@@ -6429,10 +6429,10 @@ nav-frontend-knapper-style@^0.3.14:
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-0.3.23.tgz#60c5bc8af8a88ce2e6be5597332afa41deaba1ba"
   integrity sha512-gAQ9z55qL9qt/HAJhY8zcpd36EkfXv/jAL/Jp9+ilgFepR6psI4J+0Se5lESsGM1ugL+sVDazdgvQMm9ZzFkug==
 
-nav-frontend-knapper@^1.0.15:
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-1.0.27.tgz#3e151c269e75ae70416d69d1c175448ba73c4827"
-  integrity sha512-TvvDlMasRiEM3kxFK1DPghobZiFYwXX8kBLUg47X2asK2KPwZXhlxiXCUcR7SHW6DxQjBr1/YQGSElIr3PNdSw==
+nav-frontend-knapper@^1.0.40:
+  version "1.0.40"
+  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-1.0.40.tgz#21e2b5556bf68b7cb179c13947f780700c77799a"
+  integrity sha512-BTbPqcQIFas+it6KjFIVixnLtj/zoZTPCtF7+sLv3N6wPpggoaZJ4tEx6y0al2VYMvz5FWwT5H4oc3Iky6Pdug==
 
 nav-frontend-paneler-style@^0.3.11:
   version "0.3.14"
