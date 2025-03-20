@@ -1,0 +1,61 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: {{name}}
+  namespace: teamdagpenger
+  labels:
+    team: teamdagpenger
+    app: {{name}}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "64M"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+spec:
+  image: {{image}}
+  port: 5173
+  liveness:
+    path: "{{base_path}}/api/internal/isalive"
+    initialDelay: 10
+  readiness:
+    path: "{{base_path}}/api/internal/isready"
+    initialDelay: 10
+  replicas:
+    min: {{replicas.min}}
+    max: {{replicas.max}}
+    cpuThresholdPercentage: 75
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 256Mi
+  ingresses:
+    {{#each ingresses as |url|}}
+       - {{url}}
+      {{/each}}
+  secureLogs:
+    enabled: true
+  env:
+    - name: SELF_URL
+      value: {{ingress}}
+  accessPolicy:
+    outbound:
+      external:
+        - host: rt6o382n.apicdn.sanity.io
+        - host: www.nav.no
+        - host: amplitude.nav.no
+        - host: graph.microsoft.com
+        - host: login.microsoftonline.com
+
+  azure:
+    application:
+      tenant: {{azure.tenant}}
+      enabled: {{azure.enabled}}
+      claims:
+        groups:
+          - id: {{azure.grupper.saksbehandler}}
+          - id: {{azure.grupper.beslutter}}
+        extra:
+          - NAVident
+    sidecar:
+      enabled: {{azure.enabled}}
+      autoLogin: true
