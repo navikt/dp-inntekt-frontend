@@ -1,13 +1,17 @@
 import {type LoaderFunctionArgs, useLoaderData} from "react-router";
 import {mockResponseForHentingAvUklassifisertInntekt} from "~/utils/mock.server.response";
+import {getDPInntektOboToken} from "~/utils/auth.server";
 
-async function fetchVerdikoder() {
-    const url = `https://dp-inntekt-api.intern.dev.nav.no/v1/inntekt/verdikoder`;
-
+async function fetchVerdikoder(token: String) {
+    //const url = `https://dp-inntekt-api.intern.dev.nav.no/v1/inntekt/verdikoder`;
+    const url = `https://dp-inntekt-api.intern.dev.nav.no/v2/inntekt/klassifisert/01JFTM0H9MP3N5RH3H4VYB4GHH`;
+    console.log(token + ": TOKEN");
     const response = await fetch(url, {
         headers: {
-            'Authorization': `Bearer token`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            connection: "keep-alive",
         },
     })
 
@@ -23,8 +27,8 @@ async function fetchVerdikoder() {
   }
 
   export const loader = async ({params, request}: LoaderFunctionArgs) => {
-    const response = await fetchVerdikoder();
-    return response;
+    var token = await getDPInntektOboToken(request);
+    return await fetchVerdikoder(token);
   }
 
 export default function Verdikoder() {
@@ -34,9 +38,8 @@ export default function Verdikoder() {
     return (
         <>
             <h1>Dette er verdikoder siden</h1>
-            <p>{response}</p>
             <h1>RESPONS MOCK</h1>
-            <p>{mockResponseForHentingAvUklassifisertInntekt.inntektId.id + ""}</p>
+            <p>{mockResponseForHentingAvUklassifisertInntekt.inntektId.id}</p>
         </>
         
     )

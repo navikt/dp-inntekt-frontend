@@ -3,9 +3,10 @@ import {getEnv} from "~/utils/env.utils";
 
 export async function getDPInntektOboToken(request: Request) {
     if (getEnv("IS_LOCALHOST") === "true") {
-        return "";
+        return process.env.DP_INNTEKT_API_TOKEN || "";
     }
-    const audience = `${getEnv("NAIS_CLUSTER_NAME")}:teamdagpenger:dp-inntekt-api`;
+
+    const audience = `api://${getEnv("NAIS_CLUSTER_NAME")}.teamdagpenger.dp-inntekt-api/.default`;
     return await getOnBehalfOfToken(request, audience);
 }
 

@@ -45,6 +45,8 @@ spec:
         - host: amplitude.nav.no
         - host: graph.microsoft.com
         - host: login.microsoftonline.com
+      rules:
+        - application: dp-inntekt-api
 
   azure:
     application:
