@@ -29,5 +29,9 @@
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+  "optionalDependencies": {
+    "@esbuild/linux-x64": "0.25.1",
+    "@rollup/rollup-linux-x64-musl": "4.35.0"
   }
 }
