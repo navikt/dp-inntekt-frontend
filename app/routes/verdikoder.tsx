@@ -1,15 +1,12 @@
 import {type LoaderFunctionArgs, useLoaderData} from "react-router";
-import {getDPInntektOboToken} from "~/utils/auth.server";
 
 
-async function fetchVerdikoder(token: String) {
-    //const url = `https://dp-inntekt-api.intern.dev.nav.no/v1/inntekt/verdikoder`;
-    const url = `https://dp-inntekt-api.intern.dev.nav.no/v2/inntekt/klassifisert/01JFTM0H9MP3N5RH3H4VYB4GHH`;
+async function fetchVerdikoder() {
+    const url = `https://dp-inntekt-api.intern.dev.nav.no/v1/inntekt/verdikoder`;
     const response = await fetch(url, {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: `Bearer ${token}`,
             connection: "keep-alive",
         },
     })
@@ -26,17 +23,17 @@ async function fetchVerdikoder(token: String) {
   }
 
   export const loader = async ({params, request}: LoaderFunctionArgs) => {
-    var token = await getDPInntektOboToken(request);
-    return await fetchVerdikoder(token);
+    return await fetchVerdikoder();
   }
 
 export default function Verdikoder() {
     const response = useLoaderData<typeof loader>();
+    console.log(response);
 
     return (
         <>
             <h1>Dette er verdikoder siden</h1>
-            <p>{response.inntektsId}</p>
+            <p>{`${response}`}</p>
         </>
         
     )
