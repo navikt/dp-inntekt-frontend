@@ -1,6 +1,6 @@
 import {type LoaderFunctionArgs, useLoaderData} from "react-router";
-import {mockResponseForHentingAvUklassifisertInntekt} from "~/utils/mock.server.response";
 import {getDPInntektOboToken} from "~/utils/auth.server";
+
 
 async function fetchVerdikoder(token: String) {
     //const url = `https://dp-inntekt-api.intern.dev.nav.no/v1/inntekt/verdikoder`;
