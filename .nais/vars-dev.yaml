@@ -1,4 +1,3 @@
-name: dp-inntekt-frontend-dev
 ingresses:
   - https://inntekt-frontend.ansatt.dev.nav.no
 replicas:
