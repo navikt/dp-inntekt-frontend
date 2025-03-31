@@ -3,7 +3,7 @@ import {getDPInntektOboToken} from "~/utils/auth.server";
 
 
 async function fetchKlassifisertInntekt(token: String) {
-    const url = `https://dp-inntekt-api.intern.dev.nav.no/v2/inntekt/klassifisert/01JFTM0H9MP3N5RH3H4VYB4GHH`;
+    const url = `${process.env.DP_INNTEKT_API_URL}/v2/inntekt/klassifisert/01JFTM0H9MP3N5RH3H4VYB4GHH`;
     const response = await fetch(url, {
         headers: {
             "Content-Type": "application/json",
