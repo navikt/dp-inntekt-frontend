@@ -37,6 +37,8 @@ spec:
   env:
     - name: SELF_URL
       value: {{ingress}}
+    - name: DP_INNTEKT_API_URL
+      value: {{dp_inntekt_api_url}}
   accessPolicy:
     outbound:
       external:

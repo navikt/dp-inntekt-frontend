@@ -1,8 +1,9 @@
 import {type LoaderFunctionArgs, useLoaderData} from "react-router";
+import * as process from "node:process";
 
 
 async function fetchVerdikoder() {
-    const url = `https://dp-inntekt-api.intern.dev.nav.no/v1/inntekt/verdikoder`;
+    const url = `${process.env.DP_INNTEKT_API_URL}/v1/inntekt/verdikoder`;
     const response = await fetch(url, {
         headers: {
             "Content-Type": "application/json",

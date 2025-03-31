@@ -1,3 +1,5 @@
+dp_inntekt_api_url: "http://dp-inntekt-api"
+
 ingresses:
   - https://inntekt-frontend.ansatt.dev.nav.no
 replicas:
