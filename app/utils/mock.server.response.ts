@@ -1,4 +1,4 @@
-export var mockResponseForHentingAvUklassifisertInntekt = {
+export var mockResponseForHentingAvUklassifisertInntekt: UklassifisertInntektResponse = {
     "inntektId": {
         "id": "01JQDYWXG0WA8R7NH6B34682AM"
     },
