@@ -1,5 +1,6 @@
 import {Button, Modal, TextField} from "@navikt/ds-react";
 import {useRef} from "react";
+import {PlusCircleIcon} from "@navikt/aksel-icons";
 
 export default function LeggTilInntektsKildeModal () {
     const ref = useRef<HTMLDialogElement>(null);
@@ -7,7 +8,9 @@ export default function LeggTilInntektsKildeModal () {
 
     return (
         <div className="py-12">
-            <Button onClick={() => ref.current?.showModal()}>Åpne modal</Button>
+            <Button variant="primary" icon={<PlusCircleIcon aria-hidden />} onClick={() => ref.current?.showModal()} style={{margin: "10px"}}>
+                Legg til inntektskilde
+            </Button>
 
 
             <Modal ref={ref} header={{ heading: "Skjema" }} width={400}>
