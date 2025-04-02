@@ -9,7 +9,6 @@ export default function LeggTilInntektsKildeModal () {
         <div className="py-12">
             <Button onClick={() => ref.current?.showModal()}>Åpne modal</Button>
 
-
             <Modal ref={ref} header={{ heading: "Skjema" }} width={400}>
                 <Modal.Body>
                     <form method="dialog" id="skjema" onSubmit={() => alert("onSubmit")}>
