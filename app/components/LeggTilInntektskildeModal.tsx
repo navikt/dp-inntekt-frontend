@@ -1,6 +1,6 @@
 import {
     Button,
-    DatePicker, HStack,
+    DatePicker, HStack, Label,
     Modal,
     Radio,
     RadioGroup, Select,
@@ -10,6 +10,7 @@ import {
 } from "@navikt/ds-react";
 import {useRef} from "react";
 import {PlusCircleIcon} from "@navikt/aksel-icons";
+import InntektPeriodeIModalen from "~/components/InntektPeriodeIModalen";
 
 export default function LeggTilInntektsKildeModal () {
     const ref = useRef<HTMLDialogElement>(null);
@@ -30,7 +31,7 @@ export default function LeggTilInntektsKildeModal () {
 
             <Modal ref={ref} header={{ heading: "Inntektskilde og inntekt" }} width={"medium"}>
                 <Modal.Body>
-                    <form method="dialog" id="skjema" onSubmit={() => alert("onSubmit")}>
+                    <form method="dialog" id="skjema">
                         <RadioGroup legend="Type inntektskilde" >
                             <Radio value="norskVirksomhet">Norsk virksomhet</Radio>
                             <Radio value="utenlandsVirksomhet">Utenlands virksomhet</Radio>
@@ -53,7 +54,10 @@ export default function LeggTilInntektsKildeModal () {
                             <option value="ElektroniskKom">Elektrisk kommunikasjon</option>
                         </Select>
 
-                        <TextField label="Periode" placeholder={"Coming soon!"}/>
+                        <div>
+                            <Label>Periode</Label>
+                            <InntektPeriodeIModalen />
+                        </div>
                         <TextField label="Begrunnelse" />
 
 
