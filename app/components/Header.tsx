@@ -1,7 +1,11 @@
 import { BodyShort, Box, HStack } from "@navikt/ds-react";
 import { NavLogoIkon } from "./Ikoner/NavLogoIkon";
 
-export function Header() {
+interface IProps {
+  tittel: string;
+}
+
+export function Header({ tittel }: IProps) {
   return (
     <Box
       background="surface-default"
@@ -11,7 +15,7 @@ export function Header() {
       borderWidth="1"
     >
       <HStack gap="3">
-        <NavLogoIkon /> <BodyShort weight="semibold">Dagpenger inntekt</BodyShort>
+        <NavLogoIkon /> <BodyShort weight="semibold">{tittel}</BodyShort>
       </HStack>
     </Box>
   );

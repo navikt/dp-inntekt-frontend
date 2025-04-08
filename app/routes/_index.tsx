@@ -2,6 +2,7 @@ import { BodyShort, Box, VStack } from "@navikt/ds-react";
 import { useLoaderData } from "react-router";
 import { Header } from "~/components/Header";
 import InntektExpansionCard from "~/components/InntektExpansionCard";
+import { InntektPeriodeSum } from "~/components/InntektPeriodeSum";
 import LeggTilInntektsKildeModal from "~/components/LeggTilInntektskildeModal";
 import { Personalia } from "~/components/Personalia";
 import { mockResponseForHentingAvUklassifisertInntekt } from "~/utils/mock.server.response";
@@ -67,21 +68,22 @@ export default function Index() {
   const pnr = mockResponseForHentingAvUklassifisertInntekt.inntektsmottaker.pnr;
   const sisteOppdatert = "21.03.2025, kl 12:04";
 
+  function hentInntektPeriodeSum() {
+    return {
+      fom: "Mars 2022",
+      tom: "Mars 2025",
+      sum: 867000,
+    };
+  }
+
+  const { fom, tom, sum } = hentInntektPeriodeSum();
+
   return (
     <main>
-      <Header />
+      <Header tittel="Dagpenger inntekt" />
       <Personalia navn={navn} pnr={pnr} sistOppdatert={sisteOppdatert} />
-
       <Box background="surface-default" padding="6" borderRadius="xlarge">
-        <Box padding="2">
-          <VStack>
-            <BodyShort>Innteksperiode</BodyShort>
-            <BodyShort>Mars 2022 - Mars 2025</BodyShort>
-            <BodyShort weight="semibold" size="large">
-              867 000 kr
-            </BodyShort>
-          </VStack>
-        </Box>
+        <InntektPeriodeSum fom={fom} tom={tom} sum={sum} />
         {data.map((virksomhet) => (
           <InntektExpansionCard key={virksomhet.virksomhetsnummer} virksomhet={virksomhet} />
         ))}
