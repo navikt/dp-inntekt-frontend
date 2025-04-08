@@ -1,89 +1,92 @@
-import {Box} from "@navikt/ds-react";
-import {mockResponseForHentingAvUklassifisertInntekt} from "~/utils/mock.server.response";
+import { BodyShort, Box, VStack } from "@navikt/ds-react";
+import { useLoaderData } from "react-router";
+import { Header } from "~/components/Header";
 import InntektExpansionCard from "~/components/InntektExpansionCard";
 import LeggTilInntektsKildeModal from "~/components/LeggTilInntektskildeModal";
+import { Personalia } from "~/components/Personalia";
+import { mockResponseForHentingAvUklassifisertInntekt } from "~/utils/mock.server.response";
 
-export default function HomePage() {
-
-    const data = [
+export async function loader() {
+  const data = [
+    {
+      virksomhetsnummer: "924567834",
+      navn: "Grav og Spreng AS",
+      periode: {
+        fra: new Date("2024-02-01"),
+        til: new Date("2024-10-01"),
+      },
+      inntekter: [
         {
-            "virksomhetsnummer": "924567834",
-            "navn": "Grav og Spreng AS",
-            "periode": {
-                "fra": new Date("2024-02-01"),
-                "til": new Date("2024-10-01")
-            },
-            "inntekter": [
-                {
-                    "inntektstype": "Timelønn",
-                    "kilde": "A-Inntekt",
-                    "sistOppdatert": "00.00.0000",
-                    "redigert": "Nei",
-                    "begrunnelse": "-",
-                    "b": "-",
-                    "beløp": "184 500kr",
-                }, {
-                    "inntektstype": "Elektronisk kommunikasjon",
-                    "kilde": "A-Inntekt",
-                    "sistOppdatert": "00.00.0000",
-                    "redigert": "Ja",
-                    "begrunnelse": "Dårlige data",
-                    "b": "-",
-                    "beløp": "1 400kr",
-                }
-            ]
+          inntektstype: "Timelønn",
+          kilde: "A-Inntekt",
+          sistOppdatert: "00.00.0000",
+          redigert: "Nei",
+          begrunnelse: "-",
+          b: "-",
+          beløp: "184 500kr",
         },
         {
-            "virksomhetsnummer": "924567834",
-            "navn": "Grav og Spreng AS",
-            "periode": {
-                "fra": new Date("2022-11-01"),
-                "til": new Date("2025-03-01")
-            },
-            "inntekter": [
-                {
-                    "inntektstype": "Timelønn",
-                    "kilde": "A-Inntekt",
-                    "sistOppdatert": "00.00.0000",
-                    "redigert": "Nei",
-                    "begrunnelse": "-",
-                    "b": "-",
-                    "beløp": "59 500kr",
-                }
-            ]
+          inntektstype: "Elektronisk kommunikasjon",
+          kilde: "A-Inntekt",
+          sistOppdatert: "00.00.0000",
+          redigert: "Ja",
+          begrunnelse: "Dårlige data",
+          b: "-",
+          beløp: "1 400kr",
         },
-    ]
-    return (
-        <div>
-            <Box
-                background="surface-default"
-                padding="6"
-                borderRadius="xlarge"
-                borderColor="border-subtle"
-                borderWidth="1"
-                style={{margin: "20px"}}
-            >
-                Nav logo + inntekt
-            </Box>
-            <Box
-                background="surface-default"
-                padding="6"
-                borderRadius="xlarge"
-                borderColor="border-subtle"
-                borderWidth="1"
-                style={{margin: "20px"}}
-            >
-                {`logo / ${mockResponseForHentingAvUklassifisertInntekt.inntektsmottaker.navn} / ${mockResponseForHentingAvUklassifisertInntekt.inntektsmottaker.pnr} / Tekst`}
-            </Box>
-            <Box style={{margin: "20px", padding: "20px"}} background="surface-default">
-                {
-                    data.map((virksomhet, index) => {
-                        // @ts-ignore
-                        return <InntektExpansionCard key={index} virksomhet={virksomhet} />
-                    })
-                }
-                <LeggTilInntektsKildeModal />
-            </Box>
-        </div>
-    );
+      ],
+    },
+    {
+      virksomhetsnummer: "924567836",
+      navn: "Rema",
+      periode: {
+        fra: new Date("2022-11-01"),
+        til: new Date("2025-03-01"),
+      },
+      inntekter: [
+        {
+          inntektstype: "Timelønn",
+          kilde: "A-Inntekt",
+          sistOppdatert: "00.00.0000",
+          redigert: "Nei",
+          begrunnelse: "-",
+          b: "-",
+          beløp: "59 500kr",
+        },
+      ],
+    },
+  ];
+
+  return { data };
+}
+
+export default function Index() {
+  const { data } = useLoaderData<typeof loader>();
+
+  const navn = mockResponseForHentingAvUklassifisertInntekt.inntektsmottaker.navn;
+  const pnr = mockResponseForHentingAvUklassifisertInntekt.inntektsmottaker.pnr;
+  const sisteOppdatert = "21.03.2025, kl 12:04";
+
+  return (
+    <main>
+      <Header />
+      <Personalia navn={navn} pnr={pnr} sistOppdatert={sisteOppdatert} />
+
+      <Box background="surface-default" padding="6" borderRadius="xlarge">
+        <Box padding="2">
+          <VStack>
+            <BodyShort>Innteksperiode</BodyShort>
+            <BodyShort>Mars 2022 - Mars 2025</BodyShort>
+            <BodyShort weight="semibold" size="large">
+              867 000 kr
+            </BodyShort>
+          </VStack>
+        </Box>
+        {data.map((virksomhet) => (
+          <InntektExpansionCard key={virksomhet.virksomhetsnummer} virksomhet={virksomhet} />
+        ))}
+        <LeggTilInntektsKildeModal />
+      </Box>
+    </main>
+  );
 }

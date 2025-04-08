@@ -1,3 +1,9 @@
-html{
-    background-color: var(--a-bg-subtle)
+html {
+  background-color: var(--a-bg-subtle);
+}
+
+main {
+  max-width: var(--a-breakpoint-2xl-down);
+  margin: 0 auto;
+  padding: var(--a-spacing-6);
 }
