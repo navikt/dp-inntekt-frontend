@@ -10,7 +10,7 @@ interface IProps {
 export function Personalia({ navn, pnr, sistOppdatert }: IProps) {
   return (
     <Box background="surface-default" padding="6" borderRadius="xlarge" borderColor="border-subtle">
-      <HStack gap="3" wrap={false} align="center">
+      <HStack gap="4" wrap={false} align="center">
         <KvinneIkon />
         <HStack gap="4">
           <BodyShort weight="semibold">{navn}</BodyShort>
@@ -18,7 +18,7 @@ export function Personalia({ navn, pnr, sistOppdatert }: IProps) {
           <BodyShort>{pnr}</BodyShort>
         </HStack>
         <Spacer />
-        <HStack gap="3" align="center">
+        <HStack gap="4" align="center">
           <BodyShort size="small">{`Sist oppdatert: ${sistOppdatert}`}</BodyShort>
           <Button variant="secondary" size="small">
             Hent inntekter på nytt
