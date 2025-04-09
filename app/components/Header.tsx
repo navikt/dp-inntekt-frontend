@@ -7,13 +7,7 @@ interface IProps {
 
 export function Header({ tittel }: IProps) {
   return (
-    <Box
-      background="surface-default"
-      padding="6"
-      borderRadius="xlarge"
-      borderColor="border-subtle"
-      borderWidth="1"
-    >
+    <Box background="surface-default" padding="6" borderRadius="xlarge" borderColor="border-subtle">
       <HStack gap="3">
         <NavLogoIkon /> <BodyShort weight="semibold">{tittel}</BodyShort>
       </HStack>
