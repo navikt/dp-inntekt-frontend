@@ -1,4 +1,4 @@
-import { BodyShort, Box, VStack } from "@navikt/ds-react";
+import { Box, HStack, VStack } from "@navikt/ds-react";
 import { useLoaderData } from "react-router";
 import { Header } from "~/components/Header";
 import InntektExpansionCard from "~/components/InntektExpansionCard";
@@ -80,15 +80,17 @@ export default function Index() {
 
   return (
     <main>
-      <Header tittel="Dagpenger inntekt" />
-      <Personalia navn={navn} pnr={pnr} sistOppdatert={sisteOppdatert} />
-      <Box background="surface-default" padding="6" borderRadius="xlarge">
-        <InntektPeriodeSum fom={fom} tom={tom} sum={sum} />
-        {data.map((virksomhet) => (
-          <InntektExpansionCard key={virksomhet.virksomhetsnummer} virksomhet={virksomhet} />
-        ))}
-        <LeggTilInntektsKildeModal />
-      </Box>
+      <VStack gap="6">
+        <Header tittel="Dagpenger inntekt" />
+        <Personalia navn={navn} pnr={pnr} sistOppdatert={sisteOppdatert} />
+        <Box background="surface-default" padding="6" borderRadius="xlarge">
+          <InntektPeriodeSum fom={fom} tom={tom} sum={sum} />
+          {data.map((virksomhet) => (
+            <InntektExpansionCard key={virksomhet.virksomhetsnummer} virksomhet={virksomhet} />
+          ))}
+          <LeggTilInntektsKildeModal />
+        </Box>
+      </VStack>
     </main>
   );
 }
