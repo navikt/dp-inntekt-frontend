@@ -1,4 +1,3 @@
-import { ArrowsCirclepathIcon } from "@navikt/aksel-icons";
 import { BodyShort, Box, Button, CopyButton, HStack, Spacer } from "@navikt/ds-react";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 
@@ -16,18 +15,15 @@ export function Personalia({ navn, pnr, sistOppdatert }: IProps) {
         <HStack gap="4" align="center">
           <BodyShort weight="semibold">{navn}</BodyShort>
           <BodyShort>/</BodyShort>
-          <BodyShort>{pnr}</BodyShort>
-          <CopyButton copyText={pnr} />
+          <HStack align="center">
+            <BodyShort>{pnr}</BodyShort>
+            <CopyButton copyText={pnr} />
+          </HStack>
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
           <BodyShort size="small">{`Sist oppdatert: ${sistOppdatert}`}</BodyShort>
-          <Button
-            variant="secondary"
-            size="small"
-            icon={<ArrowsCirclepathIcon title="star" fontSize="1.5rem" />}
-            iconPosition="right"
-          >
+          <Button variant="secondary" size="small">
             Hent inntekter på nytt
           </Button>
         </HStack>
