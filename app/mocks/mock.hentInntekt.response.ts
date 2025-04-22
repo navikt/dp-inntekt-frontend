@@ -90,3 +90,251 @@ export var mockResponseForHentingAvUklassifisertInntekt: UklassifisertInntektRes
     navn: "Kari Nordmann",
   },
 };
+
+export const mockKlassifisertInntektResponse = {
+  inntektsId: "01JRFXF1J0V27WEWWGSBWJQ988",
+  inntektsListe: [
+    {
+      årMåned: "2022-04",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-05",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-06",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-07",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-08",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-09",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-10",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-11",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2022-12",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-04",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-01",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-02",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-03",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-05",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-06",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-07",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-08",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-09",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-10",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-11",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2023-12",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2024-01",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2024-02",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+    {
+      årMåned: "2024-03",
+      klassifiserteInntekter: [
+        {
+          beløp: "50000.0",
+          inntektKlasse: "ARBEIDSINNTEKT",
+        },
+      ],
+      harAvvik: false,
+    },
+  ],
+  manueltRedigert: false,
+  sisteAvsluttendeKalenderMåned: "2025-03",
+};

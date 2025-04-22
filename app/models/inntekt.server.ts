@@ -16,12 +16,9 @@ export interface INetworkResponseError {
   };
 }
 
-export async function hentInntekt(request: Request): Promise<INetworkResponse<[]>> {
-  const url = `${getEnv("DP_INNTEKT_API_URL")}/v2/inntekt/klassifisert/01JFTM0H9MP3N5RH3H4VYB4GHH`;
+export async function hentKlassifisertInntekt(request: Request): Promise<INetworkResponse<[]>> {
+  const url = `${getEnv("DP_INNTEKT_API_URL")}/v2/inntekt/klassifisert/01JRFXF1J0V27WEWWGSBWJQ988`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
-
-  console.log(url);
-  console.log(onBehalfOfToken);
 
   const response = await fetch(url, {
     method: "GET",
@@ -32,8 +29,6 @@ export async function hentInntekt(request: Request): Promise<INetworkResponse<[]
       connection: "keep-alive",
     },
   });
-
-  console.log(response);
 
   if (!response.ok) {
     return {
@@ -46,8 +41,6 @@ export async function hentInntekt(request: Request): Promise<INetworkResponse<[]
   }
 
   const data: [] = await response.json();
-
-  console.log("msw;", data);
 
   const mappedDate = [
     {
@@ -101,6 +94,6 @@ export async function hentInntekt(request: Request): Promise<INetworkResponse<[]
 
   return {
     status: "success",
-    data: [],
+    data: data,
   };
 }

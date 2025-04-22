@@ -5,15 +5,14 @@ import InntektExpansionCard from "~/components/InntektExpansionCard";
 import { InntektPeriodeSum } from "~/components/InntektPeriodeSum";
 import LeggTilInntektsKildeModal from "~/components/LeggTilInntektskildeModal";
 import { Personalia } from "~/components/Personalia";
-import { hentInntekt } from "~/models/inntekt.server";
+import { hentKlassifisertInntekt } from "~/models/inntekt.server";
 import { mockResponseForHentingAvUklassifisertInntekt } from "~/mocks/mock.hentInntekt.response";
 import type { Route } from "./+types/_index";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  console.log(" 🔥hit loader");
-  const inntekt = await hentInntekt(request);
+  const klassifisertInntekt = await hentKlassifisertInntekt(request);
 
-  return { inntekt };
+  return { inntekt: klassifisertInntekt };
 }
 
 export default function Index() {
@@ -39,7 +38,7 @@ export default function Index() {
     <main>
       <VStack gap="6">
         <Header tittel="Dagpenger inntekt" />
-        <Personalia navn={navn} pnr={pnr} sistOppdatert={sisteOppdatert} />
+
         {/* <Box background="surface-default" padding="6" borderRadius="xlarge">
           <InntektPeriodeSum fom={fom} tom={tom} sum={sum} />
           {inntekt.map((virksomhet) => (
