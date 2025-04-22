@@ -1,13 +1,12 @@
 import { http, HttpResponse } from "msw";
+import { getEnv } from "~/utils/env.utils";
+import { mockKlassifisertInntektResponse } from "./mock.hentInntekt.response";
 
 export const handlers = [
-  // Intercept "GET https://example.com/user" requests...
-  http.get("https://example.com/user", () => {
-    // ...and respond to them using this JSON response.
-    return HttpResponse.json({
-      id: "c7b3d8e0-5e0b-4b0f-8b3a-3b9f4b3d3b3d",
-      firstName: "John",
-      lastName: "Maverick",
-    });
-  }),
+  http.get(
+    `${getEnv("DP_INNTEKT_API_URL")}/v2/inntekt/klassifisert/01JRFXF1J0V27WEWWGSBWJQ988`,
+    () => {
+      return HttpResponse.json(mockKlassifisertInntektResponse);
+    }
+  ),
 ];
