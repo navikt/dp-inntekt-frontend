@@ -6,10 +6,11 @@ import type { RenderToPipeableStreamOptions } from "react-dom/server";
 import { renderToPipeableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
+import { getEnv } from "./utils/env.utils";
 
 export const streamTimeout = 5_000;
 
-if (process.env.USE_MSW) {
+if (getEnv("USE_MSW") === "true") {
   import("~/mocks/mock-server").then(({ server, startMockServer }) => {
     startMockServer(server);
   });
