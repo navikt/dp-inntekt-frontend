@@ -1,12 +1,9 @@
 import { http, HttpResponse } from "msw";
 import { getEnv } from "~/utils/env.utils";
-import { mockKlassifisertInntektResponse } from "./mock.hentInntekt.response";
+import { mockUklassifisertInntekt } from "./mock.uklassifiert-inntekt";
 
 export const handlers = [
-  http.get(
-    `${getEnv("DP_INNTEKT_API_URL")}/v2/inntekt/klassifisert/01JRFXF1J0V27WEWWGSBWJQ988`,
-    () => {
-      return HttpResponse.json(mockKlassifisertInntektResponse);
-    }
-  ),
+  http.get(`${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/:inntektId`, () => {
+    return HttpResponse.json(mockUklassifisertInntekt);
+  }),
 ];

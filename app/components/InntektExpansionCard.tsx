@@ -1,5 +1,6 @@
 import { ExpansionCard } from "@navikt/ds-react";
 import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
+import type { InntektVirksomhetMaaned } from "~/types/inntekt.types";
 
 function VariableAndAnswer(name: string, value: string) {
   return (
@@ -33,7 +34,7 @@ interface Virksomhet {
 }
 
 interface VirksomhetExpansionProps {
-  virksomhet: Virksomhet;
+  virksomhet: InntektVirksomhetMaaned;
 }
 
 const lesbarPeriode = (periode: VirksomhetPeriode) => {
@@ -60,16 +61,17 @@ const formaterBeløp = (beløp: number) => {
 
 export default function InntektExpansionCard({ virksomhet }: VirksomhetExpansionProps) {
   return (
-    <ExpansionCard aria-label="Demo med custom styling" style={{ padding: "10px" }}>
+    <ExpansionCard aria-label="Demo med custom styling">
       <ExpansionCard.Header>
-        <ExpansionCard.Title>{virksomhet.navn}</ExpansionCard.Title>
+        <ExpansionCard.Title>{virksomhet.virksomhetNavn}</ExpansionCard.Title>
         <ExpansionCard.Description>
-          {VariableAndAnswer("Org nummer", virksomhet.virksomhetsnummer)}
+          Organisasjonsnummer {virksomhet.virksomhet}
+          {/* {VariableAndAnswer("Org nummer", virksomhet.virksomhetsnummer)}
           {VariableAndAnswer("Periode", lesbarPeriode(virksomhet.periode))}
           {VariableAndAnswer(
             "Beløp for perioden",
             `${formaterBeløp(beløpForPerioden(virksomhet.inntekter))}`
-          )}
+          )} */}
         </ExpansionCard.Description>
       </ExpansionCard.Header>
       <ExpansionCard.Content>

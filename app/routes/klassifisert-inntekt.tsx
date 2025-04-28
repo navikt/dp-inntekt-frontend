@@ -1,5 +1,5 @@
 import { type LoaderFunctionArgs, useLoaderData } from "react-router";
-import { getDPInntektOboToken } from "~/utils/auth.server";
+import { getDPInntektOboToken } from "~/utils/auth.util.server";
 
 async function fetchKlassifisertInntekt(token: String) {
   const url = `${process.env.DP_INNTEKT_API_URL}/v2/inntekt/klassifisert/01JFTM0H9MP3N5RH3H4VYB4GHH`;
