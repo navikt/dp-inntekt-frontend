@@ -1,4 +1,4 @@
-import type { UklassifisertInntekt } from "~/types/inntekt.types";
+import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import { getDPInntektOboToken } from "~/utils/auth.util.server";
 import { getEnv } from "~/utils/env.utils";
 
@@ -20,7 +20,7 @@ export interface INetworkResponseError {
 export async function hentUklassifisertInntekt(
   request: Request,
   inntektId: string
-): Promise<INetworkResponse<UklassifisertInntekt>> {
+): Promise<INetworkResponse<IUklassifisertInntekt>> {
   const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
 
@@ -44,7 +44,7 @@ export async function hentUklassifisertInntekt(
     };
   }
 
-  const data: UklassifisertInntekt = await response.json();
+  const data: IUklassifisertInntekt = await response.json();
 
   return {
     status: "success",

@@ -1,23 +1,23 @@
-export interface UklassifisertInntekt {
-  inntektVirksomhetMaaned: InntektVirksomhetMaaned[];
-  mottaker: Mottaker;
+export interface IUklassifisertInntekt {
+  inntektVirksomhetMaaned: IInntektVirksomhetMaaned[];
+  mottaker: IMottaker;
 }
 
-export interface InntektVirksomhetMaaned {
+export interface IInntektVirksomhetMaaned {
   virksomhet: string;
   virksomhetNavn: string;
-  periode: Periode;
-  inntekter: Inntekt[];
+  periode: IPeriode;
+  inntekter: IInntekt[];
   totalBeløp: string;
   avvikListe: any[]; // You can replace `any` with a more specific type if needed
 }
 
-export interface Periode {
+export interface IPeriode {
   fra: string; // Format: YYYY-MM
   til: string; // Format: YYYY-MM
 }
 
-export interface Inntekt {
+export interface IInntekt {
   belop: string;
   fordel: string;
   beskrivelse: string;
@@ -26,28 +26,28 @@ export interface Inntekt {
   opptjeningsland: string;
   skattemessigBosattLand: string;
   utbetaltIMaaned: string;
-  virksomhet: Aktoer;
-  inntektsmottaker: Aktoer;
+  virksomhet: IAktoer;
+  inntektsmottaker: IAktoer;
   inngaarIGrunnlagForTrekk: boolean;
   utloeserArbeidsgiveravgift: boolean;
   informasjonsstatus: string;
   inntektType: string;
-  tilleggsinformasjon: Tilleggsinformasjon;
+  tilleggsinformasjon: ITilleggsinformasjon;
   redigert: boolean;
   begrunnelse: string;
   aarMaaned: string;
 }
 
-export interface Aktoer {
+export interface IAktoer {
   aktoerType: string;
   identifikator: string;
 }
 
-export interface Tilleggsinformasjon {
+export interface ITilleggsinformasjon {
   kategori: string;
 }
 
-export interface Mottaker {
+export interface IMottaker {
   pnr: string;
   navn: string;
 }

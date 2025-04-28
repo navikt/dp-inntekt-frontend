@@ -1,21 +1,25 @@
 import { BodyShort, Box, VStack } from "@navikt/ds-react";
+import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
+import { finnInntektsPeriode, sumTotalBelop } from "~/utils/inntekt.util";
 
 interface IProps {
-  periode: { fra: string; til: string };
-  sum: number;
+  uklassifisertInntekt: IUklassifisertInntekt;
 }
 
-export function InntektPeriodeSum({ periode, sum }: IProps) {
+export function InntektPerioderOppsummering({ uklassifisertInntekt }: IProps) {
+  const { fra, til } = finnInntektsPeriode(uklassifisertInntekt.inntektVirksomhetMaaned);
+  const inntektPerioderTotaltBelop = sumTotalBelop(uklassifisertInntekt.inntektVirksomhetMaaned);
+
   return (
     <Box padding="2">
       <VStack>
         <BodyShort>Innteksperiode</BodyShort>
         <BodyShort>
-          {formaterNorskDato(periode.fra)} - {formaterNorskDato(periode.til)}
+          {formaterNorskDato(fra)} - {formaterNorskDato(til)}
         </BodyShort>
         <BodyShort weight="semibold" size="large">
-          {formatterNorskTall(sum)}
+          {formatterNorskTall(inntektPerioderTotaltBelop)}
         </BodyShort>
       </VStack>
     </Box>

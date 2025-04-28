@@ -1,6 +1,6 @@
-import type { UklassifisertInntekt } from "~/types/inntekt.types";
+import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 
-export const mockUklassifisertInntekt: UklassifisertInntekt = {
+export const mockUklassifisertInntekt: IUklassifisertInntekt = {
   inntektVirksomhetMaaned: [
     {
       virksomhet: "896929119",

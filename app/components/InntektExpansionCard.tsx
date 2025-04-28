@@ -1,10 +1,10 @@
 import { ExpansionCard, VStack } from "@navikt/ds-react";
 import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
-import type { InntektVirksomhetMaaned } from "~/types/inntekt.types";
+import type { IInntektVirksomhetMaaned } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 
 interface VirksomhetExpansionProps {
-  virksomhet: InntektVirksomhetMaaned;
+  virksomhet: IInntektVirksomhetMaaned;
 }
 
 interface IInntekInfo {

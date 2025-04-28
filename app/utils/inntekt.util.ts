@@ -1,6 +1,6 @@
-import type { InntektVirksomhetMaaned } from "~/types/inntekt.types";
+import type { IInntektVirksomhetMaaned } from "~/types/inntekt.types";
 
-export function finnInntektsPeriode(inntekter: InntektVirksomhetMaaned[]): {
+export function finnInntektsPeriode(inntekter: IInntektVirksomhetMaaned[]): {
   fra: string;
   til: string;
 } {
@@ -23,6 +23,6 @@ export function finnInntektsPeriode(inntekter: InntektVirksomhetMaaned[]): {
   return { fra: fom, til: tom };
 }
 
-export function sumTotalBelop(data: InntektVirksomhetMaaned[]): number {
+export function sumTotalBelop(data: IInntektVirksomhetMaaned[]): number {
   return data.reduce((sum, item) => sum + Number(item.totalBeløp), 0);
 }

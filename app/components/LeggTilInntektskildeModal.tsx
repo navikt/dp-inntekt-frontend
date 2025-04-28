@@ -29,7 +29,6 @@ export default function LeggTilInntektsKildeModal() {
         variant="primary"
         icon={<PlusCircleIcon aria-hidden />}
         onClick={() => ref.current?.showModal()}
-        style={{ margin: "10px" }}
       >
         Legg til inntektskilde
       </Button>
