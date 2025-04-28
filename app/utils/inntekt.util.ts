@@ -1,8 +1,8 @@
 import type { InntektVirksomhetMaaned } from "~/types/inntekt.types";
 
 export function finnInntektsPeriode(inntekter: InntektVirksomhetMaaned[]): {
-  fom: string;
-  tom: string;
+  fra: string;
+  til: string;
 } {
   if (inntekter.length === 0) {
     throw new Error("Inntekt er en tom liste");
@@ -20,7 +20,7 @@ export function finnInntektsPeriode(inntekter: InntektVirksomhetMaaned[]): {
     }
   }
 
-  return { fom, tom };
+  return { fra: fom, til: tom };
 }
 
 export function sumTotalBelop(data: InntektVirksomhetMaaned[]): number {

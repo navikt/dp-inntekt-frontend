@@ -41,12 +41,15 @@ export default function Index() {
             periode={finnInntektsPeriode(data.inntektVirksomhetMaaned)}
             sum={sumTotalBelop(data.inntektVirksomhetMaaned)}
           />
-          <LeggTilInntektsKildeModal />
         </Box>
 
-        {data.inntektVirksomhetMaaned.map((virksomhet: InntektVirksomhetMaaned) => (
-          <InntektExpansionCard key={virksomhet.virksomhetNavn} virksomhet={virksomhet} />
-        ))}
+        <Box background="surface-default" padding="6" borderRadius="xlarge">
+          {data.inntektVirksomhetMaaned.map((virksomhet: InntektVirksomhetMaaned) => (
+            <InntektExpansionCard key={virksomhet.virksomhetNavn} virksomhet={virksomhet} />
+          ))}
+
+          <LeggTilInntektsKildeModal />
+        </Box>
       </VStack>
     </main>
   );

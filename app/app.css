@@ -7,3 +7,12 @@ main {
   margin: 0 auto;
   padding: var(--a-spacing-6);
 }
+
+/* Reset p tag padding globally*/
+p {
+  margin: 0;
+}
+
+.mt-4 {
+  margin-top: var(--a-spacing-4);
+}

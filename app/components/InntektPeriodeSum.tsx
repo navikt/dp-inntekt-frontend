@@ -2,7 +2,7 @@ import { BodyShort, Box, VStack } from "@navikt/ds-react";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 
 interface IProps {
-  periode: { fom: string; tom: string };
+  periode: { fra: string; til: string };
   sum: number;
 }
 
@@ -12,10 +12,10 @@ export function InntektPeriodeSum({ periode, sum }: IProps) {
       <VStack>
         <BodyShort>Innteksperiode</BodyShort>
         <BodyShort>
-          {formaterNorskDato(periode.fom)} - {formaterNorskDato(periode.tom)}
+          {formaterNorskDato(periode.fra)} - {formaterNorskDato(periode.til)}
         </BodyShort>
         <BodyShort weight="semibold" size="large">
-          {formatterNorskTall(sum)} kr
+          {formatterNorskTall(sum)}
         </BodyShort>
       </VStack>
     </Box>

@@ -10,5 +10,5 @@ export function formaterNorskDato(dato: string) {
 }
 
 export function formatterNorskTall(tall: number) {
-  return tall.toLocaleString("no-NO");
+  return `${tall.toLocaleString("no-NO")} kr`;
 }
