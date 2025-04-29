@@ -1,16 +1,17 @@
-import { ExpansionCard, VStack } from "@navikt/ds-react";
+import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
 import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
 import type { IInntektVirksomhetMaaned } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 
-interface VirksomhetExpansionProps {
-  virksomhet: IInntektVirksomhetMaaned;
+interface IProps {
+  inntektVirksomhetMaaned: IInntektVirksomhetMaaned;
 }
 
 interface IInntekInfo {
   overskrift: string;
   verdi: string;
 }
+
 export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
   return (
     <VStack gap="0">
@@ -20,29 +21,36 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
   );
 }
 
-export default function InntektExpansionCard({ virksomhet }: VirksomhetExpansionProps) {
+export default function InntektExpansionCard({ inntektVirksomhetMaaned }: IProps) {
+  console.log(inntektVirksomhetMaaned);
   return (
     <ExpansionCard aria-label="Demo med custom styling" className="mt-4">
       <ExpansionCard.Header>
-        <ExpansionCard.Title>{virksomhet.virksomhetNavn}</ExpansionCard.Title>
+        <ExpansionCard.Title>{inntektVirksomhetMaaned.virksomhetNavn} </ExpansionCard.Title>
         <ExpansionCard.Description>
           <VStack gap="4">
-            <InntektInfo overskrift="Organisasjonsnummer" verdi={virksomhet.virksomhet} />
+            <InntektInfo
+              overskrift="Organisasjonsnummer"
+              verdi={inntektVirksomhetMaaned.virksomhet}
+            />
             <InntektInfo
               overskrift="Periode"
-              verdi={`${formaterNorskDato(virksomhet.periode.fra)} - ${formaterNorskDato(
-                virksomhet.periode.til
-              )}`}
+              verdi={`${formaterNorskDato(
+                inntektVirksomhetMaaned.periode.fra
+              )} - ${formaterNorskDato(inntektVirksomhetMaaned.periode.til)}`}
             />
             <InntektInfo
               overskrift="Beløp for perioden"
-              verdi={formatterNorskTall(Number(virksomhet.totalBeløp))}
+              verdi={formatterNorskTall(Number(inntektVirksomhetMaaned.totalBeløp))}
             />
           </VStack>
         </ExpansionCard.Description>
       </ExpansionCard.Header>
       <ExpansionCard.Content>
-        <UtvidetIntektTabell />
+        <UtvidetIntektTabell inntektVirksomhetMaaned={inntektVirksomhetMaaned} />
+        <Button size="small" className="mt-4">
+          Legg til inntekt
+        </Button>
       </ExpansionCard.Content>
     </ExpansionCard>
   );

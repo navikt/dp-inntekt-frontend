@@ -35,7 +35,10 @@ export default function Index() {
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           {uklassifisertInntekt.data.inntektVirksomhetMaaned.map(
             (virksomhet: IInntektVirksomhetMaaned) => (
-              <InntektExpansionCard key={virksomhet.virksomhetNavn} virksomhet={virksomhet} />
+              <InntektExpansionCard
+                key={virksomhet.virksomhetNavn}
+                inntektVirksomhetMaaned={virksomhet}
+              />
             )
           )}
 

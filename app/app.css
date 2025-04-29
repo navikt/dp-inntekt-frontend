@@ -16,3 +16,7 @@ p {
 .mt-4 {
   margin-top: var(--a-spacing-4);
 }
+
+.bold {
+  font-weight: bold;
+}

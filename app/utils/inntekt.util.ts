@@ -8,21 +8,21 @@ export function finnInntektsPeriode(inntekter: IInntektVirksomhetMaaned[]): {
     throw new Error("Inntekt er en tom liste");
   }
 
-  let fom = inntekter[0].periode.fra;
-  let tom = inntekter[0].periode.til;
+  let tidligsteFraDato = inntekter[0].periode.fra;
+  let senesteTilDato = inntekter[0].periode.til;
 
-  for (const item of inntekter) {
-    if (item.periode.fra < fom) {
-      fom = item.periode.fra;
+  for (const inntekt of inntekter) {
+    if (inntekt.periode.fra < tidligsteFraDato) {
+      tidligsteFraDato = inntekt.periode.fra;
     }
-    if (item.periode.til > tom) {
-      tom = item.periode.til;
+    if (inntekt.periode.til > senesteTilDato) {
+      senesteTilDato = inntekt.periode.til;
     }
   }
 
-  return { fra: fom, til: tom };
+  return { fra: tidligsteFraDato, til: senesteTilDato };
 }
 
-export function sumTotalBelop(data: IInntektVirksomhetMaaned[]): number {
-  return data.reduce((sum, item) => sum + Number(item.totalBeløp), 0);
+export function sumTotalBelop(inntekter: IInntektVirksomhetMaaned[]): number {
+  return inntekter.reduce((sum, item) => sum + Number(item.totalBeløp), 0);
 }
