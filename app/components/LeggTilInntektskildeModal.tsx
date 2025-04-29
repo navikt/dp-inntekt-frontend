@@ -24,7 +24,7 @@ export default function LeggTilInntektsKildeModal() {
   });
 
   return (
-    <div className="mt-4">
+    <div className="mt-6">
       <Button
         variant="primary"
         icon={<PlusCircleIcon aria-hidden />}

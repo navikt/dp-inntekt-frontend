@@ -28,9 +28,6 @@ export function Personalia({ mottaker }: IProps) {
           <Button variant="secondary" size="small">
             Hent inntekter på nytt
           </Button>
-          <Button variant="primary" size="small">
-            Lukk vindu
-          </Button>
         </HStack>
       </HStack>
     </Box>

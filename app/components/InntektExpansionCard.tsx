@@ -22,9 +22,8 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 }
 
 export default function InntektExpansionCard({ inntektVirksomhetMaaned }: IProps) {
-  console.log(inntektVirksomhetMaaned);
   return (
-    <ExpansionCard aria-label="Demo med custom styling" className="mt-4">
+    <ExpansionCard aria-label="Demo med custom styling">
       <ExpansionCard.Header>
         <ExpansionCard.Title>{inntektVirksomhetMaaned.virksomhetNavn} </ExpansionCard.Title>
         <ExpansionCard.Description>

@@ -17,6 +17,14 @@ p {
   margin-top: var(--a-spacing-4);
 }
 
+.mt-6 {
+  margin-top: var(--a-spacing-6);
+}
+
+.mt-8 {
+  margin-top: var(--a-spacing-8);
+}
+
 .bold {
   font-weight: bold;
 }
