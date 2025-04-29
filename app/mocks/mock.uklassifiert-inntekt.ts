@@ -81,5 +81,5 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
       avvikListe: [],
     },
   ],
-  mottaker: { pnr: "2044350291600", navn: "Ola Nordmann" },
+  mottaker: { pnr: "20443502916", navn: "Ola Nordmann" },
 };

@@ -1,6 +1,8 @@
-import { BodyShort, Box, Button, CopyButton, HStack, Spacer } from "@navikt/ds-react";
-import { KvinneIkon } from "./Ikoner/KvinneIkon";
+import { BodyShort, Box, Button, HStack, Spacer } from "@navikt/ds-react";
 import type { IMottaker } from "~/types/inntekt.types";
+import { erEnKvinne } from "~/utils/generell.util";
+import { KvinneIkon } from "./Ikoner/KvinneIkon";
+import { MennIkon } from "./Ikoner/MennIkon";
 
 interface IProps {
   mottaker: IMottaker;
@@ -13,13 +15,12 @@ export function Personalia({ mottaker }: IProps) {
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
       <HStack gap="4" wrap={false} align="center">
-        <KvinneIkon />
+        {erEnKvinne(mottaker.pnr) ? <KvinneIkon /> : <MennIkon />}
         <HStack gap="4" align="center">
           <BodyShort weight="semibold">{mottaker.navn}</BodyShort>
           <BodyShort>/</BodyShort>
           <HStack align="center">
             <BodyShort>{mottaker.pnr}</BodyShort>
-            <CopyButton copyText={mottaker.pnr} />
           </HStack>
         </HStack>
         <Spacer />
