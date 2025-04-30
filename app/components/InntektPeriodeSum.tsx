@@ -1,14 +1,14 @@
 import { BodyShort, Box, VStack } from "@navikt/ds-react";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
-import { finnInntektsPeriode, sumTotalBelop } from "~/utils/inntekt.util";
+import { sumTotalBelop } from "~/utils/inntekt.util";
 
 interface IProps {
   uklassifisertInntekt: IUklassifisertInntekt;
 }
 
 export function InntektPerioderOppsummering({ uklassifisertInntekt }: IProps) {
-  const { fra, til } = finnInntektsPeriode(uklassifisertInntekt.inntektVirksomhetMaaned);
+  const { fra, til } = uklassifisertInntekt.inntektsperiod;
   const inntektPerioderTotaltBelop = sumTotalBelop(uklassifisertInntekt.inntektVirksomhetMaaned);
 
   return (

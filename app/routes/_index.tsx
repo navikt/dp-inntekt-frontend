@@ -8,6 +8,7 @@ import LeggTilInntektsKildeModal from "~/components/LeggTilInntektskildeModal";
 import { Personalia } from "~/components/Personalia";
 import { hentUklassifisertInntekt } from "~/models/inntekt.server";
 import type { Route } from "./+types/_index";
+import { delOppIAarperioder } from "~/utils/mappedInntekt.util";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);

@@ -1,6 +1,7 @@
 export interface IUklassifisertInntekt {
   inntektVirksomhetMaaned: IInntektVirksomhetMaaned[];
   mottaker: IMottaker;
+  inntektsperiod: IPeriode;
 }
 
 export interface IInntektVirksomhetMaaned {

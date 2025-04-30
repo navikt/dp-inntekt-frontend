@@ -2,8 +2,8 @@ export function MennIkon() {
   return (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M16 0C7.164 0 0 7.164 0 16C0 24.836 7.1635 32 16 32C24.8365 32 32 24.8365 32 16C32 7.164 24.836 0 16 0Z"
         fill="#3386E0"
       />
