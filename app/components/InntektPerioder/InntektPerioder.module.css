@@ -1,0 +1,25 @@
+.periodeContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: var(--a-spacing-4);
+}
+
+.periode {
+  width: 100%;
+  border: 1px solid var(--a-border-default);
+  padding: var(--a-spacing-4);
+  border-radius: 4px;
+}
+
+.manederContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--a-spacing-4);
+}
+
+@media only screen and (min-width: 890px) {
+  .periodeContainer {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
