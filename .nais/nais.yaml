@@ -50,16 +50,16 @@ spec:
       rules:
         - application: dp-inntekt-api
 
-  azure:
-    application:
-      tenant: {{azure.tenant}}
-      enabled: {{azure.enabled}}
-      claims:
-        groups:
-          - id: {{azure.grupper.saksbehandler}}
-          - id: {{azure.grupper.beslutter}}
-        extra:
-          - NAVident
-    sidecar:
-      enabled: {{azure.enabled}}
-      autoLogin: true
+  # azure:
+  #   application:
+  #     tenant: {{azure.tenant}}
+  #     enabled: {{azure.enabled}}
+  #     claims:
+  #       groups:
+  #         - id: {{azure.grupper.saksbehandler}}
+  #         - id: {{azure.grupper.beslutter}}
+  #       extra:
+  #         - NAVident
+  #   sidecar:
+  #     enabled: {{azure.enabled}}
+  #     autoLogin: true

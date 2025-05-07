@@ -6,21 +6,27 @@ import InntektExpansionCard from "~/components/InntektExpansionCard";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import LeggTilInntektsKildeModal from "~/components/LeggTillInntektskildeModal/LeggTilInntektskildeModal";
 import { Personalia } from "~/components/Personalia";
-import { hentUklassifisertInntekt } from "~/models/inntekt.server";
+// import { hentUklassifisertInntekt } from "~/models/inntekt.server";
 import type { Route } from "./+types/_index";
+import { mockUklassifisertInntekt } from "~/mocks/mock.uklassifiert-inntekt";
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const url = new URL(request.url);
+  // const url = new URL(request.url);
 
-  // Todo: fjern hardkodet inntektId
-  url.searchParams.set("inntektId", "1234");
-  const inntektId = url.searchParams.get("inntektId");
+  // // Todo: fjern hardkodet inntektId
+  // url.searchParams.set("inntektId", "1234");
+  // const inntektId = url.searchParams.get("inntektId");
 
-  // Nullsjekk for å sjekke om inntekt Id mangler
-  invariant(inntektId, "Mangler inntektId");
-  const uklassifisertInntekt = await hentUklassifisertInntekt(request, inntektId);
+  // // Nullsjekk for å sjekke om inntekt Id mangler
+  // invariant(inntektId, "Mangler inntektId");
+  // const uklassifisertInntekt = await hentUklassifisertInntekt(request, inntektId);
 
-  return { uklassifisertInntekt };
+  return {
+    uklassifisertInntekt: {
+      status: "success",
+      data: mockUklassifisertInntekt,
+    },
+  };
 }
 
 export default function Index() {
