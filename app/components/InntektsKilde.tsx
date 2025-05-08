@@ -2,6 +2,7 @@ import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
 import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
 import type { IInntektVirksomhetMaaned } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
+import { summerInntekter } from "~/utils/inntekt.util";
 
 interface IProps {
   inntektVirksomhetMaaned: IInntektVirksomhetMaaned;
@@ -40,7 +41,8 @@ export default function InntektsKilde({ inntektVirksomhetMaaned }: IProps) {
             />
             <InntektInfo
               overskrift="Beløp for perioden"
-              verdi={formatterNorskTall(Number(inntektVirksomhetMaaned.totalBeløp))}
+              // Todo: Bruk tallet fra backend isteden
+              verdi={formatterNorskTall(summerInntekter(inntektVirksomhetMaaned.inntekter))}
             />
           </VStack>
         </ExpansionCard.Description>

@@ -10,7 +10,7 @@ export function InntektPerioder() {
           <div className="bold">{periode.ar}</div>
           <div className={styles.manederContainer}>
             {periode.maneder.map((maned) => (
-              <TextField label={maned.maned} size="small" value={maned.inntekt} />
+              <TextField label={maned.maned} size="small" />
             ))}
           </div>
         </div>

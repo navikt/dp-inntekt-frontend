@@ -42,7 +42,6 @@ export default function LeggTilInntektsKilde() {
                   <Radio value="utenlandsVirksomhet">Utenlands virksomhet</Radio>
                   <Radio value="privatPerson">Privat person</Radio>
                 </RadioGroup>
-
                 <TextField label="Arbeidsgiver" size="small" />
                 <TextField label="Organisasjonsnummer" size="small" />
                 <Select label="Inntektstype" size="small">
