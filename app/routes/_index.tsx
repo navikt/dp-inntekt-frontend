@@ -2,9 +2,9 @@ import { Box, VStack } from "@navikt/ds-react";
 import { redirect, useLoaderData } from "react-router";
 import invariant from "tiny-invariant";
 import { Header } from "~/components/Header";
-import InntektExpansionCard from "~/components/InntektExpansionCard";
+import InntektsKilde from "~/components/InntektsKilde";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
-import LeggTilInntektsKildeModal from "~/components/LeggTillInntektskildeModal/LeggTilInntektskildeModal";
+import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
 import { Personalia } from "~/components/Personalia";
 import { hentUklassifisertInntekt } from "~/models/inntekt.server";
 import type { Route } from "./+types/_index";
@@ -41,13 +41,10 @@ export default function Index() {
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <VStack gap="4">
             {uklassifisertInntekt.data.inntektVirksomhetMaaned.map((virksomhet) => (
-              <InntektExpansionCard
-                key={virksomhet.virksomhetNavn}
-                inntektVirksomhetMaaned={virksomhet}
-              />
+              <InntektsKilde key={virksomhet.virksomhetNavn} inntektVirksomhetMaaned={virksomhet} />
             ))}
           </VStack>
-          <LeggTilInntektsKildeModal />
+          <LeggTilInntektsKilde />
         </Box>
       </VStack>
     </main>

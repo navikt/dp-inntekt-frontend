@@ -10,11 +10,11 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useRef } from "react";
-import { InntektPerioder } from "../InntektPerioder/InntektPerioder";
+import { InntektPerioder } from "./InntektPerioder";
 
-import styles from "./LeggTilInntektskildeModal.module.css";
+import styles from "./LeggTilInntektskilde.module.css";
 
-export default function LeggTilInntektsKildeModal() {
+export default function LeggTilInntektsKilde() {
   const ref = useRef<HTMLDialogElement>(null);
 
   return (

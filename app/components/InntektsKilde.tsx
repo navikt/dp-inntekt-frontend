@@ -21,7 +21,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
   );
 }
 
-export default function InntektExpansionCard({ inntektVirksomhetMaaned }: IProps) {
+export default function InntektsKilde({ inntektVirksomhetMaaned }: IProps) {
   return (
     <ExpansionCard aria-label="Demo med custom styling">
       <ExpansionCard.Header>
