@@ -9,13 +9,18 @@ import {
   TextField,
   VStack,
 } from "@navikt/ds-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
 
 export default function LeggTilInntektsKilde() {
   const ref = useRef<HTMLDialogElement>(null);
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 11 }, (_, i) => currentYear - i);
+
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   return (
     <div className="mt-6">
@@ -50,11 +55,24 @@ export default function LeggTilInntektsKilde() {
                   <option value="lonnEOS">Lønn EØS</option>
                   <option value="ElektroniskKom">Elektrisk kommunikasjon</option>
                 </Select>
+                <div>
+                  <Select
+                    label="Periode til"
+                    size="small"
+                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                    value={selectedYear}
+                  >
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
               </VStack>
-
               <VStack gap="2">
                 <Label size="small">Periode</Label>
-                <InntektPerioder />
+                <InntektPerioder periodeSlutt={selectedYear} />
               </VStack>
             </VStack>
           </form>
