@@ -4,7 +4,7 @@ import { redirect } from "react-router";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 import { Header } from "~/components/Header";
-import type { Route } from "./+types/feil";
+import type { Route } from "./+types/sok";
 
 const schema = z.object({
   inntektsId: z
