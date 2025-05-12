@@ -8,6 +8,8 @@ import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInnte
 import { Personalia } from "~/components/Personalia";
 import { hentUklassifisertInntekt } from "~/models/inntekt.server";
 import type { Route } from "./+types/_index";
+import { finnTidligsteOgSenestePeriode } from "~/utils/inntekt.util";
+import { useLayoutEffect } from "react";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
@@ -34,18 +36,26 @@ export default function Index() {
     return <>Error page</>;
   }
 
+  const helePeriode = finnTidligsteOgSenestePeriode(uklassifisertInntekt.data.virksomhetsinntekt);
+
   return (
     <main>
       <VStack gap="6">
         <Header tittel="Dagpenger inntekt" />
         <Personalia mottaker={uklassifisertInntekt.data.mottaker} />
         <Box background="surface-default" padding="6" borderRadius="xlarge">
-          <InntektPerioderOppsummering uklassifisertInntekt={uklassifisertInntekt.data} />
+          <InntektPerioderOppsummering
+            virksomhetsinntekt={uklassifisertInntekt.data.virksomhetsinntekt}
+          />
         </Box>
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <VStack gap="4">
-            {uklassifisertInntekt.data.inntektVirksomhetMaaned.map((virksomhet) => (
-              <InntektsKilde key={virksomhet.virksomhetNavn} inntektVirksomhetMaaned={virksomhet} />
+            {uklassifisertInntekt.data.virksomhetsinntekt.map((virksomhet) => (
+              <InntektsKilde
+                key={virksomhet.virksomhetsnummer}
+                virksomhetsinntekt={virksomhet}
+                helePeriode={helePeriode}
+              />
             ))}
           </VStack>
           <LeggTilInntektsKilde />

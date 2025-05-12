@@ -1,12 +1,11 @@
 export interface IUklassifisertInntekt {
-  inntektVirksomhetMaaned: IInntektVirksomhetMaaned[];
+  virksomhetsinntekt: IVirksomhetsinntekt[];
   mottaker: IMottaker;
-  inntektsperiod: IPeriode;
 }
 
-export interface IInntektVirksomhetMaaned {
-  virksomhet: string;
-  virksomhetNavn: string;
+export interface IVirksomhetsinntekt {
+  virksomhetsnummer: string;
+  virksomhetsnavn: string;
   periode: IPeriode;
   inntekter: IInntekt[];
   totalBeløp: string;
@@ -22,24 +21,22 @@ export interface IInntekt {
   belop: string;
   fordel: string;
   beskrivelse: string;
-  inntektsKilde: string;
-  inntektsStatus: string;
-  opptjeningsland: string;
-  skattemessigBosattLand: string;
+  inntektskilde: string;
+  inntektsstatus: string;
+  leveringstidspunkt: string;
   utbetaltIMaaned: string;
-  virksomhet: IAktoer;
-  inntektsmottaker: IAktoer;
+  virksomhet: IAktor;
+  inntektsmottaker: IAktor;
   inngaarIGrunnlagForTrekk: boolean;
   utloeserArbeidsgiveravgift: boolean;
   informasjonsstatus: string;
   inntektType: string;
-  tilleggsinformasjon: ITilleggsinformasjon;
   redigert: boolean;
   begrunnelse: string;
   aarMaaned: string;
 }
 
-export interface IAktoer {
+export interface IAktor {
   aktoerType: string;
   identifikator: string;
 }

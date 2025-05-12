@@ -1,48 +1,3 @@
-export const mockUklassifisertInntekt: IUklassifisertInntekt = {
-  inntektVirksomhetMaaned: [
-    {
-      virksomhet: "896929119",
-      virksomhetNavn: "Kiwi",
-      periode: { fra: "2021-01", til: "2023-12" },
-      inntekter: generateMockInntektDataFromRange("2021-01", "2023-12"),
-      totalBeløp: "200000",
-      avvikListe: [],
-    },
-    {
-      virksomhet: "896929120",
-      virksomhetNavn: "Meny",
-      periode: { fra: "2023-01", til: "2023-12" },
-      inntekter: [
-        {
-          belop: "50000",
-          fordel: "kontantytelse",
-          beskrivelse: "fastloenn",
-          inntektsKilde: "A-ordningen",
-          inntektsStatus: "LoependeInnrapportert",
-          opptjeningsland: "NO",
-          skattemessigBosattLand: "NO",
-          utbetaltIMaaned: "2023-01",
-          virksomhet: { aktoerType: "ORGANISASJON", identifikator: "896929120" },
-          inntektsmottaker: { aktoerType: "AKTOER_ID", identifikator: "2044350291600" },
-          inngaarIGrunnlagForTrekk: true,
-          utloeserArbeidsgiveravgift: true,
-          informasjonsstatus: "InngaarAlltid",
-          inntektType: "LOENNSINNTEKT",
-          tilleggsinformasjon: { kategori: "NorskKontinentalsokkel" },
-          redigert: false,
-          begrunnelse: "FASTLOENN",
-          aarMaaned: "2023-01",
-        },
-      ],
-      totalBeløp: "50000",
-      avvikListe: [],
-    },
-  ],
-  mottaker: { pnr: "20443502916", navn: "Ola Nordmann" },
-  // Todo finn ut om intekstId utleder hvilke inteksperiode dette gjelder, det er for deler i tre perioder
-  inntektsperiod: { fra: "2021-01", til: "2023-12" },
-};
-
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 
 function generateMockInntektDataFromRange(start: string, end: string) {
@@ -60,10 +15,9 @@ function generateMockInntektDataFromRange(start: string, end: string) {
       belop: "10000",
       fordel: "kontantytelse",
       beskrivelse: "fastloenn",
-      inntektsKilde: "A-ordningen",
-      inntektsStatus: "LoependeInnrapportert",
-      opptjeningsland: "NO",
-      skattemessigBosattLand: "NO",
+      inntektskilde: "A-ordningen",
+      inntektsstatus: "LoependeInnrapportert",
+      leveringstidspunkt: formattedMonth,
       utbetaltIMaaned: formattedMonth,
       virksomhet: { aktoerType: "ORGANISASJON", identifikator: "896929119" },
       inntektsmottaker: { aktoerType: "AKTOER_ID", identifikator: "2044350291600" },
@@ -87,3 +41,44 @@ function generateMockInntektDataFromRange(start: string, end: string) {
 
   return data;
 }
+
+export const mockUklassifisertInntekt: IUklassifisertInntekt = {
+  virksomhetsinntekt: [
+    {
+      virksomhetsnummer: "937846231",
+      virksomhetsnavn: "KIWI NORGE AS",
+      periode: { fra: "2021-01", til: "2023-12" },
+      inntekter: generateMockInntektDataFromRange("2021-01", "2023-12"),
+      totalBeløp: "1000000",
+      avvikListe: [],
+    },
+    {
+      virksomhetsnummer: "000111222",
+      virksomhetsnavn: "",
+      periode: { fra: "2021-01", til: "2023-12" },
+      inntekter: [
+        {
+          belop: "250000",
+          fordel: "kontantytelse",
+          beskrivelse: "lottKunTrygdeavgift",
+          inntektskilde: "A-ordningen",
+          inntektsstatus: "LoependeInnrapportert",
+          leveringstidspunkt: "2019-02",
+          utbetaltIMaaned: "2018-03",
+          virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
+          inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
+          inngaarIGrunnlagForTrekk: true,
+          utloeserArbeidsgiveravgift: true,
+          informasjonsstatus: "InngaarAlltid",
+          inntektType: "NAERINGSINNTEKT",
+          redigert: false,
+          begrunnelse: "LOTT_KUN_TRYGDEAVGIFT",
+          aarMaaned: "2023-12",
+        },
+      ],
+      totalBeløp: "250000",
+      avvikListe: [],
+    },
+  ],
+  mottaker: { pnr: "20443502916", navn: "Ola Nordmann" },
+};

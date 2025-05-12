@@ -1,30 +1,29 @@
 import { Button, Table } from "@navikt/ds-react";
 import { useRouteLoaderData } from "react-router";
 import type { loader } from "~/routes/_index";
-import type { IInntektVirksomhetMaaned } from "~/types/inntekt.types";
+import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formatterNorskTall } from "~/utils/formattering.util";
-import { hentInntektTypeTekst } from "~/utils/inntekt.util";
 import {
   delOppIAarperioder,
   filtrertOgSummertBelop,
   grupperEtterInntektTypeOgKilde,
-} from "~/utils/mappedInntekt.util";
+  hentInntektTypeTekst,
+} from "~/utils/inntekt.util";
 
 interface IProps {
-  inntektVirksomhetMaaned: IInntektVirksomhetMaaned;
-  perioder?: [];
+  virksomhetsinntekt: IVirksomhetsinntekt;
+  helePeriode: IPeriode;
 }
 
-export default function UtvidetIntektTabell({ inntektVirksomhetMaaned }: IProps) {
-  const gruppertInntektTyper = grupperEtterInntektTypeOgKilde(inntektVirksomhetMaaned.inntekter);
-  const data = useRouteLoaderData<typeof loader>("routes/_index");
+export default function UtvidetIntektTabell({ virksomhetsinntekt, helePeriode }: IProps) {
+  const gruppertInntektTyper = grupperEtterInntektTypeOgKilde(virksomhetsinntekt.inntekter);
+  const indexRouteData = useRouteLoaderData<typeof loader>("routes/_index");
 
-  if (data?.uklassifisertInntekt.status === "error") {
+  if (indexRouteData?.uklassifisertInntekt.status === "error") {
     return <>Error</>;
   }
 
-  // @ts-ignore
-  const perioder = delOppIAarperioder(data?.uklassifisertInntekt.data.inntektsperiod);
+  const deltOppPerioder = delOppIAarperioder(helePeriode);
 
   return (
     <Table>
@@ -46,17 +45,17 @@ export default function UtvidetIntektTabell({ inntektVirksomhetMaaned }: IProps)
       </Table.Header>
       <Table.Body>
         {gruppertInntektTyper.map((inntekt) => (
-          <Table.Row key={inntekt.inntektsKilde}>
+          <Table.Row key={inntekt.inntektskilde}>
             <Table.DataCell>{hentInntektTypeTekst(inntekt.inntektType)}</Table.DataCell>
-            <Table.DataCell>{inntekt.inntektsKilde}</Table.DataCell>
+            <Table.DataCell>{inntekt.inntektType}</Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, perioder[0]))}
+              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, deltOppPerioder[0]))}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, perioder[1]))}
+              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, deltOppPerioder[1]))}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, perioder[2]))}
+              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, deltOppPerioder[2]))}
             </Table.DataCell>
             <Table.DataCell align="right">
               <Button variant="tertiary" size="small">
@@ -71,17 +70,17 @@ export default function UtvidetIntektTabell({ inntektVirksomhetMaaned }: IProps)
           <Table.DataCell className="bold"></Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              filtrertOgSummertBelop(inntektVirksomhetMaaned.inntekter, perioder[0])
+              filtrertOgSummertBelop(virksomhetsinntekt.inntekter, deltOppPerioder[0])
             )}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              filtrertOgSummertBelop(inntektVirksomhetMaaned.inntekter, perioder[1])
+              filtrertOgSummertBelop(virksomhetsinntekt.inntekter, deltOppPerioder[1])
             )}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              filtrertOgSummertBelop(inntektVirksomhetMaaned.inntekter, perioder[2])
+              filtrertOgSummertBelop(virksomhetsinntekt.inntekter, deltOppPerioder[2])
             )}
           </Table.DataCell>
           <Table.DataCell></Table.DataCell>

@@ -1,15 +1,15 @@
 import { BodyShort, Box, VStack } from "@navikt/ds-react";
-import type { IUklassifisertInntekt } from "~/types/inntekt.types";
+import type { IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
-import { sumTotalBelop } from "~/utils/inntekt.util";
+import { finnTidligsteOgSenestePeriode, sumTotalBelopForHelePeriode } from "~/utils/inntekt.util";
 
 interface IProps {
-  uklassifisertInntekt: IUklassifisertInntekt;
+  virksomhetsinntekt: IVirksomhetsinntekt[];
 }
 
-export function InntektPerioderOppsummering({ uklassifisertInntekt }: IProps) {
-  const { fra, til } = uklassifisertInntekt.inntektsperiod;
-  const inntektPerioderTotaltBelop = sumTotalBelop(uklassifisertInntekt.inntektVirksomhetMaaned);
+export function InntektPerioderOppsummering({ virksomhetsinntekt }: IProps) {
+  const { fra, til } = finnTidligsteOgSenestePeriode(virksomhetsinntekt);
+  const inntektPerioderTotaltBelop = sumTotalBelopForHelePeriode(virksomhetsinntekt);
 
   return (
     <Box padding="2">
