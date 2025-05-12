@@ -9,18 +9,47 @@ import {
   TextField,
   VStack,
 } from "@navikt/ds-react";
+import { useForm } from "@rvf/react-router";
 import { useRef, useState } from "react";
+import { z } from "zod";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
 
+const schema = z.object({
+  inntektskilde: z.string({
+    required_error: "Inntektskilde er påkrevd",
+  }),
+  organisasjonsnavn: z
+    .string({
+      required_error: "Organisasjonsnavn er påkrevd",
+    })
+    .min(1, "Organisasjonsnavn er påkrevd")
+    .max(50, "Organisasjonsnavn er for langt"),
+  organisasjonsnummer: z
+    .string({
+      required_error: "Organisasjonsnummer er påkrevd",
+    })
+    .min(1, "Organisasjonsnummer er påkrevd")
+    .max(50, "Organisasjonsnummer er for langt"),
+  inntektstype: z.string({
+    required_error: "Inntektstype er påkrevd",
+  }),
+});
+
 export default function LeggTilInntektsKilde() {
   const ref = useRef<HTMLDialogElement>(null);
 
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 11 }, (_, i) => currentYear - i);
+  const iAr = new Date().getFullYear();
+  const arArrayTiArTilbakeITid = Array.from({ length: 11 }, (_, i) => iAr - i);
 
-  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedYear, setSelectedYear] = useState(iAr);
+
+  const inntektForm = useForm({
+    submitSource: "state",
+    method: "put",
+    schema,
+  });
 
   return (
     <div className="mt-6">
@@ -38,21 +67,40 @@ export default function LeggTilInntektsKilde() {
         width={"1024px"}
         size="small"
       >
-        <Modal.Body>
-          <form method="dialog" id="skjema">
+        <form {...inntektForm.getFormProps()}>
+          <Modal.Body>
             <VStack gap="4">
               <VStack gap="4" className={styles.inntektInputContainer}>
-                <RadioGroup legend="Type inntektskilde" size="small">
+                <RadioGroup
+                  name="inntektskilde"
+                  legend="Type inntektskilde"
+                  size="small"
+                  error={inntektForm.error("inntektskilde")}
+                >
                   <Radio value="norskVirksomhet">Norsk virksomhet</Radio>
-                  <Radio value="utenlandsVirksomhet">Utenlands virksomhet</Radio>
                   <Radio value="privatPerson">Privat person</Radio>
                 </RadioGroup>
-                <TextField label="Arbeidsgiver" size="small" />
-                <TextField label="Organisasjonsnummer" size="small" />
-                <Select label="Inntektstype" size="small">
+                <TextField
+                  name="organisasjonsnavn"
+                  label="Organisasjonsnavn"
+                  size="small"
+                  error={inntektForm.error("organisasjonsnavn")}
+                />
+                <TextField
+                  name="organisasjonsnummer"
+                  label="Organisasjonsnummer"
+                  size="small"
+                  error={inntektForm.error("organisasjonsnummer")}
+                />
+                <Select
+                  name="inntektstype"
+                  label="Inntektstype"
+                  size="small"
+                  error={inntektForm.error("inntektstype")}
+                >
+                  <option value="">Velg inntekstype</option>
                   <option value="timelonn">Timelønn</option>
                   <option value="fastlonn">Fastlønn</option>
-                  <option value="lonnEOS">Lønn EØS</option>
                   <option value="ElektroniskKom">Elektrisk kommunikasjon</option>
                 </Select>
                 <div>
@@ -62,7 +110,7 @@ export default function LeggTilInntektsKilde() {
                     onChange={(e) => setSelectedYear(Number(e.target.value))}
                     value={selectedYear}
                   >
-                    {years.map((year) => (
+                    {arArrayTiArTilbakeITid.map((year) => (
                       <option key={year} value={year}>
                         {year}
                       </option>
@@ -72,18 +120,18 @@ export default function LeggTilInntektsKilde() {
               </VStack>
               <VStack gap="2">
                 <Label size="small">Periode</Label>
-                <InntektPerioder periodeSlutt={selectedYear} />
+                <InntektPerioder periodeSluttAr={selectedYear} />
               </VStack>
             </VStack>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button form="skjema">Lagre</Button>
-          <Button type="button" variant="secondary" onClick={() => ref.current?.close()}>
-            Avbryt
-          </Button>
-          <Button variant="tertiary">Lukk</Button>
-        </Modal.Footer>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit">Lagre</Button>
+            <Button type="button" variant="secondary" onClick={() => ref.current?.close()}>
+              Avbryt
+            </Button>
+            <Button variant="tertiary">Lukk</Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     </div>
   );

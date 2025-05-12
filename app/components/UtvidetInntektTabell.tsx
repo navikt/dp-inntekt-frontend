@@ -46,7 +46,7 @@ export default function UtvidetIntektTabell({ inntektVirksomhetMaaned }: IProps)
       </Table.Header>
       <Table.Body>
         {gruppertInntektTyper.map((inntekt) => (
-          <Table.Row>
+          <Table.Row key={inntekt.inntektsKilde}>
             <Table.DataCell>{hentInntektTypeTekst(inntekt.inntektType)}</Table.DataCell>
             <Table.DataCell>{inntekt.inntektsKilde}</Table.DataCell>
             <Table.DataCell align="right">

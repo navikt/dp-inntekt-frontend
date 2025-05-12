@@ -21,3 +21,43 @@ export function summerInntekter(inntekter: IInntekt[]) {
     return sum + (isNaN(belop) ? 0 : belop);
   }, 0);
 }
+
+export interface IPeriod {
+  aar: string;
+  maneder: IManed[];
+}
+
+export interface IManed {
+  maned: string;
+  inntekt: number;
+}
+
+export function genererFireArBakFraSluttAr(sluttAr: number): IPeriod[] {
+  const norskManeder = [
+    "Januar",
+    "Februar",
+    "Mars",
+    "April",
+    "Mai",
+    "Juni",
+    "Juli",
+    "August",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  const perioder: IPeriod[] = [];
+
+  for (let ar = sluttAr - 3; ar <= sluttAr; ar++) {
+    const maneder: IManed[] = norskManeder.map((maned) => ({
+      maned,
+      inntekt: 5000,
+    }));
+
+    perioder.push({ aar: ar.toString(), maneder });
+  }
+
+  return perioder;
+}
