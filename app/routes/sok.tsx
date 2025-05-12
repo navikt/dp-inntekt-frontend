@@ -23,7 +23,7 @@ export async function action({ request }: Route.ActionArgs) {
   return redirect(`/?inntektsId=${inntektsId}`);
 }
 
-export default function Feil() {
+export default function Sok() {
   const form = useForm({
     submitSource: "state",
     method: "put",

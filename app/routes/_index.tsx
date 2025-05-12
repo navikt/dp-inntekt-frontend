@@ -18,7 +18,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   // Redirect hvis inntekts-ID mangler
   if (!inntektsId) {
-    return redirect("/feil");
+    return redirect("/sok");
   }
 
   invariant(inntektsId, "Mangler inntekts-ID");
