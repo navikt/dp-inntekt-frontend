@@ -12,13 +12,17 @@ import type { Route } from "./+types/_index";
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
 
-  // Todo: fjern hardkodet inntektId
-  url.searchParams.set("inntektId", "1234");
-  const inntektId = url.searchParams.get("inntektId");
+  // Todo: fjern hardkodet inntektsId
+  url.searchParams.set("inntektsId", "01ARZ3NDEKTSV4RRFFQ69G5FAV");
+  const inntektsId = url.searchParams.get("inntektsId");
 
-  // Nullsjekk for å sjekke om inntekt Id mangler
-  invariant(inntektId, "Mangler inntektId");
-  const uklassifisertInntekt = await hentUklassifisertInntekt(request, inntektId);
+  // Redirect hvis inntekts-ID mangler
+  if (!inntektsId) {
+    return redirect("/feil");
+  }
+
+  invariant(inntektsId, "Mangler inntekts-ID");
+  const uklassifisertInntekt = await hentUklassifisertInntekt(request, inntektsId);
 
   return { uklassifisertInntekt };
 }
