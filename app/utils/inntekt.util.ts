@@ -44,9 +44,10 @@ export interface IAarManeder {
 
 export interface IManed {
   maned: string;
-  inntekt: number;
+  inntekt?: number;
 }
 
+// Funksjonen lager en liste med fire år (inkludert sluttåret), der hvert år inneholder alle tolv måneder
 export function genererFireArBakFraSluttAr(sluttAr: number): IAarManeder[] {
   const norskManeder = [
     "Januar",
@@ -68,7 +69,7 @@ export function genererFireArBakFraSluttAr(sluttAr: number): IAarManeder[] {
   for (let ar = sluttAr - 3; ar <= sluttAr; ar++) {
     const maneder: IManed[] = norskManeder.map((maned) => ({
       maned,
-      inntekt: 5000,
+      inntekt: undefined,
     }));
 
     perioder.push({ aar: ar.toString(), maneder });
@@ -77,9 +78,9 @@ export function genererFireArBakFraSluttAr(sluttAr: number): IAarManeder[] {
   return perioder;
 }
 
-export function finnTidligsteOgSenestePeriode(
-  virkersomhetsinntekt: IVirksomhetsinntekt[]
-): IPeriode {
+// Funksjonen tar en liste med virksomhetsinntekter og finner den tidligste startdatoen (fra)
+// og seneste sluttdatoen (til) blant alle periodene, og returnerer dette som én samlet periode.
+export function finnInntekstPeriode(virkersomhetsinntekt: IVirksomhetsinntekt[]): IPeriode {
   if (!Array.isArray(virkersomhetsinntekt) || virkersomhetsinntekt.length === 0) {
     return { fra: "", til: "" };
   }
@@ -162,7 +163,7 @@ export function delOppIAarperioder(inntektsperiode: IPeriode) {
   return perioder; // Returnerer en liste med tre perioder
 }
 
-export function filtrertOgSummertBelop(inntekter: IInntekt[], periode: IPeriode): number {
+export function beregnTotalInntektForPeriode(inntekter: IInntekt[], periode: IPeriode): number {
   const { fra, til } = periode;
 
   // Filtrerer inntekter som ligger innenfor perioden

@@ -5,17 +5,17 @@ import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formatterNorskTall } from "~/utils/formattering.util";
 import {
   delOppIAarperioder,
-  filtrertOgSummertBelop,
+  beregnTotalInntektForPeriode,
   grupperEtterInntektTypeOgKilde,
   hentInntektTypeTekst,
 } from "~/utils/inntekt.util";
 
 interface IProps {
   virksomhetsinntekt: IVirksomhetsinntekt;
-  helePeriode: IPeriode;
+  inntektsPeriode: IPeriode;
 }
 
-export default function UtvidetIntektTabell({ virksomhetsinntekt, helePeriode }: IProps) {
+export default function UtvidetIntektTabell({ virksomhetsinntekt, inntektsPeriode }: IProps) {
   const gruppertInntektTyper = grupperEtterInntektTypeOgKilde(virksomhetsinntekt.inntekter);
   const indexRouteData = useRouteLoaderData<typeof loader>("routes/_index");
 
@@ -23,7 +23,7 @@ export default function UtvidetIntektTabell({ virksomhetsinntekt, helePeriode }:
     return <>Error</>;
   }
 
-  const deltOppPerioder = delOppIAarperioder(helePeriode);
+  const oppdeltPeriode = delOppIAarperioder(inntektsPeriode);
 
   return (
     <Table>
@@ -49,13 +49,19 @@ export default function UtvidetIntektTabell({ virksomhetsinntekt, helePeriode }:
             <Table.DataCell>{hentInntektTypeTekst(inntekt.inntektType)}</Table.DataCell>
             <Table.DataCell>{inntekt.inntektType}</Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, deltOppPerioder[0]))}
+              {formatterNorskTall(
+                beregnTotalInntektForPeriode(inntekt.inntekter, oppdeltPeriode[0])
+              )}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, deltOppPerioder[1]))}
+              {formatterNorskTall(
+                beregnTotalInntektForPeriode(inntekt.inntekter, oppdeltPeriode[1])
+              )}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(filtrertOgSummertBelop(inntekt.inntekter, deltOppPerioder[2]))}
+              {formatterNorskTall(
+                beregnTotalInntektForPeriode(inntekt.inntekter, oppdeltPeriode[2])
+              )}
             </Table.DataCell>
             <Table.DataCell align="right">
               <Button variant="tertiary" size="small">
@@ -70,17 +76,17 @@ export default function UtvidetIntektTabell({ virksomhetsinntekt, helePeriode }:
           <Table.DataCell className="bold"></Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              filtrertOgSummertBelop(virksomhetsinntekt.inntekter, deltOppPerioder[0])
+              beregnTotalInntektForPeriode(virksomhetsinntekt.inntekter, oppdeltPeriode[0])
             )}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              filtrertOgSummertBelop(virksomhetsinntekt.inntekter, deltOppPerioder[1])
+              beregnTotalInntektForPeriode(virksomhetsinntekt.inntekter, oppdeltPeriode[1])
             )}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              filtrertOgSummertBelop(virksomhetsinntekt.inntekter, deltOppPerioder[2])
+              beregnTotalInntektForPeriode(virksomhetsinntekt.inntekter, oppdeltPeriode[2])
             )}
           </Table.DataCell>
           <Table.DataCell></Table.DataCell>

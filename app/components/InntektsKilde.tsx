@@ -4,15 +4,11 @@ import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
 import type { loader } from "~/routes/_index";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
-import {
-  finnTidligsteOgSenestePeriode,
-  summerInntekter,
-  sumTotalBelopForHelePeriode,
-} from "~/utils/inntekt.util";
+import { summerInntekter } from "~/utils/inntekt.util";
 
 interface IProps {
   virksomhetsinntekt: IVirksomhetsinntekt;
-  helePeriode: IPeriode;
+  inntektsPeriode: IPeriode;
 }
 
 interface IInntekInfo {
@@ -29,7 +25,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
   );
 }
 
-export default function InntektsKilde({ virksomhetsinntekt, helePeriode }: IProps) {
+export default function InntektsKilde({ virksomhetsinntekt, inntektsPeriode }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, inntekter } = virksomhetsinntekt;
 
   const indexRouteData = useRouteLoaderData<typeof loader>("routes/_index");
@@ -39,7 +35,7 @@ export default function InntektsKilde({ virksomhetsinntekt, helePeriode }: IProp
   }
 
   return (
-    <ExpansionCard aria-label="Demo med custom styling">
+    <ExpansionCard aria-label={`Inntekt for ${virksomhetsnavn}`}>
       <ExpansionCard.Header>
         <ExpansionCard.Title>{virksomhetsnavn || virksomhetsnummer}</ExpansionCard.Title>
         <ExpansionCard.Description>
@@ -54,14 +50,16 @@ export default function InntektsKilde({ virksomhetsinntekt, helePeriode }: IProp
             />
             <InntektInfo
               overskrift="Beløp for perioden"
-              // Todo: Bruk tallet fra backend isteden
               verdi={formatterNorskTall(summerInntekter(inntekter))}
             />
           </VStack>
         </ExpansionCard.Description>
       </ExpansionCard.Header>
       <ExpansionCard.Content>
-        <UtvidetIntektTabell virksomhetsinntekt={virksomhetsinntekt} helePeriode={helePeriode} />
+        <UtvidetIntektTabell
+          virksomhetsinntekt={virksomhetsinntekt}
+          inntektsPeriode={inntektsPeriode}
+        />
         <Button size="small" className="mt-4">
           Legg til inntekt
         </Button>

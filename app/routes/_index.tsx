@@ -2,14 +2,13 @@ import { Box, VStack } from "@navikt/ds-react";
 import { redirect, useLoaderData } from "react-router";
 import invariant from "tiny-invariant";
 import { Header } from "~/components/Header";
-import InntektsKilde from "~/components/InntektsKilde";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
+import InntektsKilde from "~/components/InntektsKilde";
 import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
 import { Personalia } from "~/components/Personalia";
 import { hentUklassifisertInntekt } from "~/models/inntekt.server";
+import { finnInntekstPeriode } from "~/utils/inntekt.util";
 import type { Route } from "./+types/_index";
-import { finnTidligsteOgSenestePeriode } from "~/utils/inntekt.util";
-import { useLayoutEffect } from "react";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
@@ -36,7 +35,7 @@ export default function Index() {
     return <>Error page</>;
   }
 
-  const helePeriode = finnTidligsteOgSenestePeriode(uklassifisertInntekt.data.virksomhetsinntekt);
+  const inntektsPeriode = finnInntekstPeriode(uklassifisertInntekt.data.virksomhetsinntekt);
 
   return (
     <main>
@@ -46,6 +45,7 @@ export default function Index() {
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <InntektPerioderOppsummering
             virksomhetsinntekt={uklassifisertInntekt.data.virksomhetsinntekt}
+            inntektsPeriode={inntektsPeriode}
           />
         </Box>
         <Box background="surface-default" padding="6" borderRadius="xlarge">
@@ -54,7 +54,7 @@ export default function Index() {
               <InntektsKilde
                 key={virksomhet.virksomhetsnummer}
                 virksomhetsinntekt={virksomhet}
-                helePeriode={helePeriode}
+                inntektsPeriode={inntektsPeriode}
               />
             ))}
           </VStack>
