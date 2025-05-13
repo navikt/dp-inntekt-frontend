@@ -1,6 +1,7 @@
 export interface IUklassifisertInntekt {
   virksomhetsinntekt: IVirksomhetsinntekt[];
   mottaker: IMottaker;
+  periode: IPeriode;
 }
 
 export interface IVirksomhetsinntekt {

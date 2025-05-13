@@ -1,9 +1,5 @@
-import type {
-  IInntekt,
-  IPeriode,
-  IUklassifisertInntekt,
-  IVirksomhetsinntekt,
-} from "~/types/inntekt.types";
+import type { IInntekt, IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import { norskManeder } from "./constants";
 
 export function sumTotalBelopForVirkesomhet(inntekter: IInntekt[]): number {
   return inntekter.reduce((sum, item) => sum + Number(item.belop), 0);
@@ -49,21 +45,6 @@ export interface IManed {
 
 // Funksjonen lager en liste med fire år (inkludert sluttåret), der hvert år inneholder alle tolv måneder
 export function genererFireArBakFraSluttAr(sluttAr: number): IAarManeder[] {
-  const norskManeder = [
-    "Januar",
-    "Februar",
-    "Mars",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
-
   const perioder: IAarManeder[] = [];
 
   for (let ar = sluttAr - 3; ar <= sluttAr; ar++) {

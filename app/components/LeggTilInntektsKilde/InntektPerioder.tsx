@@ -6,10 +6,11 @@ import { getYear } from "date-fns";
 import { genererFireArBakFraSluttAr, type IAarManeder } from "~/utils/inntekt.util";
 
 interface IProps {
-  periodeSluttAr: number | undefined;
+  periodeSluttAr: number;
+  periodeSluttManed: number;
 }
 
-export function InntektPerioder({ periodeSluttAr }: IProps) {
+export function InntektPerioder({ periodeSluttAr, periodeSluttManed }: IProps) {
   const [perioder, setPerioder] = useState<IAarManeder[]>();
 
   useEffect(() => {

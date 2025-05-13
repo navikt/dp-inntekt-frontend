@@ -1,7 +1,5 @@
 import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
-import { useRouteLoaderData } from "react-router";
 import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
-import type { loader } from "~/routes/_index";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 import { summerInntekter } from "~/utils/inntekt.util";
@@ -27,12 +25,6 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 
 export default function InntektsKilde({ virksomhetsinntekt, inntektsPeriode }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, inntekter } = virksomhetsinntekt;
-
-  const indexRouteData = useRouteLoaderData<typeof loader>("routes/_index");
-
-  if (indexRouteData?.uklassifisertInntekt.status === "error") {
-    return <>Error</>;
-  }
 
   return (
     <ExpansionCard aria-label={`Inntekt for ${virksomhetsnavn}`}>

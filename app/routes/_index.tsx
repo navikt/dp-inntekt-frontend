@@ -7,14 +7,13 @@ import InntektsKilde from "~/components/InntektsKilde";
 import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
 import { Personalia } from "~/components/Personalia";
 import { hentUklassifisertInntekt } from "~/models/inntekt.server";
-import { finnInntekstPeriode } from "~/utils/inntekt.util";
 import type { Route } from "./+types/_index";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
 
   // Todo: fjern hardkodet inntektsId
-  url.searchParams.set("inntektsId", "01ARZ3NDEKTSV4RRFFQ69G5FAV");
+  // url.searchParams.set("inntektsId", "01ARZ3NDEKTSV4RRFFQ69G5FAV");
   const inntektsId = url.searchParams.get("inntektsId");
 
   // Redirect hvis inntekts-ID mangler
@@ -35,8 +34,6 @@ export default function Index() {
     return <>Error page</>;
   }
 
-  const inntektsPeriode = finnInntekstPeriode(uklassifisertInntekt.data.virksomhetsinntekt);
-
   return (
     <main>
       <VStack gap="6">
@@ -45,7 +42,7 @@ export default function Index() {
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <InntektPerioderOppsummering
             virksomhetsinntekt={uklassifisertInntekt.data.virksomhetsinntekt}
-            inntektsPeriode={inntektsPeriode}
+            inntektsPeriode={uklassifisertInntekt.data.periode}
           />
         </Box>
         <Box background="surface-default" padding="6" borderRadius="xlarge">
@@ -54,7 +51,7 @@ export default function Index() {
               <InntektsKilde
                 key={virksomhet.virksomhetsnummer}
                 virksomhetsinntekt={virksomhet}
-                inntektsPeriode={inntektsPeriode}
+                inntektsPeriode={uklassifisertInntekt.data.periode}
               />
             ))}
           </VStack>

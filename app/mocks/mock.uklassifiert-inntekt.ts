@@ -81,4 +81,5 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
     },
   ],
   mottaker: { pnr: "20443502916", navn: "Ola Nordmann" },
+  periode: { fra: "2021-01", til: "2023-12" },
 };

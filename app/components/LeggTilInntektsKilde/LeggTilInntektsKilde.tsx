@@ -12,6 +12,7 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useRef, useState } from "react";
 import { z } from "zod";
+import { norskManeder } from "~/utils/constants";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
@@ -44,6 +45,7 @@ export default function LeggTilInntektsKilde() {
   const arArrayTiArTilbakeITid = Array.from({ length: 11 }, (_, i) => iAr - i);
 
   const [selectedYear, setSelectedYear] = useState(iAr);
+  const [selectedMonth, setselectedMonth] = useState(1);
 
   const inntektForm = useForm({
     submitSource: "state",
@@ -103,9 +105,21 @@ export default function LeggTilInntektsKilde() {
                   <option value="fastlonn">Fastlønn</option>
                   <option value="ElektroniskKom">Elektrisk kommunikasjon</option>
                 </Select>
-                <div>
+                <VStack gap="2">
                   <Select
-                    label="Periode til"
+                    label="Periode slutt måned"
+                    size="small"
+                    onChange={(e) => setselectedMonth(Number(e.target.value))}
+                    value={selectedMonth}
+                  >
+                    {norskManeder.map((maned, _index) => (
+                      <option key={maned} value={_index + 1}>
+                        {maned}
+                      </option>
+                    ))}
+                  </Select>
+                  <Select
+                    label="Periode slutt år"
                     size="small"
                     onChange={(e) => setSelectedYear(Number(e.target.value))}
                     value={selectedYear}
@@ -116,11 +130,11 @@ export default function LeggTilInntektsKilde() {
                       </option>
                     ))}
                   </Select>
-                </div>
+                </VStack>
               </VStack>
               <VStack gap="2">
                 <Label size="small">Periode</Label>
-                <InntektPerioder periodeSluttAr={selectedYear} />
+                <InntektPerioder periodeSluttManed={selectedMonth} periodeSluttAr={selectedYear} />
               </VStack>
             </VStack>
           </Modal.Body>

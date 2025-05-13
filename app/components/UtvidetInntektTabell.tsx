@@ -1,11 +1,9 @@
 import { Button, Table } from "@navikt/ds-react";
-import { useRouteLoaderData } from "react-router";
-import type { loader } from "~/routes/_index";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formatterNorskTall } from "~/utils/formattering.util";
 import {
-  delOppIAarperioder,
   beregnTotalInntektForPeriode,
+  delOppIAarperioder,
   grupperEtterInntektTypeOgKilde,
   hentInntektTypeTekst,
 } from "~/utils/inntekt.util";
@@ -17,12 +15,6 @@ interface IProps {
 
 export default function UtvidetIntektTabell({ virksomhetsinntekt, inntektsPeriode }: IProps) {
   const gruppertInntektTyper = grupperEtterInntektTypeOgKilde(virksomhetsinntekt.inntekter);
-  const indexRouteData = useRouteLoaderData<typeof loader>("routes/_index");
-
-  if (indexRouteData?.uklassifisertInntekt.status === "error") {
-    return <>Error</>;
-  }
-
   const oppdeltPeriode = delOppIAarperioder(inntektsPeriode);
 
   return (
