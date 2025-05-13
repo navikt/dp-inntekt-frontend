@@ -1,5 +1,9 @@
+import { differenceInMonths, format } from "date-fns";
+import { nb } from "date-fns/locale";
+import { parse } from "date-fns/parse";
 import type { IInntekt, IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { norskManeder } from "./constants";
+import { capitalize } from "./generell.util";
 
 export function sumTotalBelopForVirkesomhet(inntekter: IInntekt[]): number {
   return inntekter.reduce((sum, item) => sum + Number(item.belop), 0);
@@ -40,7 +44,8 @@ export interface IAarManeder {
 
 export interface IManed {
   maned: string;
-  inntekt?: number;
+  aar?: number;
+  readOnly?: boolean;
 }
 
 // Funksjonen lager en liste med fire år (inkludert sluttåret), der hvert år inneholder alle tolv måneder
@@ -57,6 +62,53 @@ export function genererFireArBakFraSluttAr(sluttAr: number): IAarManeder[] {
   }
 
   return perioder;
+}
+
+// Genererer 4 år med 12 måneder hver, der måneder utenfor perioden markeres som readOnly
+export function genererFireArTilOgMed(periode: IPeriode): IAarManeder[] {
+  // Validerer at inputperioden er nøyaktig 36 måneder lang
+  if (!erPeriode36Maneder(periode)) {
+    throw new Error("Periode er ikke 36 måneder");
+  }
+
+  const sluttAar = parseInt(periode.til.slice(0, 4), 10);
+  const startAar = sluttAar - 3;
+
+  const aarManeder: IAarManeder[] = [];
+
+  for (let aar = startAar; aar <= sluttAar; aar++) {
+    const maneder: IManed[] = [];
+
+    for (let mnd = 0; mnd < 12; mnd++) {
+      const dato = new Date(aar, mnd, 1); // f.eks. 2023-11-01
+      const ym = format(dato, "yyyy-MM");
+
+      const readOnly = ym < periode.fra || ym > periode.til;
+      const manedNavn = format(dato, "MMMM", { locale: nb });
+
+      maneder.push({
+        maned: capitalize(manedNavn),
+        aar,
+        readOnly,
+      });
+    }
+
+    aarManeder.push({
+      aar: aar.toString(),
+      maneder,
+    });
+  }
+
+  return aarManeder;
+}
+
+// Returnerer true hvis perioden dekker nøyaktig 36 måneder (inkludert fra- og til-måneden)
+export function erPeriode36Maneder(periode: IPeriode): boolean {
+  const fraDato = parse(periode.fra, "yyyy-MM", new Date());
+  const tilDato = parse(periode.til, "yyyy-MM", new Date());
+
+  const antallManeder = differenceInMonths(tilDato, fraDato) + 1;
+  return antallManeder === 36;
 }
 
 // Funksjonen tar en liste med virksomhetsinntekter og finner den tidligste startdatoen (fra)
@@ -144,6 +196,7 @@ export function delOppIAarperioder(inntektsperiode: IPeriode) {
   return perioder; // Returnerer en liste med tre perioder
 }
 
+// Beregner total inntekt for en gitt periode ved å summere beløp innenfor fra–til
 export function beregnTotalInntektForPeriode(inntekter: IInntekt[], periode: IPeriode): number {
   const { fra, til } = periode;
 

@@ -7,3 +7,7 @@ export function erEnKvinne(pnr: string) {
 
   return individSiffer % 2 === 0;
 }
+
+export function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

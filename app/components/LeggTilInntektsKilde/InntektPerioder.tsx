@@ -1,25 +1,23 @@
 import { TextField } from "@navikt/ds-react";
-
-import styles from "./InntektPerioder.module.css";
-import { useEffect, useState } from "react";
 import { getYear } from "date-fns";
-import { genererFireArBakFraSluttAr, type IAarManeder } from "~/utils/inntekt.util";
+import { useEffect, useState } from "react";
+import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
+import { genererFireArTilOgMed, type IAarManeder } from "~/utils/inntekt.util";
+import styles from "./InntektPerioder.module.css";
 
-interface IProps {
-  periodeSluttAr: number;
-  periodeSluttManed: number;
-}
-
-export function InntektPerioder({ periodeSluttAr, periodeSluttManed }: IProps) {
+export function InntektPerioder() {
   const [perioder, setPerioder] = useState<IAarManeder[]>();
+  const { uklassifisertInntekt } = useTypedRouteLoaderData("routes/_index");
 
   useEffect(() => {
     lagPerioder();
-  }, [periodeSluttAr]);
+  }, []);
+
+  // @ts-ignore
+  const periode = uklassifisertInntekt.data.periode;
 
   function lagPerioder() {
-    const iAr = getYear(new Date());
-    const generertPerioder = genererFireArBakFraSluttAr(periodeSluttAr || iAr);
+    const generertPerioder = genererFireArTilOgMed(periode);
     setPerioder(generertPerioder);
   }
 
@@ -30,7 +28,7 @@ export function InntektPerioder({ periodeSluttAr, periodeSluttManed }: IProps) {
           <div className="bold">{periode.aar}</div>
           <div className={styles.manederContainer}>
             {periode.maneder.map((maned, _index) => (
-              <TextField key={_index} label={maned.maned} size="small" />
+              <TextField key={_index} label={maned.maned} size="small" readOnly={maned.readOnly} />
             ))}
           </div>
         </div>
