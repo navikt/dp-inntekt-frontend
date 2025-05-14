@@ -2,7 +2,6 @@ import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
 import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
-import { summerInntekter } from "~/utils/inntekt.util";
 
 interface IProps {
   virksomhetsinntekt: IVirksomhetsinntekt;
@@ -24,7 +23,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 }
 
 export default function InntektsKilde({ virksomhetsinntekt, inntektsPeriode }: IProps) {
-  const { virksomhetsnummer, virksomhetsnavn, periode, inntekter } = virksomhetsinntekt;
+  const { virksomhetsnummer, virksomhetsnavn, periode, totalBeløp } = virksomhetsinntekt;
 
   return (
     <ExpansionCard aria-label={`Inntekt for ${virksomhetsnavn}`}>
@@ -42,7 +41,7 @@ export default function InntektsKilde({ virksomhetsinntekt, inntektsPeriode }: I
             />
             <InntektInfo
               overskrift="Beløp for perioden"
-              verdi={formatterNorskTall(summerInntekter(inntekter))}
+              verdi={formatterNorskTall(Number(totalBeløp))}
             />
           </VStack>
         </ExpansionCard.Description>

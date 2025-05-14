@@ -18,7 +18,7 @@
   gap: var(--a-spacing-4);
 }
 
-@media only screen and (min-width: 890px) {
+@media only screen and (min-width: 970px) {
   .periodeContainer {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }

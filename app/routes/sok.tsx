@@ -18,7 +18,7 @@ export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const inntektsId = formData.get("inntektsId");
 
-  invariant(inntektsId, " Mangler inntekts-ID");
+  invariant(inntektsId, "Mangler inntekts-ID");
 
   return redirect(`/?inntektsId=${inntektsId}`);
 }

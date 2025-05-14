@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { z } from "zod";
 import { InntektPerioder } from "./InntektPerioder";
 
@@ -40,9 +40,9 @@ const schema = z.object({
 export default function LeggTilInntektsKilde() {
   const ref = useRef<HTMLDialogElement>(null);
 
-  const inntektForm = useForm({
+  const form = useForm({
     submitSource: "state",
-    method: "put",
+    method: "post",
     schema,
   });
 
@@ -59,10 +59,10 @@ export default function LeggTilInntektsKilde() {
       <Modal
         ref={ref}
         header={{ heading: "Inntektskilde og inntekt" }}
-        width={"1024px"}
+        width={"1150px"}
         size="small"
       >
-        <form {...inntektForm.getFormProps()}>
+        <form {...form.getFormProps()}>
           <Modal.Body>
             <VStack gap="4">
               <VStack gap="4" className={styles.inntektInputContainer}>
@@ -70,7 +70,7 @@ export default function LeggTilInntektsKilde() {
                   name="inntektskilde"
                   legend="Type inntektskilde"
                   size="small"
-                  error={inntektForm.error("inntektskilde")}
+                  error={form.error("inntektskilde")}
                 >
                   <Radio value="norskVirksomhet">Norsk virksomhet</Radio>
                   <Radio value="privatPerson">Privat person</Radio>
@@ -79,19 +79,19 @@ export default function LeggTilInntektsKilde() {
                   name="organisasjonsnavn"
                   label="Organisasjonsnavn"
                   size="small"
-                  error={inntektForm.error("organisasjonsnavn")}
+                  error={form.error("organisasjonsnavn")}
                 />
                 <TextField
                   name="organisasjonsnummer"
                   label="Organisasjonsnummer"
                   size="small"
-                  error={inntektForm.error("organisasjonsnummer")}
+                  error={form.error("organisasjonsnummer")}
                 />
                 <Select
                   name="inntektstype"
                   label="Inntektstype"
                   size="small"
-                  error={inntektForm.error("inntektstype")}
+                  error={form.error("inntektstype")}
                 >
                   <option value="">Velg inntekstype</option>
                   <option value="timelonn">Timelønn</option>
@@ -106,7 +106,9 @@ export default function LeggTilInntektsKilde() {
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <Button type="submit">Lagre</Button>
+            <Button type="submit" loading={form.formState.isSubmitting}>
+              Lagre
+            </Button>
             <Button type="button" variant="secondary" onClick={() => ref.current?.close()}>
               Avbryt
             </Button>

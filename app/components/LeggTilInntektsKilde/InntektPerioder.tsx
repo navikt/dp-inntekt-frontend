@@ -1,12 +1,14 @@
 import { TextField } from "@navikt/ds-react";
-import { getYear } from "date-fns";
+import { format, getYear } from "date-fns";
 import { useEffect, useState } from "react";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import { genererFireArTilOgMed, type IAarManeder } from "~/utils/inntekt.util";
+import { genererFireArTilOgMed, type IGenerertePeriode } from "~/utils/inntekt.util";
 import styles from "./InntektPerioder.module.css";
+import { nb } from "date-fns/locale/nb";
+import { capitalize } from "~/utils/generell.util";
 
 export function InntektPerioder() {
-  const [perioder, setPerioder] = useState<IAarManeder[]>();
+  const [perioder, setPerioder] = useState<IGenerertePeriode[]>();
   const { uklassifisertInntekt } = useTypedRouteLoaderData("routes/_index");
 
   useEffect(() => {
@@ -24,11 +26,17 @@ export function InntektPerioder() {
   return (
     <div className={styles.periodeContainer}>
       {perioder?.map((periode) => (
-        <div key={periode.aar} className={styles.periode}>
-          <div className="bold">{periode.aar}</div>
+        <div key={periode.ar} className={styles.periode}>
+          <div className="bold">{periode.ar}</div>
           <div className={styles.manederContainer}>
-            {periode.maneder.map((maned, _index) => (
-              <TextField key={_index} label={maned.maned} size="small" readOnly={maned.readOnly} />
+            {periode.maneder.map((month) => (
+              <TextField
+                key={month.dato}
+                name={month.dato}
+                label={capitalize(format(month.dato, "MMMM", { locale: nb }))}
+                size="small"
+                readOnly={month.readOnly}
+              />
             ))}
           </div>
         </div>

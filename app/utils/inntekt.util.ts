@@ -1,13 +1,6 @@
 import { differenceInMonths, format } from "date-fns";
-import { nb } from "date-fns/locale";
 import { parse } from "date-fns/parse";
 import type { IInntekt, IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
-import { norskManeder } from "./constants";
-import { capitalize } from "./generell.util";
-
-export function sumTotalBelopForVirkesomhet(inntekter: IInntekt[]): number {
-  return inntekter.reduce((sum, item) => sum + Number(item.belop), 0);
-}
 
 export function sumTotalBelopForHelePeriode(virksomhetsinntekter: IVirksomhetsinntekt[]): number {
   return virksomhetsinntekter.reduce((total, virksomhet) => {
@@ -27,75 +20,49 @@ const inntektTypeTekst: Record<string, string> = {
 };
 
 export function hentInntektTypeTekst(type: string): string {
-  return inntektTypeTekst[type] ?? "Ukjent inntektstype";
+  return inntektTypeTekst[type] || type;
 }
 
-export function summerInntekter(inntekter: IInntekt[]) {
-  return inntekter.reduce((sum, inntekt) => {
-    const belop = parseFloat(inntekt.belop);
-    return sum + (isNaN(belop) ? 0 : belop);
-  }, 0);
+export interface IGenerertePeriode {
+  ar: string;
+  maneder: IGenerertManed[];
 }
 
-export interface IAarManeder {
-  aar: string;
-  maneder: IManed[];
-}
-
-export interface IManed {
-  maned: string;
-  aar?: number;
-  readOnly?: boolean;
-}
-
-// Funksjonen lager en liste med fire år (inkludert sluttåret), der hvert år inneholder alle tolv måneder
-export function genererFireArBakFraSluttAr(sluttAr: number): IAarManeder[] {
-  const perioder: IAarManeder[] = [];
-
-  for (let ar = sluttAr - 3; ar <= sluttAr; ar++) {
-    const maneder: IManed[] = norskManeder.map((maned) => ({
-      maned,
-      inntekt: undefined,
-    }));
-
-    perioder.push({ aar: ar.toString(), maneder });
-  }
-
-  return perioder;
+export interface IGenerertManed {
+  dato: string;
+  readOnly: boolean;
 }
 
 // Genererer 4 år med 12 måneder hver, der måneder utenfor perioden markeres som readOnly
-export function genererFireArTilOgMed(periode: IPeriode): IAarManeder[] {
+export function genererFireArTilOgMed(periode: IPeriode): IGenerertePeriode[] {
   // Validerer at inputperioden er nøyaktig 36 måneder lang
   if (!erPeriode36Maneder(periode)) {
     throw new Error("Periode er ikke 36 måneder");
   }
 
-  const sluttAar = parseInt(periode.til.slice(0, 4), 10);
-  const startAar = sluttAar - 3;
+  const periodeTilYear = parseInt(periode.til.slice(0, 4), 10);
+  const periodeStartYear = periodeTilYear - 3;
 
-  const aarManeder: IAarManeder[] = [];
+  const aarManeder: IGenerertePeriode[] = [];
 
-  for (let aar = startAar; aar <= sluttAar; aar++) {
-    const maneder: IManed[] = [];
+  for (let year = periodeStartYear; year <= periodeTilYear; year++) {
+    const months: IGenerertManed[] = [];
 
-    for (let mnd = 0; mnd < 12; mnd++) {
-      const dato = new Date(aar, mnd, 1); // f.eks. 2023-11-01
-      const ym = format(dato, "yyyy-MM");
+    for (let month = 0; month < 12; month++) {
+      const date = new Date(year, month, 1); // f.eks. 2023-11-01
+      const yearAndMonth = format(date, "yyyy-MM");
 
-      const readOnly = ym < periode.fra || ym > periode.til;
-      const manedNavn = format(dato, "MMMM", { locale: nb });
+      const readOnly = yearAndMonth < periode.fra || yearAndMonth > periode.til;
 
-      maneder.push({
-        maned: capitalize(manedNavn),
-        aar,
+      months.push({
+        dato: new Date(year, month + 1, 1).toISOString().slice(0, 7),
         readOnly,
       });
     }
 
     aarManeder.push({
-      aar: aar.toString(),
-      maneder,
+      ar: year.toString(),
+      maneder: months,
     });
   }
 

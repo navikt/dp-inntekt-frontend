@@ -27,6 +27,14 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { uklassifisertInntekt };
 }
 
+export async function action({ request }: Route.ActionArgs) {
+  let formData = await request.formData();
+
+  console.log(`🔥 formData :`, formData);
+
+  return {};
+}
+
 export default function Index() {
   const { uklassifisertInntekt } = useLoaderData<typeof loader>();
 
