@@ -17,6 +17,43 @@ export interface INetworkResponseError {
   };
 }
 
+export async function lagreUklassifisertInntekt(
+  request: Request,
+  inntektId: string
+): Promise<INetworkResponse<string>> {
+  const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}`;
+  const onBehalfOfToken = await getDPInntektOboToken(request);
+
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${onBehalfOfToken}`,
+      connection: "keep-alive",
+    },
+  });
+
+  if (!response.ok) {
+    return {
+      status: "error",
+      error: {
+        statusCode: response.status,
+        statusText: "Feil ved uthenting av inntekt",
+      },
+    };
+  }
+
+  const data: string = await response.text();
+
+  return {
+    status: "success",
+    data,
+  };
+}
+
+
 export async function hentUklassifisertInntekt(
   request: Request,
   inntektId: string

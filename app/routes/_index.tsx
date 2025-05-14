@@ -6,33 +6,40 @@ import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import InntektsKilde from "~/components/InntektsKilde";
 import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
 import { Personalia } from "~/components/Personalia";
-import { hentUklassifisertInntekt } from "~/models/inntekt.server";
+import { hentUklassifisertInntekt, lagreUklassifisertInntekt } from "~/models/inntekt.server";
 import type { Route } from "./+types/_index";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
 
-  // Todo: fjern hardkodet inntektsId
-  // url.searchParams.set("inntektsId", "01ARZ3NDEKTSV4RRFFQ69G5FAV");
-  const inntektsId = url.searchParams.get("inntektsId");
-
+  // Todo: fjern hardkodet inntektId
+  url.searchParams.set("inntektId", "01ARZ3NDEKTSV4RRFFQ69G5FAV");
+  const inntektId = url.searchParams.get("inntektId");
   // Redirect hvis inntekts-ID mangler
-  if (!inntektsId) {
+  if (!inntektId) {
     return redirect("/sok");
   }
 
-  invariant(inntektsId, "Mangler inntekts-ID");
-  const uklassifisertInntekt = await hentUklassifisertInntekt(request, inntektsId);
+  invariant(inntektId, "Mangler inntekts-ID");
+  const uklassifisertInntekt = await hentUklassifisertInntekt(request, inntektId);
 
   return { uklassifisertInntekt };
 }
 
 export async function action({ request }: Route.ActionArgs) {
-  let formData = await request.formData();
+  const formData = await request.formData();
+  
+  const url = new URL(request.url);
+  const inntektId = url.searchParams.get("inntektId");
 
-  console.log(`🔥 formData :`, formData);
+  invariant(inntektId, "Mangler inntekts-ID");
+  const oppdatertInntektId = await lagreUklassifisertInntekt(request, inntektId)
+  if(oppdatertInntektId.status === "success") {
+    console.log("oppdatertInntekt: ", oppdatertInntektId)
+    return redirect(`/?inntektId=${oppdatertInntektId.data}`);
+  }
 
-  return {};
+  return {}
 }
 
 export default function Index() {

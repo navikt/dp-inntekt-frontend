@@ -7,20 +7,20 @@ import { Header } from "~/components/Header";
 import type { Route } from "./+types/sok";
 
 const schema = z.object({
-  inntektsId: z
+  inntektId: z
     .string({
-      required_error: "Inntekts-ID er påkrevd",
+      required_error: "Inntekt-ID er påkrevd",
     })
-    .ulid({ message: "Ugyldig inntekts-ID format" }),
+    .ulid({ message: "Ugyldig inntekt-ID format" }),
 });
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
-  const inntektsId = formData.get("inntektsId");
+  const inntektId = formData.get("inntektId");
 
-  invariant(inntektsId, "Mangler inntekts-ID");
+  invariant(inntektId, "Mangler inntekt-ID");
 
-  return redirect(`/?inntektsId=${inntektsId}`);
+  return redirect(`/?inntektId=${inntektId}`);
 }
 
 export default function Sok() {
@@ -42,10 +42,10 @@ export default function Sok() {
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <form {...form.getFormProps()}>
             <TextField
-              name="inntektsId"
+              name="inntektId"
               label="Søk etter inntekt"
               placeholder="Eks: 01ARZ3NDEKTSV4RRFFQ69G5FAV"
-              error={form.error("inntektsId")}
+              error={form.error("inntektId")}
             />
             <Button type="submit" variant="primary" className="mt-4">
               Søk inntekt

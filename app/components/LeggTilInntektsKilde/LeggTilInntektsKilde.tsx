@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { InntektPerioder } from "./InntektPerioder";
 
@@ -45,6 +45,12 @@ export default function LeggTilInntektsKilde() {
     method: "post",
     schema,
   });
+
+  useEffect(() => {
+    if(form.formState.hasBeenSubmitted) {
+       ref.current?.close();
+     }
+   }, [form.formState]);
 
   return (
     <div className="mt-6">
