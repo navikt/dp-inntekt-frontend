@@ -16,7 +16,7 @@ export async function lagreInntekt(request: Request, inntektId: string) {
   });
 }
 
-export async function hentInntekter(request: Request, inntektId: string) {
+export async function hentInntek(request: Request, inntektId: string) {
   const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
 

@@ -9,8 +9,14 @@ interface IProps {
 }
 
 export function Personalia({ mottaker }: IProps) {
-  // Todo: Finn ut om vi har denne data
-  const sisteOppdatert = "21.03.2025, kl 12:04";
+  const date = new Date();
+  const sisteHentet = date.toLocaleDateString("no-NO", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
@@ -25,8 +31,8 @@ export function Personalia({ mottaker }: IProps) {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
-          <BodyShort size="small">{`Sist oppdatert: ${sisteOppdatert}`}</BodyShort>
-          <Button variant="secondary" size="small">
+          <BodyShort size="small">{`Siste hentet: ${sisteHentet}`}</BodyShort>
+          <Button variant="secondary" size="small" onClick={() => window.location.reload()}>
             Hent inntekter på nytt
           </Button>
         </HStack>

@@ -5,7 +5,7 @@ import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
 import { Personalia } from "~/components/Personalia";
-import { hentInntekter as hentInntek, lagreInntekt } from "~/models/inntekt.server";
+import { hentInntek, lagreInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/_index";
 import Virksomhet from "~/components/Virksomhet";
@@ -32,24 +32,24 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 // Lagring av inntekten
 // Denne funksjonen håndterer lagring av inntekten når brukeren sender inn skjemaet
-export async function action({ request }: Route.ActionArgs) {
-  const url = new URL(request.url);
-  const inntektId = url.searchParams.get("inntektId");
-  invariant(inntektId, "Mangler inntekts-ID");
+export async function action({ request, params }: Route.ActionArgs) {
+  invariant(params.inntektId, "Mangler inntekts-ID");
 
   // const formData = await request.formData();
   // console.log("formData", formData);
 
-  const oppdatertInntekResponse = await lagreInntekt(request, inntektId);
+  const lagreInntektResponse = await lagreInntekt(request, params.inntektId);
 
-  if (!oppdatertInntekResponse.ok) {
+  if (!lagreInntektResponse.ok) {
     throw new Response("Feil ved lagring av inntekt", {
-      status: oppdatertInntekResponse.status,
-      statusText: oppdatertInntekResponse.statusText,
+      status: lagreInntektResponse.status,
+      statusText: lagreInntektResponse.statusText,
     });
   }
 
-  return redirect(`/inntektId/${oppdatertInntekResponse.text()}`);
+  const nyInntektId = await lagreInntektResponse.json();
+
+  return redirect(`/inntektId/${nyInntektId}`);
 }
 
 export default function Inntekt() {

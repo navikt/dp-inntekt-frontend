@@ -70,6 +70,7 @@ export default function LeggTilInntektsKilde() {
     submitSource: "state",
     method: "post",
     schema: hentValideringSchema(genertePerioder),
+    action: "/inntektId/$inntektId",
   });
 
   useEffect(() => {
