@@ -28,18 +28,19 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
-  
+
   const url = new URL(request.url);
   const inntektId = url.searchParams.get("inntektId");
 
   invariant(inntektId, "Mangler inntekts-ID");
-  const oppdatertInntektId = await lagreUklassifisertInntekt(request, inntektId)
-  if(oppdatertInntektId.status === "success") {
-    console.log("oppdatertInntekt: ", oppdatertInntektId)
+
+  const oppdatertInntektId = await lagreUklassifisertInntekt(request, inntektId);
+  if (oppdatertInntektId.status === "success") {
+    console.log("oppdatertInntekt: ", oppdatertInntektId);
     return redirect(`/?inntektId=${oppdatertInntektId.data}`);
   }
 
-  return {}
+  return {};
 }
 
 export default function Index() {

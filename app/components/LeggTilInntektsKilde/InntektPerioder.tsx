@@ -1,28 +1,16 @@
 import { TextField } from "@navikt/ds-react";
-import { format, getYear } from "date-fns";
-import { useEffect, useState } from "react";
-import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import { genererFireArTilOgMed, type IGenerertePeriode } from "~/utils/inntekt.util";
-import styles from "./InntektPerioder.module.css";
+import { format } from "date-fns";
 import { nb } from "date-fns/locale/nb";
 import { capitalize } from "~/utils/generell.util";
+import { type IGenerertePeriode } from "~/utils/inntekt.util";
+import styles from "./InntektPerioder.module.css";
 
-export function InntektPerioder() {
-  const [perioder, setPerioder] = useState<IGenerertePeriode[]>();
-  const { uklassifisertInntekt } = useTypedRouteLoaderData("routes/_index");
+interface IProps {
+  perioder: IGenerertePeriode[];
+  form: any;
+}
 
-  useEffect(() => {
-    lagPerioder();
-  }, []);
-
-  // @ts-ignore
-  const periode = uklassifisertInntekt.data.periode;
-
-  function lagPerioder() {
-    const generertPerioder = genererFireArTilOgMed(periode);
-    setPerioder(generertPerioder);
-  }
-
+export function InntektPerioder({ perioder, form }: IProps) {
   return (
     <div className={styles.periodeContainer}>
       {perioder?.map((periode) => (
@@ -36,6 +24,7 @@ export function InntektPerioder() {
                 label={capitalize(format(month.dato, "MMMM", { locale: nb }))}
                 size="small"
                 readOnly={month.readOnly}
+                error={form.error(month.dato)}
               />
             ))}
           </div>

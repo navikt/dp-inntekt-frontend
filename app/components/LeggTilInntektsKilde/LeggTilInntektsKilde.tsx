@@ -10,47 +10,84 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { InntektPerioder } from "./InntektPerioder";
+import { genererFireArTilOgMed, type IGenerertePeriode } from "~/utils/inntekt.util";
+import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 
 import styles from "./LeggTilInntektskilde.module.css";
 
-const schema = z.object({
-  inntektskilde: z.string({
-    required_error: "Inntektskilde er påkrevd",
-  }),
-  organisasjonsnavn: z
-    .string({
-      required_error: "Organisasjonsnavn er påkrevd",
-    })
-    .min(1, "Organisasjonsnavn er påkrevd")
-    .max(50, "Organisasjonsnavn er for langt"),
-  organisasjonsnummer: z
-    .string({
-      required_error: "Organisasjonsnummer er påkrevd",
-    })
-    .min(1, "Organisasjonsnummer er påkrevd")
-    .max(50, "Organisasjonsnummer er for langt"),
-  inntektstype: z.string({
-    required_error: "Inntektstype er påkrevd",
-  }),
-});
+function hentSchema(perioder?: IGenerertePeriode[]) {
+  const baseSchema = z.object({
+    inntektskilde: z.string({
+      required_error: "Inntektskilde er påkrevd",
+    }),
+    organisasjonsnavn: z
+      .string({
+        required_error: "Organisasjonsnavn er påkrevd",
+      })
+      .min(1, "Organisasjonsnavn er påkrevd")
+      .max(50, "Organisasjonsnavn er for langt"),
+    organisasjonsnummer: z
+      .string({
+        required_error: "Organisasjonsnummer er påkrevd",
+      })
+      .min(1, "Organisasjonsnummer er påkrevd")
+      .max(50, "Organisasjonsnummer er for langt"),
+    inntektstype: z.string({
+      required_error: "Inntektstype er påkrevd",
+    }),
+  });
+
+  const inntekter: Record<string, z.ZodTypeAny> = {};
+
+  perioder?.forEach((year) => {
+    year.maneder.forEach((maaned) => {
+      if (!maaned.readOnly) {
+        inntekter[maaned.dato] = z
+          .string()
+          .trim()
+          .optional()
+          .refine((val) => val === undefined || val === "" || !isNaN(Number(val)), {
+            message: `Ikke et gyldig tall`,
+          })
+          .refine((val) => val === undefined || val === "" || Number(val) > 1, {
+            message: `Tallet må være større enn 1`,
+          });
+      }
+    });
+  });
+
+  return baseSchema.extend(inntekter);
+}
 
 export default function LeggTilInntektsKilde() {
+  const [perioder, setPerioder] = useState<IGenerertePeriode[]>();
+  const { uklassifisertInntekt } = useTypedRouteLoaderData("routes/_index");
   const ref = useRef<HTMLDialogElement>(null);
-
   const form = useForm({
     submitSource: "state",
     method: "post",
-    schema,
+    schema: hentSchema(perioder),
   });
 
   useEffect(() => {
-    if(form.formState.hasBeenSubmitted) {
-       ref.current?.close();
-     }
-   }, [form.formState]);
+    lagPerioder();
+  }, []);
+
+  // useEffect(() => {
+  //   if (form.formState.hasBeenSubmitted) {
+  //     ref.current?.close();
+  //   }
+  // }, [form.formState]);
+
+  function lagPerioder() {
+    if (uklassifisertInntekt.status === "success") {
+      const generertPerioder = genererFireArTilOgMed(uklassifisertInntekt.data.periode);
+      setPerioder(generertPerioder);
+    }
+  }
 
   return (
     <div className="mt-6">
@@ -107,7 +144,7 @@ export default function LeggTilInntektsKilde() {
               </VStack>
               <VStack gap="2">
                 <Label size="small">Periode</Label>
-                <InntektPerioder />
+                {perioder && <InntektPerioder perioder={perioder} form={form} />}
               </VStack>
             </VStack>
           </Modal.Body>
