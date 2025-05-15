@@ -13,7 +13,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
 
   // Todo: fjern hardkodet inntektId
-  url.searchParams.set("inntektId", "01ARZ3NDEKTSV4RRFFQ69G5FAV");
+  // url.searchParams.set("inntektId", "01ARZ3NDEKTSV4RRFFQ69G5FAV");
   const inntektId = url.searchParams.get("inntektId");
   // Redirect hvis inntekts-ID mangler
   if (!inntektId) {
@@ -22,6 +22,16 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   invariant(inntektId, "Mangler inntekts-ID");
   const uklassifisertInntekt = await hentUklassifisertInntekt(request, inntektId);
+
+  console.log(uklassifisertInntekt.status);
+
+  if (uklassifisertInntekt.status === "error") {
+    console.log("Error: ", uklassifisertInntekt.error);
+  }
+
+  if (uklassifisertInntekt.status === "success") {
+    console.log("Success: ", uklassifisertInntekt.data);
+  }
 
   return { uklassifisertInntekt };
 }
