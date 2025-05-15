@@ -1,5 +1,5 @@
 import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
-import UtvidetIntektTabell from "~/components/UtvidetInntektTabell";
+import VirsomhetInntekter from "~/components/VirsomhetInntekter";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 
@@ -47,7 +47,7 @@ export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
         </ExpansionCard.Description>
       </ExpansionCard.Header>
       <ExpansionCard.Content>
-        <UtvidetIntektTabell virksomhet={virksomhet} inntektsPeriode={inntektsPeriode} />
+        <VirsomhetInntekter virksomhet={virksomhet} inntektsPeriode={inntektsPeriode} />
         <Button size="small" className="mt-4">
           Legg til inntekt
         </Button>

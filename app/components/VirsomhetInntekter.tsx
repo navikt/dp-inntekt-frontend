@@ -2,9 +2,9 @@ import { Button, Table } from "@navikt/ds-react";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formatterNorskTall } from "~/utils/formattering.util";
 import {
-  beregnTotalInntektForPeriode,
-  delOppIAarperioder,
-  grupperEtterInntektTypeOgKilde,
+  beregnTotalInntektForEnPeriode,
+  delOppPeriodeTilTrePerioder,
+  grupperEtterInntektType,
   hentInntektTypeTekst,
 } from "~/utils/inntekt.util";
 
@@ -13,9 +13,12 @@ interface IProps {
   inntektsPeriode: IPeriode;
 }
 
-export default function UtvidetIntektTabell({ virksomhet, inntektsPeriode }: IProps) {
-  const gruppertInntektTyper = grupperEtterInntektTypeOgKilde(virksomhet.inntekter);
-  const oppdeltPeriode = delOppIAarperioder(inntektsPeriode);
+export default function VirsomhetInntekter({ virksomhet, inntektsPeriode }: IProps) {
+  const gruppertInntektTyper = grupperEtterInntektType(virksomhet.inntekter);
+  const oppdeltPerioder = delOppPeriodeTilTrePerioder(inntektsPeriode);
+  const periode1 = oppdeltPerioder[0];
+  const periode2 = oppdeltPerioder[1];
+  const periode3 = oppdeltPerioder[2];
 
   return (
     <Table>
@@ -37,23 +40,17 @@ export default function UtvidetIntektTabell({ virksomhet, inntektsPeriode }: IPr
       </Table.Header>
       <Table.Body>
         {gruppertInntektTyper.map((inntekt) => (
-          <Table.Row key={inntekt.inntektskilde}>
+          <Table.Row key={inntekt.inntektType}>
             <Table.DataCell>{hentInntektTypeTekst(inntekt.inntektType)}</Table.DataCell>
             <Table.DataCell>{inntekt.inntektType}</Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(
-                beregnTotalInntektForPeriode(inntekt.inntekter, oppdeltPeriode[0])
-              )}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode1))}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(
-                beregnTotalInntektForPeriode(inntekt.inntekter, oppdeltPeriode[1])
-              )}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode2))}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(
-                beregnTotalInntektForPeriode(inntekt.inntekter, oppdeltPeriode[2])
-              )}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode3))}
             </Table.DataCell>
             <Table.DataCell align="right">
               <Button variant="tertiary" size="small">
@@ -67,19 +64,13 @@ export default function UtvidetIntektTabell({ virksomhet, inntektsPeriode }: IPr
           <Table.DataCell className="bold">Totalt</Table.DataCell>
           <Table.DataCell className="bold"></Table.DataCell>
           <Table.DataCell className="bold" align="right">
-            {formatterNorskTall(
-              beregnTotalInntektForPeriode(virksomhet.inntekter, oppdeltPeriode[0])
-            )}
+            {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode1))}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
-            {formatterNorskTall(
-              beregnTotalInntektForPeriode(virksomhet.inntekter, oppdeltPeriode[1])
-            )}
+            {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode2))}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
-            {formatterNorskTall(
-              beregnTotalInntektForPeriode(virksomhet.inntekter, oppdeltPeriode[2])
-            )}
+            {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode3))}
           </Table.DataCell>
           <Table.DataCell></Table.DataCell>
         </Table.Row>

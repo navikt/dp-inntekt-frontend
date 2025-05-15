@@ -15,7 +15,7 @@ export function InntektPerioderOppsummering({ virksomheter, inntektsPeriode }: I
   return (
     <Box padding="2">
       <VStack>
-        <BodyShort>Innteksperiode</BodyShort>
+        <BodyShort>Inntektsperiode</BodyShort>
         <BodyShort>
           {formaterNorskDato(fra)} - {formaterNorskDato(til)}
         </BodyShort>

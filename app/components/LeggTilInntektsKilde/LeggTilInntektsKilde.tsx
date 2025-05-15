@@ -13,7 +13,7 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import { genererFireArTilOgMed, type IGenerertePeriode } from "~/utils/inntekt.util";
+import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
@@ -83,7 +83,7 @@ export default function LeggTilInntektsKilde() {
   // }, [form.formState]);
 
   function lagPerioder() {
-    const generertPerioder = genererFireArTilOgMed(periode);
+    const generertPerioder = generereFirePerioder(periode);
     setPerioder(generertPerioder);
   }
 
