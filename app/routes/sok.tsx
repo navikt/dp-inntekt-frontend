@@ -20,7 +20,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   invariant(inntektId, "Mangler inntekt-ID");
 
-  return redirect(`/?inntektId=${inntektId}`);
+  return redirect(`/inntektId/${inntektId}`);
 }
 
 export default function Sok() {
@@ -43,8 +43,7 @@ export default function Sok() {
           <form {...form.getFormProps()}>
             <TextField
               name="inntektId"
-              label="Søk etter inntekt"
-              placeholder="Eks: 01ARZ3NDEKTSV4RRFFQ69G5FAV"
+              label="Søk etter inntekt. Eks: 01ARZ3NDEKTSV4RRFFQ69G5FAV"
               error={form.error("inntektId")}
             />
             <Button type="submit" variant="primary" className="mt-4">

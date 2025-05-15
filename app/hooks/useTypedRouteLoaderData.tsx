@@ -1,9 +1,8 @@
 import { useRouteLoaderData } from "react-router";
-
-import type { loader as indexLoader } from "~/routes/_index";
+import type { loader as inntektIdLoader } from "~/routes/inntektId.$inntektId";
 
 type Loaders = {
-  "routes/_index": typeof indexLoader;
+  "routes/inntektId.$inntektId": typeof inntektIdLoader;
 };
 
 export function useTypedRouteLoaderData<T extends keyof Loaders>(route: T) {

@@ -9,12 +9,12 @@ import {
 } from "~/utils/inntekt.util";
 
 interface IProps {
-  virksomhetsinntekt: IVirksomhetsinntekt;
+  virksomhet: IVirksomhetsinntekt;
   inntektsPeriode: IPeriode;
 }
 
-export default function UtvidetIntektTabell({ virksomhetsinntekt, inntektsPeriode }: IProps) {
-  const gruppertInntektTyper = grupperEtterInntektTypeOgKilde(virksomhetsinntekt.inntekter);
+export default function UtvidetIntektTabell({ virksomhet, inntektsPeriode }: IProps) {
+  const gruppertInntektTyper = grupperEtterInntektTypeOgKilde(virksomhet.inntekter);
   const oppdeltPeriode = delOppIAarperioder(inntektsPeriode);
 
   return (
@@ -68,17 +68,17 @@ export default function UtvidetIntektTabell({ virksomhetsinntekt, inntektsPeriod
           <Table.DataCell className="bold"></Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              beregnTotalInntektForPeriode(virksomhetsinntekt.inntekter, oppdeltPeriode[0])
+              beregnTotalInntektForPeriode(virksomhet.inntekter, oppdeltPeriode[0])
             )}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              beregnTotalInntektForPeriode(virksomhetsinntekt.inntekter, oppdeltPeriode[1])
+              beregnTotalInntektForPeriode(virksomhet.inntekter, oppdeltPeriode[1])
             )}
           </Table.DataCell>
           <Table.DataCell className="bold" align="right">
             {formatterNorskTall(
-              beregnTotalInntektForPeriode(virksomhetsinntekt.inntekter, oppdeltPeriode[2])
+              beregnTotalInntektForPeriode(virksomhet.inntekter, oppdeltPeriode[2])
             )}
           </Table.DataCell>
           <Table.DataCell></Table.DataCell>

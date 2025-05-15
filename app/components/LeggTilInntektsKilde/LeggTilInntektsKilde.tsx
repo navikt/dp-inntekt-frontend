@@ -12,9 +12,9 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
-import { InntektPerioder } from "./InntektPerioder";
-import { genererFireArTilOgMed, type IGenerertePeriode } from "~/utils/inntekt.util";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
+import { genererFireArTilOgMed, type IGenerertePeriode } from "~/utils/inntekt.util";
+import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
 
@@ -64,7 +64,7 @@ function hentSchema(perioder?: IGenerertePeriode[]) {
 
 export default function LeggTilInntektsKilde() {
   const [perioder, setPerioder] = useState<IGenerertePeriode[]>();
-  const { uklassifisertInntekt } = useTypedRouteLoaderData("routes/_index");
+  const { virksomhetsinntekt, periode } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const ref = useRef<HTMLDialogElement>(null);
   const form = useForm({
     submitSource: "state",
@@ -83,10 +83,8 @@ export default function LeggTilInntektsKilde() {
   // }, [form.formState]);
 
   function lagPerioder() {
-    if (uklassifisertInntekt.status === "success") {
-      const generertPerioder = genererFireArTilOgMed(uklassifisertInntekt.data.periode);
-      setPerioder(generertPerioder);
-    }
+    const generertPerioder = genererFireArTilOgMed(periode);
+    setPerioder(generertPerioder);
   }
 
   return (

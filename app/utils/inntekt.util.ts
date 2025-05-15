@@ -2,8 +2,8 @@ import { differenceInMonths, format } from "date-fns";
 import { parse } from "date-fns/parse";
 import type { IInntekt, IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 
-export function sumTotalBelopForHelePeriode(virksomhetsinntekter: IVirksomhetsinntekt[]): number {
-  return virksomhetsinntekter.reduce((total, virksomhet) => {
+export function sumTotaltInntekterForAlleVirksomheter(virsomheter: IVirksomhetsinntekt[]): number {
+  return virsomheter.reduce((total, virksomhet) => {
     const sumPerVirksomhet = virksomhet.inntekter.reduce((sum, inntekt) => {
       const belop = parseFloat(inntekt.belop);
       return sum + (isNaN(belop) ? 0 : belop);

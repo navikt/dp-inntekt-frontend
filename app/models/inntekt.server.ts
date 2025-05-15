@@ -1,31 +1,11 @@
-import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import { getDPInntektOboToken } from "~/utils/auth.util.server";
 import { getEnv } from "~/utils/env.utils";
 
-export type INetworkResponse<T = void> = INetworkResponseSuccess<T> | INetworkResponseError;
-
-export interface INetworkResponseSuccess<T> {
-  status: "success";
-  data: T;
-}
-
-export interface INetworkResponseError {
-  status: "error";
-  error: {
-    statusCode: number;
-    statusText: string;
-  };
-}
-
-export async function lagreUklassifisertInntekt(
-  request: Request,
-  inntektId: string
-): Promise<INetworkResponse<string>> {
+export async function lagreInntekt(request: Request, inntektId: string) {
   const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
 
-
-  const response = await fetch(url, {
+  return await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -34,34 +14,13 @@ export async function lagreUklassifisertInntekt(
       connection: "keep-alive",
     },
   });
-
-  if (!response.ok) {
-    return {
-      status: "error",
-      error: {
-        statusCode: response.status,
-        statusText: "Feil ved uthenting av inntekt",
-      },
-    };
-  }
-
-  const data: string = await response.text();
-
-  return {
-    status: "success",
-    data,
-  };
 }
 
-
-export async function hentUklassifisertInntekt(
-  request: Request,
-  inntektId: string
-): Promise<INetworkResponse<IUklassifisertInntekt>> {
+export async function hentInntekter(request: Request, inntektId: string) {
   const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
 
-  const response = await fetch(url, {
+  return await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -70,21 +29,4 @@ export async function hentUklassifisertInntekt(
       connection: "keep-alive",
     },
   });
-
-  if (!response.ok) {
-    return {
-      status: "error",
-      error: {
-        statusCode: response.status,
-        statusText: "Feil ved uthenting av inntekt",
-      },
-    };
-  }
-
-  const data: IUklassifisertInntekt = await response.json();
-
-  return {
-    status: "success",
-    data: data,
-  };
 }

@@ -4,7 +4,7 @@ import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 
 interface IProps {
-  virksomhetsinntekt: IVirksomhetsinntekt;
+  virksomhet: IVirksomhetsinntekt;
   inntektsPeriode: IPeriode;
 }
 
@@ -22,8 +22,8 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
   );
 }
 
-export default function InntektsKilde({ virksomhetsinntekt, inntektsPeriode }: IProps) {
-  const { virksomhetsnummer, virksomhetsnavn, periode, totalBeløp } = virksomhetsinntekt;
+export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
+  const { virksomhetsnummer, virksomhetsnavn, periode, totalBeløp } = virksomhet;
 
   return (
     <ExpansionCard aria-label={`Inntekt for ${virksomhetsnavn}`}>
@@ -47,10 +47,7 @@ export default function InntektsKilde({ virksomhetsinntekt, inntektsPeriode }: I
         </ExpansionCard.Description>
       </ExpansionCard.Header>
       <ExpansionCard.Content>
-        <UtvidetIntektTabell
-          virksomhetsinntekt={virksomhetsinntekt}
-          inntektsPeriode={inntektsPeriode}
-        />
+        <UtvidetIntektTabell virksomhet={virksomhet} inntektsPeriode={inntektsPeriode} />
         <Button size="small" className="mt-4">
           Legg til inntekt
         </Button>
