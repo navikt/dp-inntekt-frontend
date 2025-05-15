@@ -18,7 +18,7 @@ import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
 
-function hentSchema(perioder?: IGenerertePeriode[]) {
+function hentValideringSchema(generertePerioder?: IGenerertePeriode[]) {
   const baseSchema = z.object({
     inntektskilde: z.string({
       required_error: "Inntektskilde er påkrevd",
@@ -40,12 +40,12 @@ function hentSchema(perioder?: IGenerertePeriode[]) {
     }),
   });
 
-  const inntekter: Record<string, z.ZodTypeAny> = {};
+  const inntekterSchema: Record<string, z.ZodTypeAny> = {};
 
-  perioder?.forEach((year) => {
+  generertePerioder?.forEach((year) => {
     year.maneder.forEach((maaned) => {
       if (!maaned.readOnly) {
-        inntekter[maaned.dato] = z
+        inntekterSchema[maaned.dato] = z
           .string()
           .trim()
           .optional()
@@ -59,17 +59,17 @@ function hentSchema(perioder?: IGenerertePeriode[]) {
     });
   });
 
-  return baseSchema.extend(inntekter);
+  return baseSchema.extend(inntekterSchema);
 }
 
 export default function LeggTilInntektsKilde() {
-  const [perioder, setPerioder] = useState<IGenerertePeriode[]>();
-  const { virksomhetsinntekt, periode } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
+  const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
+  const { periode } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const ref = useRef<HTMLDialogElement>(null);
   const form = useForm({
     submitSource: "state",
     method: "post",
-    schema: hentSchema(perioder),
+    schema: hentValideringSchema(genertePerioder),
   });
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function LeggTilInntektsKilde() {
 
   function lagPerioder() {
     const generertPerioder = generereFirePerioder(periode);
-    setPerioder(generertPerioder);
+    setGenerertePerioder(generertPerioder);
   }
 
   return (
@@ -142,7 +142,7 @@ export default function LeggTilInntektsKilde() {
               </VStack>
               <VStack gap="2">
                 <Label size="small">Periode</Label>
-                {perioder && <InntektPerioder perioder={perioder} form={form} />}
+                <InntektPerioder perioder={genertePerioder} form={form} />
               </VStack>
             </VStack>
           </Modal.Body>
