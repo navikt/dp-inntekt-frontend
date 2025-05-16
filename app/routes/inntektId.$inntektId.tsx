@@ -35,8 +35,9 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export async function action({ request, params }: Route.ActionArgs) {
   invariant(params.inntektId, "Mangler inntekts-ID");
 
-  // const formData = await request.formData();
-  // console.log("formData", formData);
+  const formData = await request.formData();
+  const entries = Object.fromEntries(formData.entries());
+  console.log("formData entries", entries);
 
   const lagreInntektResponse = await lagreInntekt(request, params.inntektId);
 
@@ -47,7 +48,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     });
   }
 
-  const nyInntektId = await lagreInntektResponse.json();
+  const nyInntektId = await lagreInntektResponse.text();
 
   return redirect(`/inntektId/${nyInntektId}`);
 }

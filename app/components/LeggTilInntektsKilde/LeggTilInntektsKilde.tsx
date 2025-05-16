@@ -29,6 +29,7 @@ function hentValideringSchema(generertePerioder?: IGenerertePeriode[]) {
       })
       .min(1, "Organisasjonsnavn er påkrevd")
       .max(50, "Organisasjonsnavn er for langt"),
+    originalData: z.string().optional(),
     organisasjonsnummer: z
       .string({
         required_error: "Organisasjonsnummer er påkrevd",
@@ -64,13 +65,16 @@ function hentValideringSchema(generertePerioder?: IGenerertePeriode[]) {
 
 export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
-  const { periode } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
+  const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const ref = useRef<HTMLDialogElement>(null);
   const form = useForm({
     submitSource: "state",
     method: "post",
     schema: hentValideringSchema(genertePerioder),
     action: "/inntektId/$inntektId",
+    defaultValues: {
+      originalData: JSON.stringify(inntekt),
+    },
   });
 
   useEffect(() => {
@@ -84,7 +88,7 @@ export default function LeggTilInntektsKilde() {
   // }, [form.formState]);
 
   function lagPerioder() {
-    const generertPerioder = generereFirePerioder(periode);
+    const generertPerioder = generereFirePerioder(inntekt.periode);
     setGenerertePerioder(generertPerioder);
   }
 
@@ -123,6 +127,7 @@ export default function LeggTilInntektsKilde() {
                   size="small"
                   error={form.error("organisasjonsnavn")}
                 />
+                <input type="hidden" name="originalData" />
                 <TextField
                   name="organisasjonsnummer"
                   label="Organisasjonsnummer"
