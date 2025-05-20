@@ -12,7 +12,8 @@ export function sumTotaltInntekterForAlleVirksomheter(virsomheter: IVirksomhetsi
   }, 0);
 }
 
-const inntektTypeTekst: Record<string, string> = {
+// Todo: gjøre om til enum
+export const inntektTypeEnum: Record<string, string> = {
   LOENNSINNTEKT: "Lønnsinntekt",
   NAERINGSINNTEKT: "Næringsinntekt",
   PENSJON_ELLER_TRYGD: "Pensjon eller trygd",
@@ -20,7 +21,7 @@ const inntektTypeTekst: Record<string, string> = {
 };
 
 export function hentInntektTypeTekst(type: string): string {
-  return inntektTypeTekst[type] || type;
+  return inntektTypeEnum[type] || type;
 }
 
 // Returnerer true hvis perioden dekker nøyaktig 36 måneder (inkludert fra- og til-måneden)

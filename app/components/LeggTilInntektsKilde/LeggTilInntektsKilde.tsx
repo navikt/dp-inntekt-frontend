@@ -13,7 +13,11 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
+import {
+  generereFirePerioder,
+  inntektTypeEnum,
+  type IGenerertePeriode,
+} from "~/utils/inntekt.util";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
@@ -141,9 +145,9 @@ export default function LeggTilInntektsKilde() {
                   error={form.error("inntektstype")}
                 >
                   <option value="">Velg inntekstype</option>
-                  <option value="timelonn">Timelønn</option>
-                  <option value="fastlonn">Fastlønn</option>
-                  <option value="ElektroniskKom">Elektrisk kommunikasjon</option>
+                  <option value={inntektTypeEnum.Timelønn}>Timelønn</option>
+                  <option value={inntektTypeEnum.Fastlønn}>Fastlønn</option>
+                  <option value={inntektTypeEnum.PENSJON_ELLER_TRYGD}>Pensjon eller trygd</option>
                 </Select>
               </VStack>
               <VStack gap="2">
