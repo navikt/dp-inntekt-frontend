@@ -17,7 +17,7 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
-import { inntektTyper } from "~/utils/constants";
+import { inntektTyperBeskrivelse } from "~/utils/constants";
 
 export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
@@ -65,8 +65,8 @@ export default function LeggTilInntektsKilde() {
                   size="small"
                   error={form.error("inntektskilde")}
                 >
-                  <Radio value="norskVirksomhet">Norsk virksomhet</Radio>
-                  <Radio value="privatPerson">Privat person</Radio>
+                  <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
+                  <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
                 <TextField
                   name="organisasjonsnavn"
@@ -88,7 +88,7 @@ export default function LeggTilInntektsKilde() {
                   error={form.error("inntektstype")}
                 >
                   <option value="">Velg inntekstype</option>
-                  {inntektTyper.map((inntektType) => (
+                  {inntektTyperBeskrivelse.map((inntektType) => (
                     <option value={inntektType.key} key={inntektType.key}>
                       {inntektType.text}
                     </option>

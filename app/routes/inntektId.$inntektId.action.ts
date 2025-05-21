@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 import { lagreInntekt } from "~/models/inntekt.server";
 import type { IInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/_index";
-import { inntektTyper } from "~/utils/constants";
+import { inntektTyperBeskrivelse } from "~/utils/constants";
 
 interface IFormDataInntek {
   dato: string;
@@ -22,6 +22,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const organisasjonsnavn = entries["organisasjonsnavn"] as string;
   const inntektstype = entries["inntektstype"] as string;
   const originalData = entries["originalData"] as string;
+  const inntektskilde = entries["inntektskilde"] as string;
 
   const inntekter = hentFormDataInntekter();
 
@@ -62,7 +63,8 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   function lagNyInntektskildeInntekter(): IInntekt[] {
     // Todo: se mer på den her
-    const virksomhet = { aktoerType: "ORGANISASJON", identifikator: organisasjonsnummer };
+    const virksomhet = { aktoerType: inntektskilde, identifikator: organisasjonsnummer };
+    // Todo: Finn ut om mottaker alltid er en person!
     const inntektsmottaker = {
       aktoerType: "NATURLIG_IDENT",
       identifikator: organisasjonsnummer,
@@ -71,9 +73,10 @@ export async function action({ request, params }: Route.ActionArgs) {
     return inntekter.map(({ dato, belop }) => ({
       belop: belop.toString(),
       fordel: "",
-      beskrivelse: "",
+      beskrivelse: inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
       inntektskilde: "",
       inntektsstatus: "",
+      inntektsperiodetype: "Maaned",
       leveringstidspunkt: dato,
       utbetaltIMaaned: dato,
       virksomhet,
@@ -81,7 +84,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       inngaarIGrunnlagForTrekk: true,
       utloeserArbeidsgiveravgift: true,
       informasjonsstatus: "",
-      inntektType: inntektTyper.find((type) => type.key === inntektstype)?.key || inntektstype,
+      inntektType: "",
       redigert: false,
       begrunnelse: "",
       aarMaaned: dato,

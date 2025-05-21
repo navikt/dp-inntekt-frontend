@@ -1,6 +1,6 @@
 import { Button, Table } from "@navikt/ds-react";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
-import { inntektTyper } from "~/utils/constants";
+import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formatterNorskTall } from "~/utils/formattering.util";
 import {
   beregnTotalInntektForEnPeriode,
@@ -14,7 +14,7 @@ interface IProps {
 }
 
 export default function VirsomhetInntekter({ virksomhet, inntektsPeriode }: IProps) {
-  const gruppertInntektTyper = grupperEtterInntektType(virksomhet.inntekter);
+  const gruppertinntektTyperBeskrivelse = grupperEtterInntektType(virksomhet.inntekter);
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(inntektsPeriode);
   const periode1 = oppdeltPerioder[0];
   const periode2 = oppdeltPerioder[1];
@@ -39,10 +39,10 @@ export default function VirsomhetInntekter({ virksomhet, inntektsPeriode }: IPro
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {gruppertInntektTyper.map((inntekt) => (
+        {gruppertinntektTyperBeskrivelse.map((inntekt) => (
           <Table.Row key={inntekt.inntektType}>
             <Table.DataCell>
-              {inntektTyper.find((type) => type.key === inntekt.inntektType)?.text ||
+              {inntektTyperBeskrivelse.find((type) => type.key === inntekt.inntektType)?.text ||
                 inntekt.inntektType}
             </Table.DataCell>
             <Table.DataCell>{inntekt.inntektType}</Table.DataCell>
