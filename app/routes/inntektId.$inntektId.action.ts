@@ -62,8 +62,8 @@ export async function action({ request, params }: Route.ActionArgs) {
   }
 
   function lagNyInntektskildeInntekter(): IInntekt[] {
-    // Todo: se mer på den her
     const virksomhet = { aktoerType: inntektskilde, identifikator: organisasjonsnummer };
+
     // Todo: Finn ut om mottaker alltid er en person!
     const inntektsmottaker = {
       aktoerType: "NATURLIG_IDENT",
@@ -73,7 +73,8 @@ export async function action({ request, params }: Route.ActionArgs) {
     return inntekter.map(({ dato, belop }) => ({
       belop: belop.toString(),
       fordel: "",
-      beskrivelse: inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
+      beskrivelse:
+        inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
       inntektskilde: "",
       inntektsstatus: "",
       inntektsperiodetype: "Maaned",
@@ -91,17 +92,15 @@ export async function action({ request, params }: Route.ActionArgs) {
     }));
   }
 
-  // Sende med "appendedInntekt" videre til backend
-  const lagreInntektResponse = await lagreInntekt(request, params.inntektId);
   const parsedOriginalData = JSON.parse(originalData);
   const nyInntektskilde = lagNyInntektskilde();
-
-  console.log(nyInntektskilde);
 
   const oppdaterteInntektData = {
     ...parsedOriginalData,
     virksomhetsinntekt: [nyInntektskilde, ...parsedOriginalData.virksomhetsinntekt],
   };
+
+  const lagreInntektResponse = await lagreInntekt(request, params.inntektId, oppdaterteInntektData);
 
   if (!lagreInntektResponse.ok) {
     throw new Response("Feil ved lagring av inntekt", {
