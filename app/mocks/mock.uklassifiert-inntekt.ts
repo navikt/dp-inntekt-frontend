@@ -48,7 +48,7 @@ function updateTotalBelop(virksomhetsinntekt: IUklassifisertInntekt["virksomhets
       return sum + parseInt(inntekt.belop, 10);
     }, 0);
 
-    virksomhet.totalBeløp = totalInntekt.toString(); // Update totalBeløp with the calculated sum
+    virksomhet.totalBelop = totalInntekt.toString(); // Update totalBelop with the calculated sum
   });
 }
 
@@ -59,7 +59,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
       virksomhetsnavn: "KIWI NORGE AS",
       periode: { fra: "2020-12", til: "2023-11" },
       inntekter: generateMockInntektDataFromRange("2020-12", "2023-11"),
-      totalBeløp: "0",
+      totalBelop: "0",
       avvikListe: [],
     },
     {
@@ -104,7 +104,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           aarMaaned: "2023-11",
         },
       ],
-      totalBeløp: "0",
+      totalBelop: "0",
       avvikListe: [],
     },
   ],

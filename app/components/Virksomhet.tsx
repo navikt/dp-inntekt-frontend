@@ -23,7 +23,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 }
 
 export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
-  const { virksomhetsnummer, virksomhetsnavn, periode, totalBeløp } = virksomhet;
+  const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
 
   return (
     <ExpansionCard aria-label={`Inntekt for ${virksomhetsnavn}`}>
@@ -41,7 +41,7 @@ export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
             />
             <InntektInfo
               overskrift="Beløp for perioden"
-              verdi={formatterNorskTall(Number(totalBeløp))}
+              verdi={formatterNorskTall(Number(totalBelop))}
             />
           </VStack>
         </ExpansionCard.Description>

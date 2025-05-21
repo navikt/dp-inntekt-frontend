@@ -9,7 +9,7 @@ export interface IVirksomhetsinntekt {
   virksomhetsnavn: string;
   periode: IPeriode;
   inntekter: IInntekt[];
-  totalBeløp: string;
+  totalBelop: string;
   avvikListe: any[]; // You can replace `any` with a more specific type if needed
 }
 

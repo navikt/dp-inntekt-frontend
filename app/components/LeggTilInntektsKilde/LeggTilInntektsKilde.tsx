@@ -12,15 +12,12 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import {
-  generereFirePerioder,
-  inntektTypeEnum,
-  type IGenerertePeriode,
-} from "~/utils/inntekt.util";
+import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
+import { inntektTyper } from "~/utils/constants";
 
 export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
@@ -91,9 +88,11 @@ export default function LeggTilInntektsKilde() {
                   error={form.error("inntektstype")}
                 >
                   <option value="">Velg inntekstype</option>
-                  <option value={inntektTypeEnum.Timelønn}>Timelønn</option>
-                  <option value={inntektTypeEnum.Fastlønn}>Fastlønn</option>
-                  <option value={inntektTypeEnum.PENSJON_ELLER_TRYGD}>Pensjon eller trygd</option>
+                  {inntektTyper.map((inntektType) => (
+                    <option value={inntektType.key} key={inntektType.key}>
+                      {inntektType.text}
+                    </option>
+                  ))}
                 </Select>
               </VStack>
               <VStack gap="2">
