@@ -11,90 +11,36 @@ import {
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
-import { z } from "zod";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import {
   generereFirePerioder,
   inntektTypeEnum,
   type IGenerertePeriode,
 } from "~/utils/inntekt.util";
+import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
-
-function hentValideringSchema(generertePerioder?: IGenerertePeriode[]) {
-  const baseSchema = z.object({
-    inntektskilde: z.string({
-      required_error: "Inntektskilde er påkrevd",
-    }),
-    organisasjonsnavn: z
-      .string({
-        required_error: "Organisasjonsnavn er påkrevd",
-      })
-      .min(1, "Organisasjonsnavn er påkrevd")
-      .max(50, "Organisasjonsnavn er for langt"),
-    originalData: z.string().optional(),
-    organisasjonsnummer: z
-      .string({
-        required_error: "Organisasjonsnummer er påkrevd",
-      })
-      .min(1, "Organisasjonsnummer er påkrevd")
-      .max(50, "Organisasjonsnummer er for langt"),
-    inntektstype: z.string({
-      required_error: "Inntektstype er påkrevd",
-    }),
-  });
-
-  const inntekterSchema: Record<string, z.ZodTypeAny> = {};
-
-  generertePerioder?.forEach((year) => {
-    year.maneder.forEach((maaned) => {
-      if (!maaned.readOnly) {
-        inntekterSchema[maaned.dato] = z
-          .string()
-          .trim()
-          .optional()
-          .refine((val) => val === undefined || val === "" || !isNaN(Number(val)), {
-            message: `Ikke et gyldig tall`,
-          })
-          .refine((val) => val === undefined || val === "" || Number(val) > 1, {
-            message: `Tallet må være større enn 1`,
-          });
-      }
-    });
-  });
-
-  return baseSchema.extend(inntekterSchema);
-}
 
 export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const generertePerioder = generereFirePerioder(inntekt.periode);
+    setGenerertePerioder(generertePerioder);
+  }, []);
+
   const form = useForm({
     submitSource: "state",
     method: "post",
-    schema: hentValideringSchema(genertePerioder),
-    action: "/inntektId/$inntektId",
+    schema: hentInntektValidationSchema(genertePerioder),
+    action: "/inntektId/$inntektId/action",
     defaultValues: {
       originalData: JSON.stringify(inntekt),
     },
   });
-
-  useEffect(() => {
-    lagPerioder();
-  }, []);
-
-  // useEffect(() => {
-  //   if (form.formState.hasBeenSubmitted) {
-  //     ref.current?.close();
-  //   }
-  // }, [form.formState]);
-
-  function lagPerioder() {
-    const generertPerioder = generereFirePerioder(inntekt.periode);
-    setGenerertePerioder(generertPerioder);
-  }
 
   return (
     <div className="mt-6">
