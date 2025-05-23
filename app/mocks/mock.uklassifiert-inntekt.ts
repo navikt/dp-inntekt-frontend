@@ -63,7 +63,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
       avvikListe: [],
     },
     {
-      virksomhetsnummer: "000111222",
+      virksomhetsnummer: "12092388024",
       virksomhetsnavn: "",
       periode: { fra: "2021-01", til: "2023-12" },
       inntekter: [
