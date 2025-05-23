@@ -2,6 +2,7 @@ import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
 import VirsomhetInntekter from "~/components/VirsomhetInntekter";
 import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
+import { erPersonnummer, maskerePersonnummer } from "~/utils/generell.util";
 
 interface IProps {
   virksomhet: IVirksomhetsinntekt;
@@ -24,16 +25,19 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 
 export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
+  const erPrivatPerson = erPersonnummer(virksomhetsnummer);
 
   return (
-    <ExpansionCard aria-label={`Inntekt for ${virksomhetsnavn}`}>
+    <ExpansionCard aria-label={`Inntekt for ${virksomhetsnummer}`}>
       <ExpansionCard.Header>
-        <ExpansionCard.Title>{virksomhetsnavn || virksomhetsnummer}</ExpansionCard.Title>
+        <ExpansionCard.Title>
+          {erPrivatPerson ? maskerePersonnummer(virksomhetsnummer) : virksomhetsnavn}
+        </ExpansionCard.Title>
         <ExpansionCard.Description>
           <VStack gap="4">
             <InntektInfo
-              overskrift="Organisasjonsnummer"
-              verdi={virksomhetsnummer || virksomhetsnummer}
+              overskrift={erPrivatPerson ? "Personnummer" : "Organisasjonsnummer"}
+              verdi={erPrivatPerson ? maskerePersonnummer(virksomhetsnummer) : virksomhetsnummer}
             />
             <InntektInfo
               overskrift="Periode"
