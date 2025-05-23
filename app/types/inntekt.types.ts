@@ -1,5 +1,5 @@
 export interface IUklassifisertInntekt {
-  virksomhetsinntekt: IVirksomhetsinntekt[];
+  virksomheter: IVirksomhetsinntekt[];
   mottaker: IMottaker;
   periode: IPeriode;
 }
@@ -7,10 +7,10 @@ export interface IUklassifisertInntekt {
 export interface IVirksomhetsinntekt {
   virksomhetsnummer: string;
   virksomhetsnavn: string;
-  periode: IPeriode;
+  periode: IPeriode | null;
   inntekter: IInntekt[];
   totalBelop: string;
-  avvikListe: any[]; // You can replace `any` with a more specific type if needed
+  avvikListe: IAvvik[];
 }
 
 export interface IPeriode {
@@ -24,14 +24,21 @@ export interface IInntekt {
   beskrivelse: string;
   inntektskilde: string;
   inntektsstatus: string;
-  leveringstidspunkt: string;
+  inntektsperiodetype: string;
+  leveringstidspunkt: string | null;
+  opptjeningsland: string | null;
+  opptjeningsperiode: string | null;
+  skattemessigBosattLand: string | null;
   utbetaltIMaaned: string;
-  virksomhet: IAktor;
-  inntektsmottaker: IAktor;
-  inngaarIGrunnlagForTrekk: boolean;
-  utloeserArbeidsgiveravgift: boolean;
-  informasjonsstatus: string;
+  opplysningspliktig: IAktor | null;
+  inntektsinnsender: IAktor | null;
+  virksomhet: IAktor | null;
+  inntektsmottaker: IAktor | null;
+  inngaarIGrunnlagForTrekk: boolean | null;
+  utloeserArbeidsgiveravgift: boolean | null;
+  informasjonsstatus: string | null;
   inntektType: string;
+  tilleggsinformasjon: ITilleggsinformasjon | null;
   redigert: boolean;
   begrunnelse: string;
   aarMaaned: string;
@@ -43,10 +50,36 @@ export interface IAktor {
 }
 
 export interface ITilleggsinformasjon {
-  kategori: string;
+  kategori: string | null;
+  tilleggsinformasjonDetaljer: ITilleggsInformasjonsDetaljer | null;
 }
 
 export interface IMottaker {
   pnr: string;
   navn: string;
+}
+
+export interface ITilleggsInformasjonsDetaljer {
+  detaljerType: string | null,
+  spesielleInntjeningsforhold: ISpesielleInntjeningsforhold | null,
+}
+
+export enum ISpesielleInntjeningsforhold {
+  "hyreTilMannskapPaaFiskeSmaahvalfangstOgSelfangstfartoey",
+  "loennVedArbeidsmarkedstiltak",
+  "loennOgAnnenGodtgjoerelseSomIkkeErSkattepliktig",
+  "loennUtbetaltFraDenNorskeStatOpptjentIUtlandet",
+  "loennVedKonkursEllerStatsgarantiOsv",
+  "skattefriArbeidsinntektBarnUnderTrettenAar",
+  "statsansattUtlandet",
+  "utenlandskeSjoefolkSomIkkeErSkattepliktig",
+  "UNKNOWN"
+}
+
+export interface IAvvik {
+  ident: IAktor;
+  opplysningspliktig: IAktor;
+  virksomhet: IAktor | null;
+  avvikPeriode: string;
+  tekst: string;
 }
