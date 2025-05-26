@@ -8,6 +8,7 @@ import Virksomhet from "~/components/Virksomhet";
 import { hentInntek } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/_index";
+import { InntektProvider } from "~/context/inntekt-context";
 
 // Henting av inntekten basert på inntektId fra URL-en
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -34,29 +35,28 @@ export default function Inntekt() {
   const { periode, mottaker, virksomheter } = useLoaderData<typeof loader>();
 
   return (
-    <main>
-      <VStack gap="6">
-        <Header tittel="Dagpenger inntekt" />
-        <Personalia mottaker={mottaker} />
-        <Box background="surface-default" padding="6" borderRadius="xlarge">
-          <InntektPerioderOppsummering
-            virksomheter={virksomheter}
-            inntektsPeriode={periode}
-          />
-        </Box>
-        <Box background="surface-default" padding="6" borderRadius="xlarge">
-          <VStack gap="4">
-            {virksomheter.map((virksomhet) => (
-              <Virksomhet
-                key={virksomhet.virksomhetsnummer}
-                virksomhet={virksomhet}
-                inntektsPeriode={periode}
-              />
-            ))}
-          </VStack>
-          <LeggTilInntektsKilde />
-        </Box>
-      </VStack>
-    </main>
+    <InntektProvider endret={false}>
+      <main>
+        <VStack gap="6">
+          <Header tittel="Dagpenger inntekt" />
+          <Personalia mottaker={mottaker} />
+          <Box background="surface-default" padding="6" borderRadius="xlarge">
+            <InntektPerioderOppsummering virksomheter={virksomheter} inntektsPeriode={periode} />
+          </Box>
+          <Box background="surface-default" padding="6" borderRadius="xlarge">
+            <VStack gap="4">
+              {virksomheter.map((virksomhet) => (
+                <Virksomhet
+                  key={virksomhet.virksomhetsnummer}
+                  virksomhet={virksomhet}
+                  inntektsPeriode={periode}
+                />
+              ))}
+            </VStack>
+            <LeggTilInntektsKilde />
+          </Box>
+        </VStack>
+      </main>
+    </InntektProvider>
   );
 }

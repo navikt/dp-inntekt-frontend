@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { redirect } from "react-router";
 import invariant from "tiny-invariant";
 import { lagreInntekt } from "~/models/inntekt.server";
-import type { IInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IInntekt, IUklassifisertInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/_index";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 
@@ -89,21 +89,21 @@ export async function action({ request, params }: Route.ActionArgs) {
       redigert: false,
       begrunnelse: "",
       aarMaaned: dato,
-      opptjeningsland: "", 
-      opptjeningsperiode: "", 
-      skattemessigBosattLand: "", 
+      opptjeningsland: "",
+      opptjeningsperiode: "",
+      skattemessigBosattLand: "",
       opplysningspliktig: null,
-      inntektsinnsender: null, 
-      tilleggsinformasjon: null
+      inntektsinnsender: null,
+      tilleggsinformasjon: null,
     }));
   }
 
-  const parsedOriginalData = JSON.parse(originalData);
   const nyInntektskilde = lagNyInntektskilde();
+  const parsedOriginalData: IUklassifisertInntekt = JSON.parse(originalData);
 
   const oppdaterteInntektData = {
     ...parsedOriginalData,
-    virksomhetsinntekt: [nyInntektskilde, ...parsedOriginalData.virksomhetsinntekt],
+    virksomhetsinntekt: [nyInntektskilde, ...parsedOriginalData.virksomheter],
   };
 
   const lagreInntektResponse = await lagreInntekt(request, params.inntektId, oppdaterteInntektData);

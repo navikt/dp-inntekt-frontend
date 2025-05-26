@@ -1,4 +1,4 @@
-import type { IUklassifisertInntekt } from "~/types/inntekt.types";
+import type { IUklassifisertInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
 
 function generateMockInntektDataFromRange(start: string, end: string) {
   const [startYear, startMonth] = start.split("-").map(Number);
@@ -25,10 +25,16 @@ function generateMockInntektDataFromRange(start: string, end: string) {
       utloeserArbeidsgiveravgift: true,
       informasjonsstatus: "InngaarAlltid",
       inntektType: "LOENNSINNTEKT",
-      tilleggsinformasjon: { kategori: "NorskKontinentalsokkel" },
       redigert: false,
       begrunnelse: "FASTLOENN",
       aarMaaned: formattedMonth,
+      opptjeningsland: "",
+      opptjeningsperiode: "",
+      skattemessigBosattLand: "",
+      opplysningspliktig: null,
+      inntektsinnsender: null,
+      tilleggsinformasjon: null,
+      inntektsperiodetype: "maaned",
     });
 
     // Increment month
@@ -42,8 +48,8 @@ function generateMockInntektDataFromRange(start: string, end: string) {
   return data;
 }
 
-function updateTotalBelop(virksomhetsinntekt: IUklassifisertInntekt["virksomhetsinntekt"]) {
-  virksomhetsinntekt.forEach((virksomhet) => {
+function updateTotalBelop(virksomheter: IVirksomhetsinntekt[]) {
+  virksomheter.forEach((virksomhet) => {
     const totalInntekt = virksomhet.inntekter.reduce((sum, inntekt) => {
       return sum + parseInt(inntekt.belop, 10);
     }, 0);
@@ -53,7 +59,7 @@ function updateTotalBelop(virksomhetsinntekt: IUklassifisertInntekt["virksomhets
 }
 
 export const mockUklassifisertInntekt: IUklassifisertInntekt = {
-  virksomhetsinntekt: [
+  virksomheter: [
     {
       virksomhetsnummer: "937846231",
       virksomhetsnavn: "KIWI NORGE AS",
@@ -84,6 +90,13 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           redigert: false,
           begrunnelse: "LOTT_KUN_TRYGDEAVGIFT",
           aarMaaned: "2020-12",
+          opptjeningsland: "",
+          opptjeningsperiode: "",
+          skattemessigBosattLand: "",
+          opplysningspliktig: null,
+          inntektsinnsender: null,
+          tilleggsinformasjon: null,
+          inntektsperiodetype: "maaned",
         },
         {
           belop: "150000",
@@ -102,6 +115,13 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           redigert: false,
           begrunnelse: "LOTT_KUN_TRYGDEAVGIFT",
           aarMaaned: "2023-11",
+          opptjeningsland: "",
+          opptjeningsperiode: "",
+          skattemessigBosattLand: "",
+          opplysningspliktig: null,
+          inntektsinnsender: null,
+          tilleggsinformasjon: null,
+          inntektsperiodetype: "maaned",
         },
       ],
       totalBelop: "0",
@@ -112,4 +132,4 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
   periode: { fra: "2020-12", til: "2023-11" },
 };
 
-updateTotalBelop(mockUklassifisertInntekt.virksomhetsinntekt);
+updateTotalBelop(mockUklassifisertInntekt.virksomheter);
