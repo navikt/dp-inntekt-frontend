@@ -1,7 +1,7 @@
 export interface IUklassifisertInntekt {
   virksomheter: IVirksomhetsinntekt[];
   mottaker: IMottaker;
-  periode: IPeriode;
+  // periode: IPeriode;
 }
 
 export interface IVirksomhetsinntekt {
@@ -60,8 +60,8 @@ export interface IMottaker {
 }
 
 export interface ITilleggsInformasjonsDetaljer {
-  detaljerType: string | null,
-  spesielleInntjeningsforhold: ISpesielleInntjeningsforhold | null,
+  detaljerType: string | null;
+  spesielleInntjeningsforhold: ISpesielleInntjeningsforhold | null;
 }
 
 export enum ISpesielleInntjeningsforhold {
@@ -73,7 +73,7 @@ export enum ISpesielleInntjeningsforhold {
   "skattefriArbeidsinntektBarnUnderTrettenAar",
   "statsansattUtlandet",
   "utenlandskeSjoefolkSomIkkeErSkattepliktig",
-  "UNKNOWN"
+  "UNKNOWN",
 }
 
 export interface IAvvik {

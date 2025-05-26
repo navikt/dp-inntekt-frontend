@@ -12,7 +12,7 @@ function generateMockInntektDataFromRange(start: string, end: string) {
     const formattedMonth = `${year}-${String(month).padStart(2, "0")}`;
 
     data.push({
-      belop: "10000", // this could be any mock value
+      belop: "10000.0", // this could be any mock value
       fordel: "kontantytelse",
       beskrivelse: "fastloenn",
       inntektskilde: "A-ordningen",
@@ -74,7 +74,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
       periode: { fra: "2021-01", til: "2023-12" },
       inntekter: [
         {
-          belop: "250000",
+          belop: "250000.0",
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
           inntektskilde: "A-ordningen",
@@ -99,7 +99,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           inntektsperiodetype: "maaned",
         },
         {
-          belop: "150000",
+          belop: "150000.0",
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
           inntektskilde: "A-ordningen",
@@ -129,7 +129,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
     },
   ],
   mottaker: { pnr: "20443502916", navn: "Ola Nordmann" },
-  periode: { fra: "2020-12", til: "2023-11" },
+  // periode: { fra: "2020-12", til: "2023-11" },
 };
 
 updateTotalBelop(mockUklassifisertInntekt.virksomheter);

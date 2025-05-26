@@ -1,16 +1,16 @@
 import { Box, VStack } from "@navikt/ds-react";
+import { format, subMonths } from "date-fns";
 import { data, redirect, useLoaderData } from "react-router";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
 import { Personalia } from "~/components/Personalia";
 import Virksomhet from "~/components/Virksomhet";
+import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntek } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/_index";
-import { InntektProvider } from "~/context/inntekt-context";
 
-// Henting av inntekten basert på inntektId fra URL-en
 export async function loader({ request, params }: Route.LoaderArgs) {
   if (!params.inntektId) {
     return redirect("/sok");
@@ -27,11 +27,22 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   const inntektData: IUklassifisertInntekt = await inntektResponse.json();
 
-  return data(inntektData);
+  const idag = new Date();
+  const minus36Mnd = subMonths(idag, 36);
+
+  const periode = {
+    fra: format(minus36Mnd, "yyyy-MM"),
+    til: format(idag, "yyyy-MM"),
+  };
+
+  return data({
+    virksomheter: inntektData.virksomheter,
+    mottaker: inntektData.mottaker,
+    periode: periode,
+  });
 }
 
 export default function Inntekt() {
-  // virksomhetsinntekt er en liste med inntekter for hver virksomhet
   const { periode, mottaker, virksomheter } = useLoaderData<typeof loader>();
 
   return (

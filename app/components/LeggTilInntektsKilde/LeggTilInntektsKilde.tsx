@@ -54,8 +54,6 @@ export default function LeggTilInntektsKilde() {
 
   function validate() {
     form.validate();
-
-    // Sjekk om validdering er ok før vi setter klar for lagring til true eller lukke modalen?
     ref.current?.close();
     setEndret(true);
   }
