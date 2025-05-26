@@ -89,6 +89,12 @@ export async function action({ request, params }: Route.ActionArgs) {
       redigert: false,
       begrunnelse: "",
       aarMaaned: dato,
+      opptjeningsland: "", 
+      opptjeningsperiode: "", 
+      skattemessigBosattLand: "", 
+      opplysningspliktig: null,
+      inntektsinnsender: null, 
+      tilleggsinformasjon: null
     }));
   }
 

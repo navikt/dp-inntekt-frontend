@@ -7,7 +7,7 @@ export interface IUklassifisertInntekt {
 export interface IVirksomhetsinntekt {
   virksomhetsnummer: string;
   virksomhetsnavn: string;
-  periode: IPeriode | null;
+  periode: IPeriode;
   inntekter: IInntekt[];
   totalBelop: string;
   avvikListe: IAvvik[];
