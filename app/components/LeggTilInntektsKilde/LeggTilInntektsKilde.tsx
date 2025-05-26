@@ -54,8 +54,11 @@ export default function LeggTilInntektsKilde() {
 
   function validate() {
     form.validate();
-    ref.current?.close();
-    setEndret(true);
+
+    if (form.formState.isValid && form.formState.isTouched) {
+      ref.current?.close();
+      setEndret(true);
+    }
   }
 
   return (
