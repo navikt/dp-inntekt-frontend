@@ -84,7 +84,7 @@ export function delOppPeriodeTilTrePerioder(inntektsperiode: IPeriode): IPeriode
     throw new Error("Feil: Periodene er ikke delt opp i tre perioder");
   }
 
-  return perioder;
+  return perioder.reverse();
 }
 
 // Beregner total inntekt for en gitt periode ved å summere beløp innenfor fra–til
