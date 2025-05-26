@@ -4,7 +4,6 @@ export function erEnKvinne(pnr: string) {
   }
 
   const individSiffer = parseInt(pnr[8], 10);
-
   return individSiffer % 2 === 0;
 }
 
@@ -14,9 +13,10 @@ export function capitalize(str: string): string {
 
 export function maskerePersonnummer(pnr: string): string {
   if (pnr.length < 5) return "*".repeat(pnr.length);
+
   const synlig = pnr.slice(0, pnr.length - 5);
   const maskert = "*".repeat(5);
-  return synlig + maskert;
+  return `${synlig} ${maskert}`;
 }
 
 export function erPersonnummer(verdi: string): boolean {
