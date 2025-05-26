@@ -31,7 +31,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function Inntekt() {
   // virksomhetsinntekt er en liste med inntekter for hver virksomhet
-  const { periode, mottaker, virksomhetsinntekt } = useLoaderData<typeof loader>();
+  const { periode, mottaker, virksomheter } = useLoaderData<typeof loader>();
 
   return (
     <main>
@@ -40,13 +40,13 @@ export default function Inntekt() {
         <Personalia mottaker={mottaker} />
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <InntektPerioderOppsummering
-            virksomheter={virksomhetsinntekt}
+            virksomheter={virksomheter}
             inntektsPeriode={periode}
           />
         </Box>
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <VStack gap="4">
-            {virksomhetsinntekt.map((virksomhet) => (
+            {virksomheter.map((virksomhet) => (
               <Virksomhet
                 key={virksomhet.virksomhetsnummer}
                 virksomhet={virksomhet}
