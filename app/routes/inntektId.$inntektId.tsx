@@ -25,6 +25,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   }
 
   const inntektData: IUklassifisertInntekt = await inntektResponse.json();
+  console.log("LOG DATA: ", inntektData)
 
   return data(inntektData);
 }
