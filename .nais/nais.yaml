@@ -61,5 +61,5 @@ spec:
         extra:
           - NAVident
     sidecar:
-      enabled: "{{azure.enabled}}"
+      enabled: {{azure.enabled}}
       autoLogin: true
