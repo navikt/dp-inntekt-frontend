@@ -17,7 +17,7 @@ export function InntektPerioderOppsummering({ virksomheter, inntektsPeriode }: I
       <VStack>
         <BodyShort>Inntektsperiode</BodyShort>
         <BodyShort>
-          {formaterNorskDato(til)} - {formaterNorskDato(fra)}
+          {formaterNorskDato(fra)} - {formaterNorskDato(til)}
         </BodyShort>
         <BodyShort weight="semibold" size="large">
           {formatterNorskTall(inntektPerioderTotaltBelop)}
