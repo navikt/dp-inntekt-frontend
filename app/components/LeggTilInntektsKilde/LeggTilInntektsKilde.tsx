@@ -18,8 +18,10 @@ import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
+import { useInntekt } from "~/context/inntekt-context";
 
 export default function LeggTilInntektsKilde() {
+  const { setInntektEndret, klarForLagring } = useInntekt();
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const ref = useRef<HTMLDialogElement>(null);
@@ -28,6 +30,12 @@ export default function LeggTilInntektsKilde() {
     const generertePerioder = generereFirePerioder(inntekt.periode);
     setGenerertePerioder(generertePerioder);
   }, []);
+
+  useEffect(() => {
+    if (klarForLagring) {
+      form.submit();
+    }
+  }, [klarForLagring]);
 
   const form = useForm({
     submitSource: "state",
@@ -38,6 +46,20 @@ export default function LeggTilInntektsKilde() {
       originalData: JSON.stringify(inntekt),
     },
   });
+
+  function avbryt() {
+    form.resetForm();
+    ref.current?.close();
+  }
+
+  function validate() {
+    form.validate();
+
+    if (form.formState.isValid && form.formState.isTouched) {
+      ref.current?.close();
+      setInntektEndret(true);
+    }
+  }
 
   return (
     <div className="mt-6">
@@ -102,13 +124,12 @@ export default function LeggTilInntektsKilde() {
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <Button type="submit" loading={form.formState.isSubmitting}>
-              Lagre
+            <Button type="button" size="small" onClick={() => validate()}>
+              Sett inn
             </Button>
-            <Button type="button" variant="secondary" onClick={() => ref.current?.close()}>
+            <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
               Avbryt
             </Button>
-            <Button variant="tertiary">Lukk</Button>
           </Modal.Footer>
         </form>
       </Modal>

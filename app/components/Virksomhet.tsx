@@ -31,7 +31,7 @@ export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
     <ExpansionCard aria-label={`Inntekt for ${virksomhetsnummer}`}>
       <ExpansionCard.Header>
         <ExpansionCard.Title>
-          {erPrivatPerson ? maskerePersonnummer(virksomhetsnummer) : virksomhetsnavn}
+          {erPrivatPerson ? "Privatperson" : virksomhetsnavn}
         </ExpansionCard.Title>
         <ExpansionCard.Description>
           <VStack gap="4">

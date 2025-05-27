@@ -1,4 +1,4 @@
-import type { IUklassifisertInntekt } from "~/types/inntekt.types";
+import type { IUklassifisertInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
 
 function generateMockInntektDataFromRange(start: string, end: string) {
   const [startYear, startMonth] = start.split("-").map(Number);
@@ -12,7 +12,7 @@ function generateMockInntektDataFromRange(start: string, end: string) {
     const formattedMonth = `${year}-${String(month).padStart(2, "0")}`;
 
     data.push({
-      belop: "10000", // this could be any mock value
+      belop: "10000.0", // this could be any mock value
       fordel: "kontantytelse",
       beskrivelse: "fastloenn",
       inntektskilde: "A-ordningen",
@@ -25,10 +25,16 @@ function generateMockInntektDataFromRange(start: string, end: string) {
       utloeserArbeidsgiveravgift: true,
       informasjonsstatus: "InngaarAlltid",
       inntektType: "LOENNSINNTEKT",
-      tilleggsinformasjon: { kategori: "NorskKontinentalsokkel" },
       redigert: false,
       begrunnelse: "FASTLOENN",
       aarMaaned: formattedMonth,
+      opptjeningsland: "",
+      opptjeningsperiode: "",
+      skattemessigBosattLand: "",
+      opplysningspliktig: null,
+      inntektsinnsender: null,
+      tilleggsinformasjon: null,
+      inntektsperiodetype: "maaned",
     });
 
     // Increment month
@@ -42,8 +48,8 @@ function generateMockInntektDataFromRange(start: string, end: string) {
   return data;
 }
 
-function updateTotalBelop(virksomhetsinntekt: IUklassifisertInntekt["virksomhetsinntekt"]) {
-  virksomhetsinntekt.forEach((virksomhet) => {
+function updateTotalBelop(virksomheter: IVirksomhetsinntekt[]) {
+  virksomheter.forEach((virksomhet) => {
     const totalInntekt = virksomhet.inntekter.reduce((sum, inntekt) => {
       return sum + parseInt(inntekt.belop, 10);
     }, 0);
@@ -53,7 +59,7 @@ function updateTotalBelop(virksomhetsinntekt: IUklassifisertInntekt["virksomhets
 }
 
 export const mockUklassifisertInntekt: IUklassifisertInntekt = {
-  virksomhetsinntekt: [
+  virksomheter: [
     {
       virksomhetsnummer: "937846231",
       virksomhetsnavn: "KIWI NORGE AS",
@@ -68,7 +74,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
       periode: { fra: "2021-01", til: "2023-12" },
       inntekter: [
         {
-          belop: "250000",
+          belop: "250000.0",
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
           inntektskilde: "A-ordningen",
@@ -84,9 +90,16 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           redigert: false,
           begrunnelse: "LOTT_KUN_TRYGDEAVGIFT",
           aarMaaned: "2020-12",
+          opptjeningsland: "",
+          opptjeningsperiode: "",
+          skattemessigBosattLand: "",
+          opplysningspliktig: null,
+          inntektsinnsender: null,
+          tilleggsinformasjon: null,
+          inntektsperiodetype: "maaned",
         },
         {
-          belop: "150000",
+          belop: "150000.0",
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
           inntektskilde: "A-ordningen",
@@ -102,6 +115,13 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           redigert: false,
           begrunnelse: "LOTT_KUN_TRYGDEAVGIFT",
           aarMaaned: "2023-11",
+          opptjeningsland: "",
+          opptjeningsperiode: "",
+          skattemessigBosattLand: "",
+          opplysningspliktig: null,
+          inntektsinnsender: null,
+          tilleggsinformasjon: null,
+          inntektsperiodetype: "maaned",
         },
       ],
       totalBelop: "0",
@@ -109,7 +129,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
     },
   ],
   mottaker: { pnr: "20443502916", navn: "Ola Nordmann" },
-  periode: { fra: "2020-12", til: "2023-11" },
+  // periode: { fra: "2020-12", til: "2023-11" },
 };
 
-updateTotalBelop(mockUklassifisertInntekt.virksomhetsinntekt);
+updateTotalBelop(mockUklassifisertInntekt.virksomheter);

@@ -1,4 +1,6 @@
-import { BodyShort, Box, Button, HStack, Spacer } from "@navikt/ds-react";
+import { FloppydiskIcon } from "@navikt/aksel-icons";
+import { BodyShort, Box, Button, CopyButton, HStack, Spacer } from "@navikt/ds-react";
+import { useInntekt } from "~/context/inntekt-context";
 import type { IMottaker } from "~/types/inntekt.types";
 import { erEnKvinne } from "~/utils/generell.util";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
@@ -9,14 +11,16 @@ interface IProps {
 }
 
 export function Personalia({ mottaker }: IProps) {
-  const date = new Date();
-  const sisteHentet = date.toLocaleDateString("no-NO", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const { inntektEndret, setKlarForLagring, contextVirsomheter, setContextViksomheter } =
+    useInntekt();
+
+  function slettKiwi() {
+    const filtertListe = [...contextVirsomheter].filter((virksomhet) => {
+      return virksomhet.virksomhetsnummer !== "937846231";
+    });
+
+    setContextViksomheter(filtertListe);
+  }
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
@@ -25,15 +29,27 @@ export function Personalia({ mottaker }: IProps) {
         <HStack gap="4" align="center">
           <BodyShort weight="semibold">{mottaker.navn}</BodyShort>
           <BodyShort>/</BodyShort>
-          <HStack align="center">
-            <BodyShort>{mottaker.pnr}</BodyShort>
+          <HStack align="center" gap="2">
+            <BodyShort>F.nr: {mottaker.pnr}</BodyShort>
+            <CopyButton copyText={mottaker.pnr} />
           </HStack>
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
-          <BodyShort size="small">{`Siste hentet: ${sisteHentet}`}</BodyShort>
-          <Button variant="secondary" size="small" onClick={() => window.location.reload()}>
-            Hent inntekter på nytt
+          <Button size="small" variant="secondary" onClick={() => slettKiwi()}>
+            Slett Kiwi
+          </Button>
+          <Button
+            variant="primary"
+            size="small"
+            icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
+            disabled={!inntektEndret}
+            type="submit"
+            onClick={() => {
+              setKlarForLagring(true);
+            }}
+          >
+            Lagre endringer
           </Button>
         </HStack>
       </HStack>
