@@ -1,29 +1,35 @@
 import { createContext, useContext, useState, type PropsWithChildren } from "react";
+import type { IVirksomhetsinntekt } from "~/types/inntekt.types";
 
-interface IInntektContext {
-  endret: boolean;
-  setEndret: (value: boolean) => void;
+interface IInntektContextProps {
+  virksomheter: IVirksomhetsinntekt[];
+}
+
+interface IInntektContextValue {
+  inntektEndret: boolean;
+  setInntektEndret: (value: boolean) => void;
   klarForLagring: boolean;
   setKlarForLagring: (value: boolean) => void;
+  contextVirsomheter: IVirksomhetsinntekt[];
+  setContextViksomheter: (value: IVirksomhetsinntekt[]) => void;
 }
 
-interface IInitialState {
-  endret: boolean;
-}
+export const InntektContext = createContext<IInntektContextValue | undefined>(undefined);
 
-export const InntektContext = createContext<IInntektContext | undefined>(undefined);
-
-function InntektProvider(props: PropsWithChildren<IInitialState>) {
-  const [endret, setEndret] = useState<boolean>(props.endret);
-  const [klarForLagring, setKlarForLagring] = useState<boolean>(false);
+function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
+  const [contextVirsomheter, setContextViksomheter] = useState(props.virksomheter || []);
+  const [inntektEndret, setInntektEndret] = useState(false);
+  const [klarForLagring, setKlarForLagring] = useState(false);
 
   return (
     <InntektContext.Provider
       value={{
-        endret,
-        setEndret,
+        inntektEndret,
+        setInntektEndret,
         klarForLagring,
         setKlarForLagring,
+        contextVirsomheter,
+        setContextViksomheter,
       }}
     >
       {props.children}
@@ -35,7 +41,7 @@ function useInntekt() {
   const context = useContext(InntektContext);
 
   if (!context) {
-    throw new Error("useInntekt must be used within a UserInfoProvider");
+    throw new Error("useInntekt must be used within a InntektProvider");
   }
 
   return context;

@@ -21,7 +21,7 @@ import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { useInntekt } from "~/context/inntekt-context";
 
 export default function LeggTilInntektsKilde() {
-  const { setEndret, klarForLagring } = useInntekt();
+  const { setInntektEndret, klarForLagring } = useInntekt();
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const ref = useRef<HTMLDialogElement>(null);
@@ -57,7 +57,7 @@ export default function LeggTilInntektsKilde() {
 
     if (form.formState.isValid && form.formState.isTouched) {
       ref.current?.close();
-      setEndret(true);
+      setInntektEndret(true);
     }
   }
 

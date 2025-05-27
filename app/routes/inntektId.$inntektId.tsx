@@ -5,7 +5,7 @@ import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
 import { Personalia } from "~/components/Personalia";
-import Virksomhet from "~/components/Virksomhet";
+import { Virksomheter } from "~/components/Virksomheter";
 import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntek } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
@@ -46,23 +46,18 @@ export default function Inntekt() {
   const { periode, mottaker, virksomheter } = useLoaderData<typeof loader>();
 
   return (
-    <InntektProvider endret={false}>
+    <InntektProvider virksomheter={virksomheter}>
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />
           <Personalia mottaker={mottaker} />
           <Box background="surface-default" padding="6" borderRadius="xlarge">
+            {/* // Todo: bør vi bruker context virsomheter isteden? */}
             <InntektPerioderOppsummering virksomheter={virksomheter} inntektsPeriode={periode} />
           </Box>
           <Box background="surface-default" padding="6" borderRadius="xlarge">
             <VStack gap="4">
-              {virksomheter.map((virksomhet) => (
-                <Virksomhet
-                  key={virksomhet.virksomhetsnummer}
-                  virksomhet={virksomhet}
-                  inntektsPeriode={periode}
-                />
-              ))}
+              <Virksomheter />
             </VStack>
             <LeggTilInntektsKilde />
           </Box>
