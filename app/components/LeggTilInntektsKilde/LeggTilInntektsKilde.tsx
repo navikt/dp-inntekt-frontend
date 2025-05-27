@@ -43,7 +43,10 @@ export default function LeggTilInntektsKilde() {
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
     defaultValues: {
-      originalData: JSON.stringify(inntekt),
+      originalData: JSON.stringify({
+        virksomheter: inntekt.virksomheter,
+        mottaker: inntekt.mottaker,
+      }),
       inntektId: inntekt.inntektId,
     },
   });
