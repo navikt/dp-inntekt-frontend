@@ -1,10 +1,9 @@
 import { format } from "date-fns";
 import { redirect } from "react-router";
-import invariant from "tiny-invariant";
 import { lagreInntekt } from "~/models/inntekt.server";
 import type { IInntekt, IUklassifisertInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
-import type { Route } from "./+types/_index";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
+import type { Route } from "./+types/_index";
 
 interface IFormDataInntek {
   dato: string;
@@ -13,15 +12,14 @@ interface IFormDataInntek {
 
 // Lagring av inntekten
 // Denne funksjonen håndterer lagring av inntekten når brukeren sender inn skjemaet
-export async function action({ request, params }: Route.ActionArgs) {
-  invariant(params.inntektId, "Mangler inntekts-ID");
-
+export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const entries = Object.fromEntries(formData.entries());
   const organisasjonsnummer = entries["organisasjonsnummer"] as string;
   const organisasjonsnavn = entries["organisasjonsnavn"] as string;
   const inntektstype = entries["inntektstype"] as string;
   const originalData = entries["originalData"] as string;
+  const inntektId = entries["inntektId"] as string;
   const inntektskilde = entries["inntektskilde"] as string;
 
   const inntekter = hentFormDataInntekter();
@@ -33,6 +31,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       organisasjonsnummer,
       inntektstype,
       originalData,
+      inntektId,
       ...rest
     } = entries;
 
@@ -106,7 +105,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     virksomhetsinntekt: [nyInntektskilde, ...parsedOriginalData.virksomheter],
   };
 
-  const lagreInntektResponse = await lagreInntekt(request, params.inntektId, oppdaterteInntektData);
+  const lagreInntektResponse = await lagreInntekt(request, inntektId, oppdaterteInntektData);
 
   if (!lagreInntektResponse.ok) {
     throw new Response("Feil ved lagring av inntekt", {

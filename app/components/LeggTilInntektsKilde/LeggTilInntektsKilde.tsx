@@ -15,10 +15,10 @@ import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
-
-import styles from "./LeggTilInntektskilde.module.css";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { useInntekt } from "~/context/inntekt-context";
+
+import styles from "./LeggTilInntektskilde.module.css";
 
 export default function LeggTilInntektsKilde() {
   const { setInntektEndret, klarForLagring } = useInntekt();
@@ -44,6 +44,7 @@ export default function LeggTilInntektsKilde() {
     action: "/inntektId/$inntektId/action",
     defaultValues: {
       originalData: JSON.stringify(inntekt),
+      inntektId: inntekt.inntektId,
     },
   });
 
@@ -97,6 +98,7 @@ export default function LeggTilInntektsKilde() {
                   error={form.error("organisasjonsnavn")}
                 />
                 <input type="hidden" name="originalData" />
+                <input type="hidden" name="inntektId" />
                 <TextField
                   name="organisasjonsnummer"
                   label="Organisasjonsnummer"

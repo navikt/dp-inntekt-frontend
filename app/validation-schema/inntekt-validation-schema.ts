@@ -13,6 +13,7 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
       .min(1, "Organisasjonsnavn er påkrevd")
       .max(50, "Organisasjonsnavn er for langt"),
     originalData: z.string().optional(),
+    inntektId: z.string().optional(),
     organisasjonsnummer: z
       .string({
         required_error: "Organisasjonsnummer er påkrevd",
