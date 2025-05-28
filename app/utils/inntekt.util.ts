@@ -5,7 +5,8 @@ import type { IInntekt, IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.ty
 export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhetsinntekt[]): number {
   return virksomheter.reduce(
     (total, virksomhet) =>
-      total + virksomhet.inntekter.reduce((sum, inntekt) => sum + inntekt.belop, 0),
+      total +
+      virksomhet.inntekter.reduce((sum, inntekt) => sum + parseInt(inntekt.belop.toString()), 0),
     0
   );
 }
@@ -97,7 +98,7 @@ export function beregnTotalInntektForEnPeriode(inntekter: IInntekt[], periode: I
 
   // Summerer beløpene for de filtrerte inntektene
   const total = filtrerte.reduce((sum, inntekt) => {
-    return sum + inntekt.belop;
+    return sum + parseInt(inntekt.belop.toString(), 10);
   }, 0);
 
   return total;
