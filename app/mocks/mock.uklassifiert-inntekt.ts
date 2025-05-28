@@ -1,3 +1,4 @@
+import { format, subMonths } from "date-fns";
 import type { IUklassifisertInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
 
 function generateMockInntektDataFromRange(start: string, end: string) {
@@ -12,7 +13,7 @@ function generateMockInntektDataFromRange(start: string, end: string) {
     const formattedMonth = `${year}-${String(month).padStart(2, "0")}`;
 
     data.push({
-      belop: "10000.0", // this could be any mock value
+      belop: 10000.0, // this could be any mock value
       fordel: "kontantytelse",
       beskrivelse: "fastloenn",
       inntektskilde: "A-ordningen",
@@ -51,21 +52,30 @@ function generateMockInntektDataFromRange(start: string, end: string) {
 function updateTotalBelop(virksomheter: IVirksomhetsinntekt[]) {
   virksomheter.forEach((virksomhet) => {
     const totalInntekt = virksomhet.inntekter.reduce((sum, inntekt) => {
-      return sum + parseInt(inntekt.belop, 10);
+      const belop = inntekt.belop;
+      return sum + belop;
     }, 0);
 
-    virksomhet.totalBelop = totalInntekt.toString(); // Update totalBelop with the calculated sum
+    virksomhet.totalBelop = totalInntekt;
   });
 }
+
+const idag = new Date();
+const minus36Mnd = subMonths(idag, 34); // 34 måneder for å inkludere nåværende måned og 35 forrige måneder
+
+const mockPeriode = {
+  fra: format(minus36Mnd, "yyyy-MM"),
+  til: format(idag, "yyyy-MM"),
+};
 
 export const mockUklassifisertInntekt: IUklassifisertInntekt = {
   virksomheter: [
     {
       virksomhetsnummer: "937846231",
       virksomhetsnavn: "KIWI NORGE AS",
-      periode: { fra: "2020-12", til: "2023-11" },
-      inntekter: generateMockInntektDataFromRange("2020-12", "2023-11"),
-      totalBelop: "0",
+      periode: mockPeriode,
+      inntekter: generateMockInntektDataFromRange(mockPeriode.fra, mockPeriode.til),
+      totalBelop: 0,
       avvikListe: [],
     },
     {
@@ -74,7 +84,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
       periode: { fra: "2021-01", til: "2023-12" },
       inntekter: [
         {
-          belop: "250000.0",
+          belop: 250000.0,
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
           inntektskilde: "A-ordningen",
@@ -99,7 +109,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           inntektsperiodetype: "maaned",
         },
         {
-          belop: "150000.0",
+          belop: 150000.0,
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
           inntektskilde: "A-ordningen",
@@ -124,7 +134,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           inntektsperiodetype: "maaned",
         },
       ],
-      totalBelop: "0",
+      totalBelop: 0,
       avvikListe: [],
     },
   ],
