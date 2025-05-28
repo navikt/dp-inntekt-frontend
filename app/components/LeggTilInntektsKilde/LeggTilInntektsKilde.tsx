@@ -12,11 +12,7 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import {
-  fjernStringFraBelopOgTotalBelop,
-  generereFirePerioder,
-  type IGenerertePeriode,
-} from "~/utils/inntekt.util";
+import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
@@ -50,7 +46,7 @@ export default function LeggTilInntektsKilde() {
     action: "/inntektId/$inntektId/action",
     defaultValues: {
       originalData: JSON.stringify({
-        virksomheter: fjernStringFraBelopOgTotalBelop(inntekt.virksomheter),
+        virksomheter: inntekt.virksomheter,
         mottaker: inntekt.mottaker,
       }),
       inntektId: inntekt.inntektId,
