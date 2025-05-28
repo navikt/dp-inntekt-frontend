@@ -9,7 +9,7 @@ export interface IVirksomhetsinntekt {
   virksomhetsnavn: string;
   periode: IPeriode;
   inntekter: IInntekt[];
-  totalBelop: number;
+  totalBelop: string;
   avvikListe: IAvvik[];
 }
 
@@ -19,7 +19,7 @@ export interface IPeriode {
 }
 
 export interface IInntekt {
-  belop: number;
+  belop: string;
   fordel: string;
   beskrivelse: string;
   inntektskilde: string;

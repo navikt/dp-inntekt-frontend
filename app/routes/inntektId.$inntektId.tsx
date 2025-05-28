@@ -28,7 +28,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const inntektData: IUklassifisertInntekt = await inntektResponse.json();
 
   const idag = new Date();
-  const minus36Mnd = subMonths(idag, 35); // 34 måneder for å inkludere nåværende måned og 35 forrige måneder
+  const minus36Mnd = subMonths(idag, 36);
 
   const periode = {
     fra: format(minus36Mnd, "yyyy-MM"),

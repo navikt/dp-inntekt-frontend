@@ -2,6 +2,7 @@ import { differenceInMonths, format } from "date-fns";
 import { parse } from "date-fns/parse";
 import type { IInntekt, IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
 
+<<<<<<< HEAD
 export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhetsinntekt[]): number {
   return virksomheter.reduce(
     (total, virksomhet) =>
@@ -9,6 +10,16 @@ export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhets
       virksomhet.inntekter.reduce((sum, inntekt) => sum + parseInt(inntekt.belop.toString()), 0),
     0
   );
+=======
+export function sumTotaltInntekterForAlleVirksomheter(virsomheter: IVirksomhetsinntekt[]): number {
+  return virsomheter.reduce((total, virksomhet) => {
+    const sumPerVirksomhet = virksomhet.inntekter.reduce((sum, inntekt) => {
+      const belop = parseFloat(inntekt.belop);
+      return sum + (isNaN(belop) ? 0 : belop);
+    }, 0);
+    return total + sumPerVirksomhet;
+  }, 0);
+>>>>>>> parent of 5fb9750 (Oppdatert type belop og totaltBelop til å være number og oppdatert util funksjoner)
 }
 
 // Returnerer true hvis perioden dekker nøyaktig 36 måneder (inkludert fra- og til-måneden)
@@ -98,7 +109,11 @@ export function beregnTotalInntektForEnPeriode(inntekter: IInntekt[], periode: I
 
   // Summerer beløpene for de filtrerte inntektene
   const total = filtrerte.reduce((sum, inntekt) => {
+<<<<<<< HEAD
     return sum + parseInt(inntekt.belop.toString(), 10);
+=======
+    return sum + parseFloat(inntekt.belop);
+>>>>>>> parent of 5fb9750 (Oppdatert type belop og totaltBelop til å være number og oppdatert util funksjoner)
   }, 0);
 
   return total;

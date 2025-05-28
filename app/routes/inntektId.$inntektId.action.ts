@@ -7,7 +7,7 @@ import type { Route } from "./+types/_index";
 
 interface IFormDataInntek {
   dato: string;
-  belop: number;
+  belop: string;
 }
 
 // Lagring av inntekten
@@ -39,7 +39,7 @@ export async function action({ request }: Route.ActionArgs) {
       const [dato] = key.split("_");
       return {
         dato: format(dato, "yyyy-MM"),
-        belop: value ? parseFloat(value as string) : 0,
+        belop: value.toString(),
       };
     });
   }
@@ -48,14 +48,14 @@ export async function action({ request }: Route.ActionArgs) {
     const datoer = inntekter.map((i) => i.dato).sort();
     const tidligste = datoer[0];
     const seneste = datoer[datoer.length - 1];
-    const totalBelop = inntekter.reduce((sum, i) => sum + i.belop, 0);
+    const totalBelop = inntekter.reduce((sum, i) => sum + Number(i.belop), 0);
 
     return {
       virksomhetsnummer: organisasjonsnummer,
       virksomhetsnavn: organisasjonsnavn,
       periode: { fra: tidligste, til: seneste },
       inntekter: lagNyInntektskildeInntekter(),
-      totalBelop: totalBelop,
+      totalBelop: totalBelop.toString(),
       avvikListe: [],
     };
   }
@@ -70,7 +70,7 @@ export async function action({ request }: Route.ActionArgs) {
     };
 
     return inntekter.map(({ dato, belop }) => ({
-      belop: belop,
+      belop: belop.toString(),
       fordel: "",
       beskrivelse:
         inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
