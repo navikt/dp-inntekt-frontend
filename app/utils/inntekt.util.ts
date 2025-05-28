@@ -144,3 +144,20 @@ export function generereFirePerioder(periode: IPeriode): IGenerertePeriode[] {
 
   return perioder;
 }
+
+// Midler tidig hack for å fjerne string fra beløp og totalbeløp
+export function fjernStringFraBelopOgTotalBelop(
+  data: IVirksomhetsinntekt[]
+): IVirksomhetsinntekt[] {
+  return data.map((virksomhet) => ({
+    ...virksomhet,
+    inntekter: virksomhet.inntekter.map((inntekt) => ({
+      ...inntekt,
+      belop: typeof inntekt.belop === "string" ? Number(inntekt.belop) : inntekt.belop,
+    })),
+    totalBelop:
+      typeof virksomhet.totalBelop === "string"
+        ? Number(virksomhet.totalBelop)
+        : virksomhet.totalBelop,
+  }));
+}

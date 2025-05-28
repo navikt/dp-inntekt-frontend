@@ -12,7 +12,11 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
+import {
+  fjernStringFraBelopOgTotalBelop,
+  generereFirePerioder,
+  type IGenerertePeriode,
+} from "~/utils/inntekt.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
@@ -37,6 +41,8 @@ export default function LeggTilInntektsKilde() {
     }
   }, [klarForLagring]);
 
+  console.log(inntekt.virksomheter);
+
   const form = useForm({
     submitSource: "state",
     method: "post",
@@ -44,7 +50,7 @@ export default function LeggTilInntektsKilde() {
     action: "/inntektId/$inntektId/action",
     defaultValues: {
       originalData: JSON.stringify({
-        virksomheter: inntekt.virksomheter,
+        virksomheter: fjernStringFraBelopOgTotalBelop(inntekt.virksomheter),
         mottaker: inntekt.mottaker,
       }),
       inntektId: inntekt.inntektId,
