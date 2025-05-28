@@ -11,16 +11,7 @@ interface IProps {
 }
 
 export function Personalia({ mottaker }: IProps) {
-  const { inntektEndret, setKlarForLagring, contextVirsomheter, setContextViksomheter } =
-    useInntekt();
-
-  function slettKiwi() {
-    const filtertListe = [...contextVirsomheter].filter((virksomhet) => {
-      return virksomhet.virksomhetsnummer !== "937846231";
-    });
-
-    setContextViksomheter(filtertListe);
-  }
+  const { inntektEndret, setKlarForLagring } = useInntekt();
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
@@ -36,9 +27,6 @@ export function Personalia({ mottaker }: IProps) {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
-          <Button size="small" variant="secondary" onClick={() => slettKiwi()}>
-            Slett Kiwi
-          </Button>
           <Button
             variant="primary"
             size="small"
