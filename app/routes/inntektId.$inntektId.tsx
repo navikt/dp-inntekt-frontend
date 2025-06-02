@@ -30,15 +30,10 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const idag = new Date();
   const minus36Mnd = subMonths(idag, 36);
 
-  const periode = {
-    fra: format(minus36Mnd, "yyyy-MM"),
-    til: format(idag, "yyyy-MM"),
-  };
-
   return data({
     virksomheter: inntektData.virksomheter,
     mottaker: inntektData.mottaker,
-    periode: periode,
+    periode: inntektData.periode,
     inntektId: params.inntektId,
   });
 }

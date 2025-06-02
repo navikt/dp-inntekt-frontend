@@ -9,7 +9,7 @@ interface IProps {
 }
 
 export function InntektPerioderOppsummering({ virksomheter, inntektsPeriode }: IProps) {
-  const { fra, til } = inntektsPeriode;
+  const { fraOgMed, tilOgMed } = inntektsPeriode;
   const inntektPerioderTotaltBelop = sumTotaltInntekterForAlleVirksomheter(virksomheter);
 
   return (
@@ -17,7 +17,7 @@ export function InntektPerioderOppsummering({ virksomheter, inntektsPeriode }: I
       <VStack>
         <BodyShort>Inntektsperiode</BodyShort>
         <BodyShort>
-          {formaterNorskDato(fra)} - {formaterNorskDato(til)}
+          {formaterNorskDato(fraOgMed)} - {formaterNorskDato(tilOgMed)}
         </BodyShort>
         <BodyShort weight="semibold" size="large">
           {formatterNorskTall(inntektPerioderTotaltBelop)}

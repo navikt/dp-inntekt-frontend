@@ -13,8 +13,8 @@ export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhets
 
 // Returnerer true hvis perioden dekker nøyaktig 36 måneder (inkludert fra- og til-måneden)
 export function inntektsPeriodeEr36Maneder(periode: IPeriode): boolean {
-  const fraDato = parse(periode.fra, "yyyy-MM", new Date());
-  const tilDato = parse(periode.til, "yyyy-MM", new Date());
+  const fraDato = parse(periode.fraOgMed, "yyyy-MM", new Date());
+  const tilDato = parse(periode.tilOgMed, "yyyy-MM", new Date());
 
   const antallManeder = differenceInMonths(tilDato, fraDato) + 1;
   return antallManeder === 36;
@@ -49,11 +49,11 @@ export function grupperEtterInntektType(
 
 // Deler opp inntektsperioden i tre separate perioder, hver på 12 måneder
 export function delOppPeriodeTilTrePerioder(inntektsperiode: IPeriode): IPeriode[] {
-  const { fra } = inntektsperiode;
+  const { fraOgMed } = inntektsperiode;
 
   // Trekker ut startår og startmåned fra "fra"-verdien (f.eks. "2022-01")
-  const startAr = parseInt(fra.split("-")[0], 10);
-  const startManed = parseInt(fra.split("-")[1], 10);
+  const startAr = parseInt(fraOgMed.split("-")[0], 10);
+  const startManed = parseInt(fraOgMed.split("-")[1], 10);
 
   const perioder = [];
 
@@ -74,8 +74,8 @@ export function delOppPeriodeTilTrePerioder(inntektsperiode: IPeriode): IPeriode
 
     // Legger til perioden i resultatlista
     perioder.push({
-      fra: formatter(fraDato),
-      til: formatter(tilDato),
+      fraOgMed: formatter(fraDato),
+      tilOgMed: formatter(tilDato),
     });
   }
 
@@ -88,12 +88,12 @@ export function delOppPeriodeTilTrePerioder(inntektsperiode: IPeriode): IPeriode
 
 // Beregner total inntekt for en gitt periode ved å summere beløp innenfor fra–til
 export function beregnTotalInntektForEnPeriode(inntekter: IInntekt[], periode: IPeriode): number {
-  const { fra, til } = periode;
+  const { fraOgMed, tilOgMed } = periode;
 
   // Filtrerer inntektene basert på datoene i perioden
   const filtrerte = inntekter.filter((inntekt) => {
     const dato = inntekt.aarMaaned;
-    return dato >= fra && dato <= til;
+    return dato >= fraOgMed && dato <= tilOgMed;
   });
 
   // Summerer beløpene for de filtrerte inntektene
@@ -116,7 +116,7 @@ export interface IGenerertManed {
 
 // Genererer 4 perioder basert på en gitt periode
 export function generereFirePerioder(periode: IPeriode): IGenerertePeriode[] {
-  const periodeTilYear = parseInt(periode.til.slice(0, 4), 10);
+  const periodeTilYear = parseInt(periode.tilOgMed.slice(0, 4), 10);
   const periodeStartYear = periodeTilYear - 3;
 
   const perioder: IGenerertePeriode[] = [];
@@ -128,7 +128,7 @@ export function generereFirePerioder(periode: IPeriode): IGenerertePeriode[] {
       const dato = new Date(year, month, 1); // f.eks. 2023-11-01
       const arOgManed = format(dato, "yyyy-MM");
 
-      const readOnly = arOgManed < periode.fra || arOgManed > periode.til;
+      const readOnly = arOgManed < periode.fraOgMed || arOgManed > periode.tilOgMed;
 
       manader.push({
         dato: new Date(year, month + 1, 1).toISOString().slice(0, 7),

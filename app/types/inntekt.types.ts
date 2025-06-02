@@ -1,7 +1,7 @@
 export interface IUklassifisertInntekt {
   virksomheter: IVirksomhetsinntekt[];
   mottaker: IMottaker;
-  // periode: IPeriode;
+  periode: IPeriode;
 }
 
 export interface IVirksomhetsinntekt {
@@ -14,8 +14,8 @@ export interface IVirksomhetsinntekt {
 }
 
 export interface IPeriode {
-  fra: string; // Format: YYYY-MM
-  til: string; // Format: YYYY-MM
+  fraOgMed: string; // Format: YYYY-MM
+  tilOgMed: string; // Format: YYYY-MM
 }
 
 export interface IInntekt {

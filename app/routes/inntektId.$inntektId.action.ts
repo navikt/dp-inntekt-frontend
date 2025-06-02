@@ -53,7 +53,7 @@ export async function action({ request }: Route.ActionArgs) {
     return {
       virksomhetsnummer: organisasjonsnummer,
       virksomhetsnavn: organisasjonsnavn,
-      periode: { fra: tidligste, til: seneste },
+      periode: { fraOgMed: tidligste, tilOgMed: seneste },
       inntekter: lagNyInntektskildeInntekter(),
       totalBelop: totalBelop.toString(),
       avvikListe: [],
