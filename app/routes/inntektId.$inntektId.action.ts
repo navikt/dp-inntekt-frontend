@@ -22,9 +22,9 @@ export async function action({ request }: Route.ActionArgs) {
   const inntektId = entries["inntektId"] as string;
   const inntektskilde = entries["inntektskilde"] as string;
 
-  const inntekter = hentFormDataInntekter();
+  const inntekter = hentInntekterFraFormData();
 
-  function hentFormDataInntekter(): IFormDataInntek[] {
+  function hentInntekterFraFormData(): IFormDataInntek[] {
     const {
       inntektskilde,
       organisasjonsnavn,
@@ -69,13 +69,14 @@ export async function action({ request }: Route.ActionArgs) {
       identifikator: organisasjonsnummer,
     };
 
+    // Todo: Sjekk disse hardkodede verdiene
     return inntekter.map(({ dato, belop }) => ({
       belop: belop.toString(),
       fordel: "",
       beskrivelse:
         inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
-      inntektskilde: "",
-      inntektsstatus: "",
+      inntektskilde: "A-ordningen",
+      inntektsstatus: "LoependeInnrapportert",
       inntektsperiodetype: "Maaned",
       leveringstidspunkt: dato,
       utbetaltIMaaned: dato,
@@ -83,17 +84,9 @@ export async function action({ request }: Route.ActionArgs) {
       inntektsmottaker,
       inngaarIGrunnlagForTrekk: true,
       utloeserArbeidsgiveravgift: true,
-      informasjonsstatus: "",
-      inntektType: "",
-      redigert: false,
-      begrunnelse: "",
+      informasjonsstatus: "InngaarAlltid",
+      inntektType: "LOENNSINNTEKT",
       aarMaaned: dato,
-      opptjeningsland: "",
-      opptjeningsperiode: "",
-      skattemessigBosattLand: "",
-      opplysningspliktig: null,
-      inntektsinnsender: null,
-      tilleggsinformasjon: null,
     }));
   }
 
@@ -102,7 +95,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   const oppdaterteInntektData = {
     ...parsedOriginalData,
-    virksomhetsinntekt: [nyInntektskilde, ...parsedOriginalData.virksomheter],
+    virksomheter: [nyInntektskilde, ...parsedOriginalData.virksomheter],
   };
 
   const lagreInntektResponse = await lagreInntekt(request, inntektId, oppdaterteInntektData);

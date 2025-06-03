@@ -7,7 +7,7 @@ export interface IUklassifisertInntekt {
 export interface IVirksomhetsinntekt {
   virksomhetsnummer: string;
   virksomhetsnavn: string;
-  periode: IVirsomhetPeriode;
+  periode: IPeriode;
   inntekter: IInntekt[];
   totalBelop: string;
   avvikListe: IAvvik[];
@@ -18,11 +18,6 @@ export interface IPeriode {
   tilOgMed: string;
 }
 
-export interface IVirsomhetPeriode {
-  fra: string;
-  til: string;
-}
-
 export interface IInntekt {
   belop: string;
   fordel: string;
@@ -30,22 +25,13 @@ export interface IInntekt {
   inntektskilde: string;
   inntektsstatus: string;
   inntektsperiodetype: string;
-  leveringstidspunkt: string | null;
-  opptjeningsland: string | null;
-  opptjeningsperiode: string | null;
-  skattemessigBosattLand: string | null;
   utbetaltIMaaned: string;
-  opplysningspliktig: IAktor | null;
-  inntektsinnsender: IAktor | null;
   virksomhet: IAktor | null;
   inntektsmottaker: IAktor | null;
   inngaarIGrunnlagForTrekk: boolean | null;
   utloeserArbeidsgiveravgift: boolean | null;
   informasjonsstatus: string | null;
   inntektType: string;
-  tilleggsinformasjon: ITilleggsinformasjon | null;
-  redigert: boolean;
-  begrunnelse: string;
   aarMaaned: string;
 }
 

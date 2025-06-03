@@ -46,6 +46,7 @@ export default function LeggTilInntektsKilde() {
       originalData: JSON.stringify({
         virksomheter: inntekt.virksomheter,
         mottaker: inntekt.mottaker,
+        periode: inntekt.periode,
       }),
       inntektId: inntekt.inntektId,
     },

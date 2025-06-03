@@ -43,7 +43,7 @@ export default function Sok() {
           <form {...form.getFormProps()}>
             <TextField
               name="inntektId"
-              label="Søk etter inntekt. Eks: 01JFTM6C7XSKRDYAK57TDMA8HQ"
+              label="Søk etter inntekt. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
               error={form.error("inntektId")}
             />
             <Button type="submit" variant="primary" className="mt-4">
