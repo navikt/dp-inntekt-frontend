@@ -9,4 +9,7 @@ export const handlers = [
   http.post(`${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/:inntektId`, () => {
     return HttpResponse.text("1234");
   }),
+  http.post(`${getEnv("DP_INNTEKT_API_URL")}/v1/enhetsregisteret/enhet/:organisasjonsnummer`, () => {
+    return HttpResponse.text("Kiwi AS");
+  }),
 ];

@@ -25,6 +25,7 @@ export default function LeggTilInntektsKilde() {
   const { setInntektEndret, klarForLagring } = useInntekt();
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
+  const [inntektskildeValg, setInntektskildeValg] = useState<string>("");
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -111,24 +112,30 @@ export default function LeggTilInntektsKilde() {
                   legend="Type inntektskilde"
                   size="small"
                   error={form.error("inntektskilde")}
+                  onChange={(valgtKilde) => setInntektskildeValg(valgtKilde)}
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
-                <TextField
-                  name="organisasjonsnavn"
-                  label="Organisasjonsnavn"
-                  size="small"
-                  error={form.error("organisasjonsnavn")}
-                />
-                <input type="hidden" name="originalData" />
-                <input type="hidden" name="inntektId" />
-                <TextField
-                  name="organisasjonsnummer"
-                  label="Organisasjonsnummer"
-                  size="small"
-                  error={form.error("organisasjonsnummer")}
-                />
+
+                {inntektskildeValg === "ORGANISASJON" && (
+                      <TextField
+                        name="organisasjonsnummer"
+                        label="Organisasjonsnummer"
+                        size="small"
+                        error={form.error("organisasjonsnummer")}
+                      />
+
+                )}
+                {inntektskildeValg === "NATURLIG_IDENT" && (
+                    <TextField
+                        name="fodselsnummer"
+                        label="Fødselsnummer"
+                        size="small"
+                        error={form.error("fodselsnummer")}
+                    />
+                )}
+
                 <Select
                   name="inntektstype"
                   label="Inntektstype"
