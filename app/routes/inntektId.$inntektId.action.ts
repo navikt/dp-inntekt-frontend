@@ -109,5 +109,8 @@ export async function action({ request }: Route.ActionArgs) {
 
   const nyInntektId = await lagreInntektResponse.text();
 
+  // Console.log for å huske nyInntektId for senere bruk
+  console.log(`🔥 nyInntektId :`, nyInntektId);
+
   return redirect(`/inntektId/${nyInntektId}`);
 }
