@@ -37,8 +37,6 @@ export default function LeggTilInntektsKilde() {
     }
   }, [klarForLagring]);
 
-  console.log(inntekt.virksomheter);
-
   const form = useForm({
     submitSource: "state",
     method: "post",

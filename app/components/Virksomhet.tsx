@@ -41,9 +41,7 @@ export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
             />
             <InntektInfo
               overskrift="Periode"
-              verdi={`${formaterNorskDato(periode.fraOgMed)} - ${formaterNorskDato(
-                periode.tilOgMed
-              )}`}
+              verdi={`${formaterNorskDato(periode.fra)} - ${formaterNorskDato(periode.til)}`}
             />
             <InntektInfo
               overskrift="Beløp for perioden"

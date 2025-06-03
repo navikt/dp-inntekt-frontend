@@ -27,13 +27,8 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   const inntektData: IUklassifisertInntekt = await inntektResponse.json();
 
-  const idag = new Date();
-  const minus36Mnd = subMonths(idag, 36);
-
   return data({
-    virksomheter: inntektData.virksomheter,
-    mottaker: inntektData.mottaker,
-    periode: inntektData.periode,
+    ...inntektData,
     inntektId: params.inntektId,
   });
 }

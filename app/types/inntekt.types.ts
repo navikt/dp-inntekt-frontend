@@ -7,15 +7,20 @@ export interface IUklassifisertInntekt {
 export interface IVirksomhetsinntekt {
   virksomhetsnummer: string;
   virksomhetsnavn: string;
-  periode: IPeriode;
+  periode: IVirsomhetPeriode;
   inntekter: IInntekt[];
   totalBelop: string;
   avvikListe: IAvvik[];
 }
 
 export interface IPeriode {
-  fraOgMed: string; // Format: YYYY-MM
-  tilOgMed: string; // Format: YYYY-MM
+  fraOgMed: string;
+  tilOgMed: string;
+}
+
+export interface IVirsomhetPeriode {
+  fra: string;
+  til: string;
 }
 
 export interface IInntekt {
