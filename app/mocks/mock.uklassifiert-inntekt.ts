@@ -63,7 +63,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
     {
       virksomhetsnummer: "937846231",
       virksomhetsnavn: "KIWI NORGE AS",
-      periode: { fra: "2020-12", til: "2023-11" },
+      periode: { fraOgMed: "2020-12", tilOgMed: "2023-11" },
       inntekter: generateMockInntektDataFromRange("2020-12", "2023-11"),
       totalBelop: "0",
       avvikListe: [],
@@ -71,7 +71,7 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
     {
       virksomhetsnummer: "12092388024",
       virksomhetsnavn: "",
-      periode: { fra: "2021-01", til: "2023-12" },
+      periode: { fraOgMed: "2021-01", tilOgMed: "2023-12" },
       inntekter: [
         {
           belop: "250000.0",
