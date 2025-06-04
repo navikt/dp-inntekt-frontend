@@ -26,6 +26,8 @@ export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [inntektskildeValg, setInntektskildeValg] = useState<string>("");
+  const [orgNavn, setOrgNavn] = useState<string | undefined>(undefined);
+
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -53,6 +55,13 @@ export default function LeggTilInntektsKilde() {
       inntektId: inntekt.inntektId,
     },
   });
+  var organisasjonsnummer = form.value("organisasjonsnummer");
+
+  useEffect(() => {
+    if ((organisasjonsnummer + "").length === 9) {
+      hentOrganisasjonsNavn();
+    }
+  }, [form.value("organisasjonsnummer")]);
 
   function avbryt() {
     form.resetForm();
@@ -83,6 +92,19 @@ export default function LeggTilInntektsKilde() {
       return;
     }
   }
+
+  async function hentOrganisasjonsNavn() {
+    const response = await fetch(`/api/enhetsregister/${organisasjonsnummer}`, {
+      method: "GET",
+    });
+
+    if (response.ok) {
+      const organisasjon = await response.json();
+      console.log("Response: ", organisasjon.navn)
+      setOrgNavn(organisasjon.navn);
+    }
+  }
+
 
   const visManglerInntektError =
     form.formState.isTouched && form.formState.isValid && !minstEnInntektFyltUt;
@@ -119,21 +141,24 @@ export default function LeggTilInntektsKilde() {
                 </RadioGroup>
 
                 {inntektskildeValg === "ORGANISASJON" && (
-                      <TextField
-                        name="organisasjonsnummer"
-                        label="Organisasjonsnummer"
-                        size="small"
-                        error={form.error("organisasjonsnummer")}
-                      />
+                  <>
+                    <TextField
+                      name="organisasjonsnummer"
+                      label="Organisasjonsnummer"
+                      size="small"
+                      error={form.error("organisasjonsnummer")}
+                    />
 
+                    {orgNavn && <p>{orgNavn}</p>}
+                  </>
                 )}
                 {inntektskildeValg === "NATURLIG_IDENT" && (
-                    <TextField
-                        name="fodselsnummer"
-                        label="Fødselsnummer"
-                        size="small"
-                        error={form.error("fodselsnummer")}
-                    />
+                  <TextField
+                    name="fodselsnummer"
+                    label="Fødselsnummer"
+                    size="small"
+                    error={form.error("fodselsnummer")}
+                  />
                 )}
 
                 <Select
