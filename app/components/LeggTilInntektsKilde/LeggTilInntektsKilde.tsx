@@ -11,20 +11,21 @@ import {
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
-import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
-import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
-import { InntektPerioder } from "./InntektPerioder";
-import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { useInntekt } from "~/context/inntekt-context";
+import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
+import type { IUklassifisertInntekt } from "~/types/inntekt.types";
+import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
-
-import styles from "./LeggTilInntektskilde.module.css";
+import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import {
   lagNyInntektskilde,
   type IFormInntekt,
   type INyInntektKilde,
 } from "~/utils/ny-intekt-kilde.util";
+import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
+import { InntektPerioder } from "./InntektPerioder";
+
+import styles from "./LeggTilInntektskilde.module.css";
 import { hentVirksomhetsNavn } from "~/models/inntekt.server";
 
 export default function LeggTilInntektsKilde() {
@@ -59,15 +60,8 @@ export default function LeggTilInntektsKilde() {
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
-    defaultValues: {
-      originalData: JSON.stringify({
-        virksomheter: inntekt.virksomheter,
-        mottaker: inntekt.mottaker,
-        periode: inntekt.periode,
-      }),
-      inntektId: inntekt.inntektId,
-    },
   });
+
   const virksomhetsnummer = form.value("organisasjonsnummer") as string;
 
   useEffect(() => {
@@ -106,7 +100,34 @@ export default function LeggTilInntektsKilde() {
     if (form.formState.isValid && minstEnInntektFyltUt) {
       ref.current?.close();
       setInntektEndret(true);
-      return;
+      setInntektMangkerError(false);
+
+      // Todo: finn bedre navn
+      const inntektskildeData: INyInntektKilde = {
+        inntektstype: form.value("inntektstype"),
+        inntektskilde: form.value("inntektskilde"),
+        virksomhetsnummer: form.value("virksomhetsnummer"),
+        virksomhetsnavn: form.value("virksomhetsnavn"),
+        periode: inntekt.periode,
+        inntekter: inntekterArray,
+      };
+
+      // Todo: finn bedre navn
+      const nyInntektskilde = lagNyInntektskilde(inntektskildeData);
+      const oppdatertVirksomheter = [nyInntektskilde, ...contextVirsomheter];
+
+      // Todo: finn bedre navn
+      const payload: IUklassifisertInntekt = {
+        virksomheter: oppdatertVirksomheter,
+        mottaker: inntekt.mottaker,
+        periode: inntekt.periode,
+      };
+
+      // Sette verdier for skjulte input-felter
+      form.setValue("inntektId", inntekt.inntektId);
+      form.setValue("payload", JSON.stringify(payload));
+
+      setContextViksomheter(oppdatertVirksomheter);
     }
   }
 
@@ -146,7 +167,7 @@ export default function LeggTilInntektsKilde() {
                   size="small"
                   error={form.error("virksomhetsnavn")}
                 />
-                <input type="hidden" name="originalData" />
+                <input type="hidden" name="payload" />
                 <input type="hidden" name="inntektId" />
                 <TextField
                   name="virksomhetsnummer"

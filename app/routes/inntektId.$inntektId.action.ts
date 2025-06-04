@@ -1,104 +1,18 @@
-import { format } from "date-fns";
 import { redirect } from "react-router";
 import { lagreInntekt } from "~/models/inntekt.server";
-import type { IInntekt, IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
-import { inntektTyperBeskrivelse } from "~/utils/constants";
+import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/_index";
-
-interface IFormDataInntek {
-  dato: string;
-  belop: string;
-}
 
 // Lagring av inntekten
 // Denne funksjonen håndterer lagring av inntekten når brukeren sender inn skjemaet
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const entries = Object.fromEntries(formData.entries());
-  const organisasjonsnummer = entries["organisasjonsnummer"] as string;
-  const organisasjonsnavn = entries["organisasjonsnavn"] as string;
-  const inntektstype = entries["inntektstype"] as string;
-  const originalData = entries["originalData"] as string;
   const inntektId = entries["inntektId"] as string;
-  const inntektskilde = entries["inntektskilde"] as string;
+  const payload = entries["payload"] as string;
 
-  const inntekter = hentInntekterFraFormData();
-
-  function hentInntekterFraFormData(): IFormDataInntek[] {
-    const {
-      inntektskilde,
-      organisasjonsnavn,
-      organisasjonsnummer,
-      inntektstype,
-      originalData,
-      inntektId,
-      ...rest
-    } = entries;
-
-    return Object.entries(rest).map(([key, value]) => {
-      const [dato] = key.split("_");
-      return {
-        dato: format(dato, "yyyy-MM"),
-        belop: value.toString(),
-      };
-    });
-  }
-
-  function lagNyInntektskilde(): IVirksomhet {
-    const datoer = inntekter.map((i) => i.dato).sort();
-    const tidligste = datoer[0];
-    const seneste = datoer[datoer.length - 1];
-    const totalBelop = inntekter.reduce((sum, i) => sum + Number(i.belop), 0);
-
-    return {
-      virksomhetsnummer: organisasjonsnummer,
-      virksomhetsnavn: organisasjonsnavn,
-      periode: { fraOgMed: tidligste, tilOgMed: seneste },
-      inntekter: lagNyInntektskildeInntekter(),
-      totalBelop: totalBelop.toString(),
-      avvikListe: [],
-    };
-  }
-
-  function lagNyInntektskildeInntekter(): IInntekt[] {
-    const virksomhet = { aktoerType: inntektskilde, identifikator: organisasjonsnummer };
-
-    // Todo: Finn ut om mottaker alltid er en person!
-    const inntektsmottaker = {
-      aktoerType: "NATURLIG_IDENT",
-      identifikator: organisasjonsnummer,
-    };
-
-    // Todo: Sjekk disse hardkodede verdiene
-    return inntekter.map(({ dato, belop }) => ({
-      belop: belop.toString(),
-      fordel: "",
-      beskrivelse:
-        inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
-      inntektskilde: "A-ordningen",
-      inntektsstatus: "LoependeInnrapportert",
-      inntektsperiodetype: "Maaned",
-      leveringstidspunkt: dato,
-      utbetaltIMaaned: dato,
-      virksomhet,
-      inntektsmottaker,
-      inngaarIGrunnlagForTrekk: true,
-      utloeserArbeidsgiveravgift: true,
-      informasjonsstatus: "InngaarAlltid",
-      inntektType: inntektstype,
-      aarMaaned: dato,
-    }));
-  }
-
-  const nyInntektskilde = lagNyInntektskilde();
-  const parsedOriginalData: IUklassifisertInntekt = JSON.parse(originalData);
-
-  const oppdaterteInntektData = {
-    ...parsedOriginalData,
-    virksomheter: [nyInntektskilde, ...parsedOriginalData.virksomheter],
-  };
-
-  const lagreInntektResponse = await lagreInntekt(request, inntektId, oppdaterteInntektData);
+  const parsedPayload = JSON.parse(payload) as IUklassifisertInntekt;
+  const lagreInntektResponse = await lagreInntekt(request, inntektId, parsedPayload);
 
   if (!lagreInntektResponse.ok) {
     throw new Response("Feil ved lagring av inntekt", {
@@ -108,9 +22,6 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   const nyInntektId = await lagreInntektResponse.text();
-
-  // Console.log for å huske nyInntektId for senere bruk
-  console.log(`🔥 nyInntektId :`, nyInntektId);
 
   return redirect(`/inntektId/${nyInntektId}`);
 }
