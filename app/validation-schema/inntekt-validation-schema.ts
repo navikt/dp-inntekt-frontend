@@ -35,10 +35,10 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
           .trim()
           .optional()
           .refine((val) => val === undefined || val === "" || !isNaN(Number(val)), {
-            message: `Ikke et gyldig tall`,
+            message: `ikke et gyldig tall`,
           })
           .refine((val) => val === undefined || val === "" || Number(val) > 1, {
-            message: `Tallet må være større enn 1`,
+            message: `må være større enn 1`,
           });
       }
     });

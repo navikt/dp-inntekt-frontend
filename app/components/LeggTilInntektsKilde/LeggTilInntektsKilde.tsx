@@ -17,6 +17,7 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { useInntekt } from "~/context/inntekt-context";
+import { formaterNorskDato } from "~/utils/formattering.util";
 
 import styles from "./LeggTilInntektskilde.module.css";
 
@@ -57,14 +58,33 @@ export default function LeggTilInntektsKilde() {
     ref.current?.close();
   }
 
-  function validate() {
-    form.validate();
+  // Henter ut alle aktive inntekts måneder som ikke er readOnly
+  const aktiveInntektsManeder = genertePerioder
+    .flatMap((year) => year.maneder)
+    .filter((maaned) => !maaned.readOnly)
+    .map((maaned) => maaned.dato);
 
-    if (form.formState.isValid && form.formState.isTouched) {
+  // Sjekker om minst en inntekt er fylt ut
+  const minstEnInntektFyltUt = aktiveInntektsManeder.some(
+    (felt) => form.value(felt) && form.value(felt) !== ""
+  );
+
+  function validate() {
+    // Hvis skjemaet ikke er berørt, validerer vi det for å vise feil
+    if (!form.formState.isTouched) {
+      form.validate();
+      return;
+    }
+
+    if (form.formState.isValid && minstEnInntektFyltUt) {
       ref.current?.close();
       setInntektEndret(true);
+      return;
     }
   }
+
+  const visManglerInntektError =
+    form.formState.isTouched && form.formState.isValid && !minstEnInntektFyltUt;
 
   return (
     <div className="mt-6">
@@ -126,6 +146,21 @@ export default function LeggTilInntektsKilde() {
               <VStack gap="2">
                 <Label size="small">Periode</Label>
                 <InntektPerioder perioder={genertePerioder} form={form} />
+                <div className={styles.errorSummary}>
+                  {aktiveInntektsManeder.map(
+                    (felt) =>
+                      form.error(felt) && (
+                        <div className="mt-2" key={felt}>
+                          Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
+                        </div>
+                      )
+                  )}
+                </div>
+                {visManglerInntektError && (
+                  <div className={styles.errorSummary}>
+                    Du må legge til inntekt for minst én måned
+                  </div>
+                )}
               </VStack>
             </VStack>
           </Modal.Body>
