@@ -9,7 +9,7 @@ import type { FormApi } from "@rvf/react-router";
 interface IProps {
   perioder: IGenerertePeriode[];
   form: FormApi<{
-    [x: string]: any;
+    [x: string]: string | undefined;
   }>;
 }
 

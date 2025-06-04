@@ -20,15 +20,23 @@ import { useInntekt } from "~/context/inntekt-context";
 import { formaterNorskDato } from "~/utils/formattering.util";
 
 import styles from "./LeggTilInntektskilde.module.css";
+import {
+  lagNyInntektskilde,
+  type IFormInntekt,
+  type INyInntektKilde,
+} from "~/utils/ny-intekt-kilde.util";
+import { hentVirksomhetsNavn } from "~/models/inntekt.server";
 
 export default function LeggTilInntektsKilde() {
-  const { setInntektEndret, klarForLagring } = useInntekt();
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
+  const [manglerInntektError, setInntektMangkerError] = useState(false);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [inntektskildeValg, setInntektskildeValg] = useState<string>("");
   const [virksomhetsNavn, setVirksomhetsNavn] = useState<string | undefined>(undefined);
 
   const ref = useRef<HTMLDialogElement>(null);
+  const { setInntektEndret, klarForLagring, contextVirsomheter, setContextViksomheter } =
+    useInntekt();
 
   useEffect(() => {
     const generertePerioder = generereFirePerioder(inntekt.periode);
@@ -43,6 +51,11 @@ export default function LeggTilInntektsKilde() {
 
   const form = useForm({
     submitSource: "state",
+    validationBehaviorConfig: {
+      initial: "onChange",
+      whenTouched: "onChange",
+      whenSubmitted: "onChange",
+    },
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
@@ -55,11 +68,11 @@ export default function LeggTilInntektsKilde() {
       inntektId: inntekt.inntektId,
     },
   });
-  const virksomhetsnummer = form.value("organisasjonsnummer") as string
+  const virksomhetsnummer = form.value("organisasjonsnummer") as string;
 
   useEffect(() => {
     if (virksomhetsnummer?.length === 9) {
-      hentVirksomhetsNavn();
+      hentVirksomhetsNavn(virksomhetsnummer);
     }
   }, [form.value("organisasjonsnummer")]);
 
@@ -67,6 +80,7 @@ export default function LeggTilInntektsKilde() {
     form.resetForm();
     setVirksomhetsNavn("");
     ref.current?.close();
+    setInntektMangkerError(false);
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
@@ -80,35 +94,21 @@ export default function LeggTilInntektsKilde() {
     (felt) => form.value(felt) && form.value(felt) !== ""
   );
 
+  // Liste over inntekter som er fylt ut i form
+  const inntekterArray: IFormInntekt[] = aktiveInntektsManeder
+    .filter((felt) => form.value(felt) !== undefined && form.value(felt) !== "")
+    .map((felt) => ({ dato: felt, belop: form.value(felt) }));
+
   function validate() {
-    // Hvis skjemaet ikke er berørt, validerer vi det for å vise feil
-    if (!form.formState.isTouched) {
-      form.validate();
-      return;
-    }
+    form.validate();
+    setInntektMangkerError(true);
 
     if (form.formState.isValid && minstEnInntektFyltUt) {
       ref.current?.close();
       setInntektEndret(true);
-      setVirksomhetsNavn("");
       return;
     }
   }
-
-  async function hentVirksomhetsNavn() {
-    const response = await fetch(`/api/enhetsregister/${virksomhetsnummer}`, {
-      method: "GET",
-    });
-
-    if (response.ok) {
-      const organisasjon = await response.json();
-      setVirksomhetsNavn(organisasjon.navn);
-    }
-  }
-
-
-  const visManglerInntektError =
-    form.formState.isTouched && form.formState.isValid && !minstEnInntektFyltUt;
 
   return (
     <div className="mt-6">
@@ -140,6 +140,20 @@ export default function LeggTilInntektsKilde() {
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
+                <TextField
+                  name="virksomhetsnavn"
+                  label="Virksomhetsnavn"
+                  size="small"
+                  error={form.error("virksomhetsnavn")}
+                />
+                <input type="hidden" name="originalData" />
+                <input type="hidden" name="inntektId" />
+                <TextField
+                  name="virksomhetsnummer"
+                  label="Virksomhetsnummer"
+                  size="small"
+                  error={form.error("virksomhetsnummer")}
+                />
 
                 {inntektskildeValg === "ORGANISASJON" && (
                   <>
@@ -189,7 +203,7 @@ export default function LeggTilInntektsKilde() {
                       )
                   )}
                 </div>
-                {visManglerInntektError && (
+                {manglerInntektError && !minstEnInntektFyltUt && (
                   <div className={styles.errorSummary}>
                     Du må legge til inntekt for minst én måned
                   </div>

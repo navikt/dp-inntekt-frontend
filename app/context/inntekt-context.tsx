@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, type PropsWithChildren } from "react";
-import type { IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IVirksomhet } from "~/types/inntekt.types";
 
 interface IInntektContextProps {
-  virksomheter: IVirksomhetsinntekt[];
+  virksomheter: IVirksomhet[];
 }
 
 interface IInntektContextValue {
@@ -10,8 +10,8 @@ interface IInntektContextValue {
   setInntektEndret: (value: boolean) => void;
   klarForLagring: boolean;
   setKlarForLagring: (value: boolean) => void;
-  contextVirsomheter: IVirksomhetsinntekt[];
-  setContextViksomheter: (value: IVirksomhetsinntekt[]) => void;
+  contextVirsomheter: IVirksomhet[];
+  setContextViksomheter: (value: IVirksomhet[]) => void;
 }
 
 export const InntektContext = createContext<IInntektContextValue | undefined>(undefined);

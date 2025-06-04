@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { redirect } from "react-router";
 import { lagreInntekt } from "~/models/inntekt.server";
-import type { IInntekt, IUklassifisertInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IInntekt, IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import type { Route } from "./+types/_index";
 
@@ -44,7 +44,7 @@ export async function action({ request }: Route.ActionArgs) {
     });
   }
 
-  function lagNyInntektskilde(): IVirksomhetsinntekt {
+  function lagNyInntektskilde(): IVirksomhet {
     const datoer = inntekter.map((i) => i.dato).sort();
     const tidligste = datoer[0];
     const seneste = datoer[datoer.length - 1];

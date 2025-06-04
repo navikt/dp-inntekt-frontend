@@ -1,5 +1,5 @@
 import { Button, Table } from "@navikt/ds-react";
-import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IPeriode, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formatterNorskTall } from "~/utils/formattering.util";
 import {
@@ -9,7 +9,7 @@ import {
 } from "~/utils/inntekt.util";
 
 interface IProps {
-  virksomhet: IVirksomhetsinntekt;
+  virksomhet: IVirksomhet;
   inntektsPeriode: IPeriode;
 }
 

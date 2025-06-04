@@ -1,10 +1,10 @@
 import { BodyShort, Box, VStack } from "@navikt/ds-react";
-import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IPeriode, IVirksomhet } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 import { sumTotaltInntekterForAlleVirksomheter } from "~/utils/inntekt.util";
 
 interface IProps {
-  virksomheter: IVirksomhetsinntekt[];
+  virksomheter: IVirksomhet[];
   inntektsPeriode: IPeriode;
 }
 
