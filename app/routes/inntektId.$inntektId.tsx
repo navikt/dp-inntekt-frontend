@@ -1,5 +1,4 @@
 import { Box, VStack } from "@navikt/ds-react";
-import { format, subMonths } from "date-fns";
 import { data, redirect, useLoaderData } from "react-router";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
@@ -9,7 +8,7 @@ import { Virksomheter } from "~/components/Virksomheter";
 import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntek } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
-import type { Route } from "./+types/_index";
+import type { Route } from "./+types/inntektId.$inntektId";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   if (!params.inntektId) {

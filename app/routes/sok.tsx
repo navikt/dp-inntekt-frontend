@@ -26,6 +26,11 @@ export async function action({ request }: Route.ActionArgs) {
 export default function Sok() {
   const form = useForm({
     submitSource: "state",
+    validationBehaviorConfig: {
+      initial: "onSubmit",
+      whenTouched: "onSubmit",
+      whenSubmitted: "onSubmit",
+    },
     method: "put",
     schema,
   });
