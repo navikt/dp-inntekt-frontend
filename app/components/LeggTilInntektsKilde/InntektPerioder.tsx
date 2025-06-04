@@ -4,10 +4,13 @@ import { nb } from "date-fns/locale/nb";
 import { capitalize } from "~/utils/generell.util";
 import { type IGenerertePeriode } from "~/utils/inntekt.util";
 import styles from "./InntektPerioder.module.css";
+import type { FormApi } from "@rvf/react-router";
 
 interface IProps {
   perioder: IGenerertePeriode[];
-  form: any;
+  form: FormApi<{
+    [x: string]: any;
+  }>;
 }
 
 export function InntektPerioder({ perioder, form }: IProps) {
@@ -19,7 +22,7 @@ export function InntektPerioder({ perioder, form }: IProps) {
           <div className={styles.manederContainer}>
             {periode.maneder.map((month) => (
               <TextField
-                className="inntektInput"
+                className={styles.maaned}
                 key={month.dato}
                 name={month.dato}
                 label={capitalize(format(month.dato, "MMMM", { locale: nb }))}

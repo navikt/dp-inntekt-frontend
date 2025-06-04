@@ -2,6 +2,11 @@
   max-width: 100%;
 }
 
+.errorSummary {
+  color: var(--a-surface-danger);
+  font-weight: 600;
+}
+
 @media only screen and (min-width: 890px) {
   .inntektInputContainer {
     max-width: 30%;
