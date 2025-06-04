@@ -30,7 +30,7 @@ import { hentVirksomhetsNavn } from "~/models/inntekt.server";
 
 export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
-  const [manglerInntektError, setInntektMangkerError] = useState(false);
+  const [manglerInntekt, setManglerInntekt] = useState(false);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [inntektskildeValg, setInntektskildeValg] = useState<string>("");
   const [virksomhetsNavn, setVirksomhetsNavn] = useState<string | undefined>(undefined);
@@ -74,7 +74,7 @@ export default function LeggTilInntektsKilde() {
     form.resetForm();
     setVirksomhetsNavn("");
     ref.current?.close();
-    setInntektMangkerError(false);
+    setManglerInntekt(false);
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
@@ -95,12 +95,12 @@ export default function LeggTilInntektsKilde() {
 
   function validate() {
     form.validate();
-    setInntektMangkerError(true);
+    setManglerInntekt(true);
 
     if (form.formState.isValid && minstEnInntektFyltUt) {
       ref.current?.close();
       setInntektEndret(true);
-      setInntektMangkerError(false);
+      setManglerInntekt(false);
 
       // Todo: finn bedre navn
       const inntektskildeData: INyInntektKilde = {
@@ -224,7 +224,7 @@ export default function LeggTilInntektsKilde() {
                       )
                   )}
                 </div>
-                {manglerInntektError && !minstEnInntektFyltUt && (
+                {manglerInntekt && !minstEnInntektFyltUt && (
                   <div className={styles.errorSummary}>
                     Du må legge til inntekt for minst én måned
                   </div>
