@@ -85,7 +85,7 @@ export async function action({ request }: Route.ActionArgs) {
       inngaarIGrunnlagForTrekk: true,
       utloeserArbeidsgiveravgift: true,
       informasjonsstatus: "InngaarAlltid",
-      inntektType: "LOENNSINNTEKT",
+      inntektType: inntektstype,
       aarMaaned: dato,
     }));
   }
