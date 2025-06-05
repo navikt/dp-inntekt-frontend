@@ -33,7 +33,7 @@ export default function LeggTilInntektsKilde() {
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
-  const [virksomhetsNavn, setVirksomhetsNavn] = useState<string | undefined>(undefined);
+  const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
   const { setInntektEndret, klarForLagring, contextVirsomheter, setContextViksomheter } =
     useInntekt();
   const ref = useRef<HTMLDialogElement>(null);
@@ -71,7 +71,7 @@ export default function LeggTilInntektsKilde() {
     if (identifikator?.length === 9) {
       hentVirksomhetsNavn();
     } else {
-      setVirksomhetsNavn(undefined);
+      setVirksomhetsnavn(undefined);
     }
   }, [identifikator]);
 
@@ -82,13 +82,13 @@ export default function LeggTilInntektsKilde() {
 
     if (response.ok) {
       const organisasjon = await response.json();
-      setVirksomhetsNavn(organisasjon.navn);
+      setVirksomhetsnavn(organisasjon.navn);
     }
   }
 
   function avbryt() {
     setManglerInntekt(false);
-    setVirksomhetsNavn(undefined);
+    setVirksomhetsnavn(undefined);
 
     form.resetForm();
     ref.current?.close();
@@ -124,6 +124,8 @@ export default function LeggTilInntektsKilde() {
         inntektstype: form.value("inntektstype"),
         inntektskilde: form.value("inntektskilde"),
         identifikator: form.value("identifikator"),
+        identifikatorsnavn:
+          inntektsKilde === "ORGANISASJON" ? virksomhetsnavn : form.value("identifikator"),
         inntekter: inntekterArray,
       };
 
@@ -169,6 +171,7 @@ export default function LeggTilInntektsKilde() {
           <Modal.Body>
             <VStack gap="4">
               <VStack gap="4" className={styles.inntektInputContainer}>
+                <input type="hidden" name="identifikatorsnavn" />
                 <input type="hidden" name="payload" />
                 <input type="hidden" name="inntektId" />
                 <RadioGroup
@@ -191,10 +194,10 @@ export default function LeggTilInntektsKilde() {
                       : undefined
                   }
                 />
-                {inntektsKilde === "ORGANISASJON" && virksomhetsNavn && (
+                {inntektsKilde === "ORGANISASJON" && virksomhetsnavn && (
                   <div>
                     <p className="bold">Virksomhet</p>
-                    <p>{virksomhetsNavn}</p>
+                    <p>{virksomhetsnavn}</p>
                   </div>
                 )}
                 <Select

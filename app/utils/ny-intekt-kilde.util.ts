@@ -5,6 +5,7 @@ export interface INyInntektKilde {
   inntektstype: string;
   inntektskilde: string;
   identifikator: string;
+  identifikatorsnavn: string;
   inntekter: IFormInntekt[];
 }
 
@@ -14,7 +15,7 @@ export interface IFormInntekt {
 }
 
 export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet {
-  const { identifikator } = nyInntektKilde;
+  const { identifikator, identifikatorsnavn } = nyInntektKilde;
 
   const generertInntekter = lagNyInntektskildeInntekter(nyInntektKilde);
   const periode = finnTidligsteOgSenesteDato(nyInntektKilde.inntekter);
@@ -25,7 +26,7 @@ export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet
 
   return {
     virksomhetsnummer: identifikator,
-    virksomhetsnavn: "",
+    virksomhetsnavn: identifikatorsnavn,
     periode: periode,
     inntekter: generertInntekter,
     totalBelop: totaltBelop,
