@@ -25,6 +25,9 @@ export default function LeggTilInntektsKilde() {
   const { setInntektEndret, klarForLagring } = useInntekt();
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
+  const [inntektskildeValg, setInntektskildeValg] = useState<string>("");
+  const [virksomhetsNavn, setVirksomhetsNavn] = useState<string | undefined>(undefined);
+
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -52,9 +55,17 @@ export default function LeggTilInntektsKilde() {
       inntektId: inntekt.inntektId,
     },
   });
+  const virksomhetsnummer = form.value("organisasjonsnummer") as string
+
+  useEffect(() => {
+    if (virksomhetsnummer?.length === 9) {
+      hentVirksomhetsNavn();
+    }
+  }, [form.value("organisasjonsnummer")]);
 
   function avbryt() {
     form.resetForm();
+    setVirksomhetsNavn("");
     ref.current?.close();
   }
 
@@ -79,9 +90,22 @@ export default function LeggTilInntektsKilde() {
     if (form.formState.isValid && minstEnInntektFyltUt) {
       ref.current?.close();
       setInntektEndret(true);
+      setVirksomhetsNavn("");
       return;
     }
   }
+
+  async function hentVirksomhetsNavn() {
+    const response = await fetch(`/api/enhetsregister/${virksomhetsnummer}`, {
+      method: "GET",
+    });
+
+    if (response.ok) {
+      const organisasjon = await response.json();
+      setVirksomhetsNavn(organisasjon.navn);
+    }
+  }
+
 
   const visManglerInntektError =
     form.formState.isTouched && form.formState.isValid && !minstEnInntektFyltUt;
@@ -111,24 +135,33 @@ export default function LeggTilInntektsKilde() {
                   legend="Type inntektskilde"
                   size="small"
                   error={form.error("inntektskilde")}
+                  onChange={(valgtKilde) => setInntektskildeValg(valgtKilde)}
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
-                <TextField
-                  name="organisasjonsnavn"
-                  label="Organisasjonsnavn"
-                  size="small"
-                  error={form.error("organisasjonsnavn")}
-                />
-                <input type="hidden" name="originalData" />
-                <input type="hidden" name="inntektId" />
-                <TextField
-                  name="organisasjonsnummer"
-                  label="Organisasjonsnummer"
-                  size="small"
-                  error={form.error("organisasjonsnummer")}
-                />
+
+                {inntektskildeValg === "ORGANISASJON" && (
+                  <>
+                    <TextField
+                      name="organisasjonsnummer"
+                      label="Virksomhetsnummer"
+                      size="small"
+                      error={form.error("organisasjonsnummer")}
+                    />
+
+                    {virksomhetsNavn && <p>{virksomhetsNavn}</p>}
+                  </>
+                )}
+                {inntektskildeValg === "NATURLIG_IDENT" && (
+                  <TextField
+                    name="fodselsnummer"
+                    label="Fødselsnummer"
+                    size="small"
+                    error={form.error("fodselsnummer")}
+                  />
+                )}
+
                 <Select
                   name="inntektstype"
                   label="Inntektstype"
