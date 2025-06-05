@@ -26,7 +26,7 @@ export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [inntektskildeValg, setInntektskildeValg] = useState<string>("");
-  const [orgNavn, setOrgNavn] = useState<string | undefined>(undefined);
+  const [virksomhetsNavn, setVirksomhetsNavn] = useState<string | undefined>(undefined);
 
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -55,16 +55,17 @@ export default function LeggTilInntektsKilde() {
       inntektId: inntekt.inntektId,
     },
   });
-  var organisasjonsnummer = form.value("organisasjonsnummer");
+  const virksomhetsnummer = form.value("organisasjonsnummer") as string
 
   useEffect(() => {
-    if ((organisasjonsnummer + "").length === 9) {
-      hentOrganisasjonsNavn();
+    if (virksomhetsnummer?.length === 9) {
+      hentVirksomhetsNavn();
     }
   }, [form.value("organisasjonsnummer")]);
 
   function avbryt() {
     form.resetForm();
+    setVirksomhetsNavn("");
     ref.current?.close();
   }
 
@@ -89,19 +90,19 @@ export default function LeggTilInntektsKilde() {
     if (form.formState.isValid && minstEnInntektFyltUt) {
       ref.current?.close();
       setInntektEndret(true);
+      setVirksomhetsNavn("");
       return;
     }
   }
 
-  async function hentOrganisasjonsNavn() {
-    const response = await fetch(`/api/enhetsregister/${organisasjonsnummer}`, {
+  async function hentVirksomhetsNavn() {
+    const response = await fetch(`/api/enhetsregister/${virksomhetsnummer}`, {
       method: "GET",
     });
 
     if (response.ok) {
       const organisasjon = await response.json();
-      console.log("Response: ", organisasjon.navn)
-      setOrgNavn(organisasjon.navn);
+      setVirksomhetsNavn(organisasjon.navn);
     }
   }
 
@@ -144,12 +145,12 @@ export default function LeggTilInntektsKilde() {
                   <>
                     <TextField
                       name="organisasjonsnummer"
-                      label="Organisasjonsnummer"
+                      label="Virksomhetsnummer"
                       size="small"
                       error={form.error("organisasjonsnummer")}
                     />
 
-                    {orgNavn && <p>{orgNavn}</p>}
+                    {virksomhetsNavn && <p>{virksomhetsNavn}</p>}
                   </>
                 )}
                 {inntektskildeValg === "NATURLIG_IDENT" && (

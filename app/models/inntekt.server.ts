@@ -36,3 +36,15 @@ export async function hentInntek(request: Request, inntektId: string) {
     },
   });
 }
+
+export async function hentVirksomhetsNavn(virksomhetsnummer: string) {
+    const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/enhetsregisteret/enhet/${virksomhetsnummer}`;
+    return await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      connection: "keep-alive",
+    },
+  });  
+}
