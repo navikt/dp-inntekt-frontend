@@ -7,6 +7,7 @@ import {
   delOppPeriodeTilTrePerioder,
   grupperEtterInntektType,
 } from "~/utils/inntekt.util";
+import { VirsomhetPeriodeHeader } from "./VirsomhetPeriodeHeader";
 
 interface IProps {
   virksomhet: IVirksomhet;
@@ -27,13 +28,13 @@ export default function VirsomhetInntekter({ virksomhet, inntektsPeriode }: IPro
           <Table.HeaderCell scope="col">Inntektstype</Table.HeaderCell>
           <Table.HeaderCell scope="col">Kilde</Table.HeaderCell>
           <Table.HeaderCell scope="col" align="right">
-            Periode 1
+            <VirsomhetPeriodeHeader periodeNummer={1} periode={periode1} />
           </Table.HeaderCell>
           <Table.HeaderCell scope="col" align="right">
-            Periode 2
+            <VirsomhetPeriodeHeader periodeNummer={2} periode={periode2} />
           </Table.HeaderCell>
           <Table.HeaderCell scope="col" align="right">
-            Periode 3
+            <VirsomhetPeriodeHeader periodeNummer={3} periode={periode3} />
           </Table.HeaderCell>
           <Table.HeaderCell scope="col"></Table.HeaderCell>
         </Table.Row>

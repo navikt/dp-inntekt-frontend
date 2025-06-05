@@ -32,3 +32,11 @@ p {
 .bold {
   font-weight: bold;
 }
+
+.light {
+  font-weight: 300;
+}
+
+.medium {
+  font-size: var(--a-font-size-medium);
+}

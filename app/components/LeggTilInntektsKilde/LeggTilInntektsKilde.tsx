@@ -35,13 +35,8 @@ export default function LeggTilInntektsKilde() {
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
   const inntektModalRef = useRef<HTMLDialogElement>(null);
-  const {
-    setInntektEndret,
-    klarForLagring,
-    setKlarForLagring,
-    contextVirsomheter,
-    setContextViksomheter,
-  } = useInntekt();
+  const { setInntektEndret, klarForLagring, contextVirsomheter, setContextViksomheter } =
+    useInntekt();
 
   const form = useForm({
     submitSource: "state",
@@ -66,7 +61,7 @@ export default function LeggTilInntektsKilde() {
   useEffect(() => {
     if (klarForLagring) {
       form.submit();
-      setKlarForLagring(false);
+      setInntektEndret(false);
     }
   }, [klarForLagring]);
 
@@ -151,6 +146,7 @@ export default function LeggTilInntektsKilde() {
       form.setValue("payload", JSON.stringify(payload));
 
       setContextViksomheter(oppdatertVirksomheter);
+      form.resetForm();
     }
   }
 

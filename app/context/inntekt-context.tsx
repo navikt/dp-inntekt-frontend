@@ -31,11 +31,11 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
   const [klarForLagring, setKlarForLagring] = useState(false);
 
   // Oppdaterer konteksten hvis virksomheter endres
-  useEffect(() => {
-    if (JSON.stringify(props.virksomheter) !== JSON.stringify(contextVirsomheter)) {
-      setContextViksomheter(props.virksomheter);
-    }
-  }, [props.virksomheter]);
+  // useEffect(() => {
+  //   if (JSON.stringify(props.virksomheter) !== JSON.stringify(contextVirsomheter)) {
+  //     setContextViksomheter(props.virksomheter);
+  //   }
+  // }, [props.virksomheter]);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
   useEffect(() => {
