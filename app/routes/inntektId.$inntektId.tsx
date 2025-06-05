@@ -30,17 +30,16 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 }
 
 export default function Inntekt() {
-  const { periode, mottaker, virksomheter } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
   return (
-    <InntektProvider virksomheter={virksomheter}>
+    <InntektProvider virksomheter={loaderData.virksomheter}>
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />
-          <Personalia mottaker={mottaker} />
+          <Personalia />
           <Box background="surface-default" padding="6" borderRadius="xlarge">
-            {/* // Todo: bør vi bruker context virsomheter isteden? */}
-            <InntektPerioderOppsummering virksomheter={virksomheter} inntektsPeriode={periode} />
+            <InntektPerioderOppsummering />
           </Box>
           <Box background="surface-default" padding="6" borderRadius="xlarge">
             <VStack gap="4">

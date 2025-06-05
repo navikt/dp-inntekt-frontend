@@ -1,16 +1,13 @@
 import { FloppydiskIcon } from "@navikt/aksel-icons";
 import { BodyShort, Box, Button, CopyButton, HStack, Spacer } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
-import type { IMottaker } from "~/types/inntekt.types";
+import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import { erEnKvinne } from "~/utils/generell.util";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
 
-interface IProps {
-  mottaker: IMottaker;
-}
-
-export function Personalia({ mottaker }: IProps) {
+export function Personalia() {
+  const { mottaker } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const { inntektEndret, setKlarForLagring } = useInntekt();
 
   return (
