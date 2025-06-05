@@ -8,12 +8,9 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
     }),
     inntektId: z.string(),
     payload: z.string(),
-    virksomhetsnummer: z
-      .string({
-        required_error: "Virksomhetsnummer er påkrevd",
-      })
-      .min(1, "Virksomhetsnummer er påkrevd")
-      .max(50, "Virksomhetsnummer er for langt"),
+    virksomhetsnummer: z.string({
+      required_error: "er påkrevd",
+    }),
     inntektstype: z.string({
       required_error: "Inntektstype er påkrevd",
     }),

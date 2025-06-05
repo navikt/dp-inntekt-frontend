@@ -27,19 +27,31 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
-import { hentVirksomhetsNavn } from "~/models/inntekt.server";
 
 export default function LeggTilInntektsKilde() {
   const params = useParams();
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
-  const [inntektskildeValg, setInntektskildeValg] = useState<string>("");
   const [virksomhetsNavn, setVirksomhetsNavn] = useState<string | undefined>(undefined);
-
-  const ref = useRef<HTMLDialogElement>(null);
   const { setInntektEndret, klarForLagring, contextVirsomheter, setContextViksomheter } =
     useInntekt();
+  const ref = useRef<HTMLDialogElement>(null);
+
+  const form = useForm({
+    submitSource: "state",
+    validationBehaviorConfig: {
+      initial: "onChange",
+      whenTouched: "onChange",
+      whenSubmitted: "onChange",
+    },
+    defaultValues: {
+      inntektskilde: "ORGANISASJON",
+    },
+    method: "post",
+    schema: hentInntektValidationSchema(genertePerioder),
+    action: "/inntektId/$inntektId/action",
+  });
 
   useEffect(() => {
     const generertePerioder = generereFirePerioder(inntekt.periode);
@@ -52,31 +64,37 @@ export default function LeggTilInntektsKilde() {
     }
   }, [klarForLagring]);
 
-  const form = useForm({
-    submitSource: "state",
-    validationBehaviorConfig: {
-      initial: "onChange",
-      whenTouched: "onChange",
-      whenSubmitted: "onChange",
-    },
-    method: "post",
-    schema: hentInntektValidationSchema(genertePerioder),
-    action: "/inntektId/$inntektId/action",
-  });
-
-  const virksomhetsnummer = form.value("organisasjonsnummer") as string;
+  const virksomhetsnummer = form.value("virksomhetsnummer") as string;
+  const inntektsKilde = form.value("inntektskilde") as string;
 
   useEffect(() => {
     if (virksomhetsnummer?.length === 9) {
+      console.log("hit");
       hentVirksomhetsNavn(virksomhetsnummer);
+    } else {
+      setVirksomhetsNavn(undefined);
     }
-  }, [form.value("organisasjonsnummer")]);
+  }, [virksomhetsnummer]);
+
+  async function hentVirksomhetsNavn(virksomhetsnummer: string) {
+    const response = await fetch(`/api/enhetsregister/${virksomhetsnummer}`, {
+      method: "GET",
+    });
+
+    if (response.ok) {
+      const organisasjon = await response.json();
+
+      console.log(`🔥 organisasjon :`, organisasjon);
+      setVirksomhetsNavn(organisasjon.navn);
+    }
+  }
 
   function avbryt() {
-    form.resetForm();
-    setVirksomhetsNavn("");
-    ref.current?.close();
     setManglerInntekt(false);
+    setVirksomhetsNavn(undefined);
+
+    form.resetForm();
+    ref.current?.close();
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
@@ -96,13 +114,13 @@ export default function LeggTilInntektsKilde() {
     .map((felt) => ({ dato: felt, belop: form.value(felt) }));
 
   function validate() {
-    form.validate();
     setManglerInntekt(true);
+    form.validate();
 
     if (form.formState.isValid && minstEnInntektFyltUt) {
-      ref.current?.close();
       setInntektEndret(true);
       setManglerInntekt(false);
+      ref.current?.close();
 
       // Todo: finn bedre navn
       const inntektskildeData: INyInntektKilde = {
@@ -131,6 +149,8 @@ export default function LeggTilInntektsKilde() {
     }
   }
 
+  const virksomhetLabel = inntektsKilde === "ORGANISASJON" ? "Virksomhetsnummer" : "Fødselsnummer";
+
   return (
     <div className="mt-6">
       <Button
@@ -151,45 +171,30 @@ export default function LeggTilInntektsKilde() {
           <Modal.Body>
             <VStack gap="4">
               <VStack gap="4" className={styles.inntektInputContainer}>
+                <input type="hidden" name="payload" />
+                <input type="hidden" name="inntektId" />
                 <RadioGroup
+                  {...form.getInputProps("inntektskilde")}
                   name="inntektskilde"
-                  legend="Type inntektskilde"
                   size="small"
                   error={form.error("inntektskilde")}
-                  onChange={(valgtKilde) => setInntektskildeValg(valgtKilde)}
+                  legend="Type inntektskilde"
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
-                <input type="hidden" name="payload" />
-                <input type="hidden" name="inntektId" />
                 <TextField
                   name="virksomhetsnummer"
-                  label="Virksomhetsnummer"
+                  label={virksomhetLabel}
                   size="small"
-                  error={form.error("virksomhetsnummer")}
+                  error={
+                    form.error("virksomhetsnummer")
+                      ? `${virksomhetLabel} ${form.error("virksomhetsnummer")}`
+                      : undefined
+                  }
                 />
 
-                {inntektskildeValg === "ORGANISASJON" && (
-                  <>
-                    <TextField
-                      name="organisasjonsnummer"
-                      label="Virksomhetsnummer"
-                      size="small"
-                      error={form.error("organisasjonsnummer")}
-                    />
-
-                    {virksomhetsNavn && <p>{virksomhetsNavn}</p>}
-                  </>
-                )}
-                {inntektskildeValg === "NATURLIG_IDENT" && (
-                  <TextField
-                    name="fodselsnummer"
-                    label="Fødselsnummer"
-                    size="small"
-                    error={form.error("fodselsnummer")}
-                  />
-                )}
+                {inntektsKilde === "ORGANISASJON" && virksomhetsNavn && <p>{virksomhetsNavn}</p>}
 
                 <Select
                   name="inntektstype"
