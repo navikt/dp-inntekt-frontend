@@ -50,7 +50,11 @@ export default function Inntekt() {
             <LeggTilInntektsKilde />
           </Box>
         </VStack>
-        <Modal ref={globalModalRef} header={{ heading: "Du har ingen endring å lagre" }}>
+        <Modal
+          ref={globalModalRef}
+          header={{ heading: "Du har ingen endring å lagre" }}
+          closeOnBackdropClick
+        >
           <Modal.Body>
             <BodyLong>Du har ikke gjort noen endringer som kan lagres.</BodyLong>
           </Modal.Body>

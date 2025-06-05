@@ -30,12 +30,28 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
   const [inntektEndret, setInntektEndret] = useState(false);
   const [klarForLagring, setKlarForLagring] = useState(false);
 
+  // Oppdaterer konteksten hvis virksomheter endres
   useEffect(() => {
-    // Oppdaterer konteksten hvis virksomheter endres
     if (JSON.stringify(props.virksomheter) !== JSON.stringify(contextVirsomheter)) {
       setContextViksomheter(props.virksomheter);
     }
   }, [props.virksomheter]);
+
+  // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
+  useEffect(() => {
+    if (!inntektEndret) return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = ""; // Nødvendig for å vise dialogen i de fleste nettlesere
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [inntektEndret]);
 
   return (
     <InntektContext.Provider

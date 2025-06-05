@@ -34,15 +34,14 @@ export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
+  const inntektModalRef = useRef<HTMLDialogElement>(null);
   const {
-    inntektEndret,
     setInntektEndret,
     klarForLagring,
     setKlarForLagring,
     contextVirsomheter,
     setContextViksomheter,
   } = useInntekt();
-  const inntektModalRef = useRef<HTMLDialogElement>(null);
 
   const form = useForm({
     submitSource: "state",
@@ -70,22 +69,6 @@ export default function LeggTilInntektsKilde() {
       setKlarForLagring(false);
     }
   }, [klarForLagring]);
-
-  // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
-  useEffect(() => {
-    if (!inntektEndret) return;
-
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = ""; // Nødvendig for å vise dialogen i de fleste nettlesere
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [inntektEndret]);
 
   const inntektsKilde = form.value("inntektskilde") as string;
   const identifikator = form.value("identifikator") as string;
