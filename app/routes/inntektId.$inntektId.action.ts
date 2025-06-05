@@ -10,6 +10,9 @@ export async function action({ request }: Route.ActionArgs) {
   const inntektId = entries["inntektId"] as string;
   const payload = entries["payload"] as string;
 
+  console.log(`🔥 inntektId :`, inntektId);
+  console.log(`🔥 payload :`, payload);
+
   const lagreInntektResponse = await lagreInntekt(request, inntektId, payload);
 
   if (!lagreInntektResponse.ok) {

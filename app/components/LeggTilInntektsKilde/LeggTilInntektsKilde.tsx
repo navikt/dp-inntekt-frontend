@@ -30,9 +30,9 @@ import styles from "./LeggTilInntektskilde.module.css";
 
 export default function LeggTilInntektsKilde() {
   const params = useParams();
+  const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
-  const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [virksomhetsNavn, setVirksomhetsNavn] = useState<string | undefined>(undefined);
   const { setInntektEndret, klarForLagring, contextVirsomheter, setContextViksomheter } =
     useInntekt();
@@ -64,27 +64,24 @@ export default function LeggTilInntektsKilde() {
     }
   }, [klarForLagring]);
 
-  const virksomhetsnummer = form.value("virksomhetsnummer") as string;
   const inntektsKilde = form.value("inntektskilde") as string;
+  const identifikator = form.value("identifikator") as string;
 
   useEffect(() => {
-    if (virksomhetsnummer?.length === 9) {
-      console.log("hit");
-      hentVirksomhetsNavn(virksomhetsnummer);
+    if (identifikator?.length === 9) {
+      hentVirksomhetsNavn();
     } else {
       setVirksomhetsNavn(undefined);
     }
-  }, [virksomhetsnummer]);
+  }, [identifikator]);
 
-  async function hentVirksomhetsNavn(virksomhetsnummer: string) {
-    const response = await fetch(`/api/enhetsregister/${virksomhetsnummer}`, {
+  async function hentVirksomhetsNavn() {
+    const response = await fetch(`/api/enhetsregister/${identifikator}`, {
       method: "GET",
     });
 
     if (response.ok) {
       const organisasjon = await response.json();
-
-      console.log(`🔥 organisasjon :`, organisasjon);
       setVirksomhetsNavn(organisasjon.navn);
     }
   }
@@ -126,7 +123,7 @@ export default function LeggTilInntektsKilde() {
       const inntektskildeData: INyInntektKilde = {
         inntektstype: form.value("inntektstype"),
         inntektskilde: form.value("inntektskilde"),
-        virksomhetsnummer: form.value("virksomhetsnummer"),
+        identifikator: form.value("identifikator"),
         inntekter: inntekterArray,
       };
 
@@ -149,7 +146,8 @@ export default function LeggTilInntektsKilde() {
     }
   }
 
-  const virksomhetLabel = inntektsKilde === "ORGANISASJON" ? "Virksomhetsnummer" : "Fødselsnummer";
+  const identifikatorLabel =
+    inntektsKilde === "ORGANISASJON" ? "Virksomhetsnummer" : "Fødselsnummer";
 
   return (
     <div className="mt-6">
@@ -184,18 +182,21 @@ export default function LeggTilInntektsKilde() {
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
                 <TextField
-                  name="virksomhetsnummer"
-                  label={virksomhetLabel}
+                  name="identifikator"
+                  label={identifikatorLabel}
                   size="small"
                   error={
-                    form.error("virksomhetsnummer")
-                      ? `${virksomhetLabel} ${form.error("virksomhetsnummer")}`
+                    form.error("identifikator")
+                      ? `${identifikatorLabel} ${form.error("identifikator")}`
                       : undefined
                   }
                 />
-
-                {inntektsKilde === "ORGANISASJON" && virksomhetsNavn && <p>{virksomhetsNavn}</p>}
-
+                {inntektsKilde === "ORGANISASJON" && virksomhetsNavn && (
+                  <div>
+                    <p className="bold">Virksomhet</p>
+                    <p>{virksomhetsNavn}</p>
+                  </div>
+                )}
                 <Select
                   name="inntektstype"
                   label="Inntektstype"

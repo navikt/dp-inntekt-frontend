@@ -4,7 +4,7 @@ import { inntektTyperBeskrivelse } from "./constants";
 export interface INyInntektKilde {
   inntektstype: string;
   inntektskilde: string;
-  virksomhetsnummer: string;
+  identifikator: string;
   inntekter: IFormInntekt[];
 }
 
@@ -14,7 +14,7 @@ export interface IFormInntekt {
 }
 
 export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet {
-  const { virksomhetsnummer } = nyInntektKilde;
+  const { identifikator } = nyInntektKilde;
 
   const generertInntekter = lagNyInntektskildeInntekter(nyInntektKilde);
   const periode = finnTidligsteOgSenesteDato(nyInntektKilde.inntekter);
@@ -24,9 +24,9 @@ export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet
     .toString();
 
   return {
-    virksomhetsnummer,
+    virksomhetsnummer: identifikator,
     virksomhetsnavn: "",
-    periode,
+    periode: periode,
     inntekter: generertInntekter,
     totalBelop: totaltBelop,
     avvikListe: [],
@@ -43,19 +43,19 @@ export function finnTidligsteOgSenesteDato(inntekter: IFormInntekt[]): IPeriode 
 }
 
 function lagNyInntektskildeInntekter(nyInntektKilde: INyInntektKilde): IInntekt[] {
-  const { inntektstype, inntektskilde, virksomhetsnummer, inntekter } = nyInntektKilde;
+  const { inntektstype, inntektskilde, identifikator, inntekter } = nyInntektKilde;
 
-  const virksomhet = { aktoerType: inntektskilde, identifikator: virksomhetsnummer };
+  const virksomhet = { aktoerType: inntektskilde, identifikator: identifikator };
 
   // Todo: Finn ut om mottaker alltid er en person!
   const inntektsmottaker = {
     aktoerType: "NATURLIG_IDENT",
-    identifikator: virksomhetsnummer,
+    identifikator: identifikator,
   };
 
   // Todo: Sjekk disse hardkodede verdiene
   return inntekter.map(({ dato, belop }) => ({
-    belop,
+    belop: belop,
     fordel: "",
     beskrivelse:
       inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
@@ -64,8 +64,8 @@ function lagNyInntektskildeInntekter(nyInntektKilde: INyInntektKilde): IInntekt[
     inntektsperiodetype: "Maaned",
     leveringstidspunkt: dato,
     utbetaltIMaaned: dato,
-    virksomhet,
-    inntektsmottaker,
+    virksomhet: virksomhet,
+    inntektsmottaker: inntektsmottaker,
     inngaarIGrunnlagForTrekk: true,
     utloeserArbeidsgiveravgift: true,
     informasjonsstatus: "InngaarAlltid",
