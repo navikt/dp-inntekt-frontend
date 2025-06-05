@@ -27,6 +27,7 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
+import { set } from "date-fns";
 
 export default function LeggTilInntektsKilde() {
   const params = useParams();
@@ -34,9 +35,14 @@ export default function LeggTilInntektsKilde() {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
-  const { setInntektEndret, klarForLagring, contextVirsomheter, setContextViksomheter } =
-    useInntekt();
-  const ref = useRef<HTMLDialogElement>(null);
+  const {
+    setInntektEndret,
+    klarForLagring,
+    setKlarForLagring,
+    contextVirsomheter,
+    setContextViksomheter,
+  } = useInntekt();
+  const inntektModalRef = useRef<HTMLDialogElement>(null);
 
   const form = useForm({
     submitSource: "state",
@@ -61,6 +67,7 @@ export default function LeggTilInntektsKilde() {
   useEffect(() => {
     if (klarForLagring) {
       form.submit();
+      setKlarForLagring(false);
     }
   }, [klarForLagring]);
 
@@ -91,7 +98,7 @@ export default function LeggTilInntektsKilde() {
     setVirksomhetsnavn(undefined);
 
     form.resetForm();
-    ref.current?.close();
+    inntektModalRef.current?.close();
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
@@ -117,7 +124,7 @@ export default function LeggTilInntektsKilde() {
     if (form.formState.isValid && minstEnInntektFyltUt) {
       setInntektEndret(true);
       setManglerInntekt(false);
-      ref.current?.close();
+      inntektModalRef.current?.close();
 
       // Todo: finn bedre navn
       const inntektskildeData: INyInntektKilde = {
@@ -156,13 +163,13 @@ export default function LeggTilInntektsKilde() {
       <Button
         variant="primary"
         icon={<PlusCircleIcon aria-hidden />}
-        onClick={() => ref.current?.showModal()}
+        onClick={() => inntektModalRef.current?.showModal()}
       >
         Legg til inntektskilde
       </Button>
 
       <Modal
-        ref={ref}
+        ref={inntektModalRef}
         header={{ heading: "Inntektskilde og inntekt" }}
         width={"1150px"}
         size="small"

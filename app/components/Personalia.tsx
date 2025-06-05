@@ -8,7 +8,7 @@ import { MennIkon } from "./Ikoner/MennIkon";
 
 export function Personalia() {
   const { mottaker } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
-  const { inntektEndret, setKlarForLagring } = useInntekt();
+  const { inntektEndret, setKlarForLagring, globalModalRef } = useInntekt();
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
@@ -28,9 +28,13 @@ export function Personalia() {
             variant="primary"
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
-            disabled={!inntektEndret}
             type="submit"
             onClick={() => {
+              if (!inntektEndret) {
+                globalModalRef?.current?.showModal();
+                return;
+              }
+
               setKlarForLagring(true);
             }}
           >

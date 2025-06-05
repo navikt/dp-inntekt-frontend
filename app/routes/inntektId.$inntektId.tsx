@@ -1,4 +1,5 @@
-import { Box, VStack } from "@navikt/ds-react";
+import { BodyLong, Box, Button, Modal, VStack } from "@navikt/ds-react";
+import { useRef } from "react";
 import { data, redirect, useLoaderData } from "react-router";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
@@ -31,9 +32,10 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function Inntekt() {
   const loaderData = useLoaderData<typeof loader>();
+  const globalModalRef = useRef<HTMLDialogElement>(null);
 
   return (
-    <InntektProvider virksomheter={loaderData.virksomheter}>
+    <InntektProvider virksomheter={loaderData.virksomheter} globalModalRef={globalModalRef}>
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />
@@ -48,6 +50,11 @@ export default function Inntekt() {
             <LeggTilInntektsKilde />
           </Box>
         </VStack>
+        <Modal ref={globalModalRef} header={{ heading: "Du har ingen endring å lagre" }}>
+          <Modal.Body>
+            <BodyLong>Du har ikke gjort noen endringer som kan lagres.</BodyLong>
+          </Modal.Body>
+        </Modal>
       </main>
     </InntektProvider>
   );
