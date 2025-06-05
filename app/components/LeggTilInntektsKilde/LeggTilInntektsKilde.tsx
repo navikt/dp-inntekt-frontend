@@ -27,7 +27,6 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./LeggTilInntektskilde.module.css";
-import { set } from "date-fns";
 
 export default function LeggTilInntektsKilde() {
   const params = useParams();
@@ -36,6 +35,7 @@ export default function LeggTilInntektsKilde() {
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
   const {
+    inntektEndret,
     setInntektEndret,
     klarForLagring,
     setKlarForLagring,
@@ -70,6 +70,22 @@ export default function LeggTilInntektsKilde() {
       setKlarForLagring(false);
     }
   }, [klarForLagring]);
+
+  // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
+  useEffect(() => {
+    if (!inntektEndret) return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = ""; // Nødvendig for å vise dialogen i de fleste nettlesere
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [inntektEndret]);
 
   const inntektsKilde = form.value("inntektskilde") as string;
   const identifikator = form.value("identifikator") as string;

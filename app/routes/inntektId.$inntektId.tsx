@@ -1,5 +1,5 @@
 import { BodyLong, Box, Button, Modal, VStack } from "@navikt/ds-react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { data, redirect, useLoaderData } from "react-router";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
