@@ -1,11 +1,11 @@
 import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
 import VirsomhetInntekter from "~/components/VirsomhetInntekter";
-import type { IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IPeriode, IVirksomhet } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 import { erPersonnummer, maskerePersonnummer } from "~/utils/generell.util";
 
 interface IProps {
-  virksomhet: IVirksomhetsinntekt;
+  virksomhet: IVirksomhet;
   inntektsPeriode: IPeriode;
 }
 

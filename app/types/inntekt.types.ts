@@ -1,10 +1,10 @@
 export interface IUklassifisertInntekt {
-  virksomheter: IVirksomhetsinntekt[];
+  virksomheter: IVirksomhet[];
   mottaker: IMottaker;
   periode: IPeriode;
 }
 
-export interface IVirksomhetsinntekt {
+export interface IVirksomhet {
   virksomhetsnummer: string;
   virksomhetsnavn: string;
   periode: IPeriode;

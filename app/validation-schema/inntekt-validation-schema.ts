@@ -6,20 +6,11 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
     inntektskilde: z.string({
       required_error: "Inntektskilde er påkrevd",
     }),
-    organisasjonsnavn: z
-      .string({
-        required_error: "Organisasjonsnavn er påkrevd",
-      })
-      .min(1, "Organisasjonsnavn er påkrevd")
-      .max(50, "Organisasjonsnavn er for langt"),
-    originalData: z.string().optional(),
-    inntektId: z.string().optional(),
-    organisasjonsnummer: z
-      .string({
-        required_error: "Organisasjonsnummer er påkrevd",
-      })
-      .min(1, "Organisasjonsnummer er påkrevd")
-      .max(50, "Organisasjonsnummer er for langt"),
+    inntektId: z.string(),
+    payload: z.string(),
+    identifikator: z.string({
+      required_error: "er påkrevd",
+    }),
     inntektstype: z.string({
       required_error: "Inntektstype er påkrevd",
     }),
@@ -37,8 +28,8 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
           .refine((val) => val === undefined || val === "" || !isNaN(Number(val)), {
             message: `ikke et gyldig tall`,
           })
-          .refine((val) => val === undefined || val === "" || Number(val) > 1, {
-            message: `må være større enn 1`,
+          .refine((val) => val === undefined || val === "" || Number(val) > 0, {
+            message: `må være større enn 0`,
           });
       }
     });

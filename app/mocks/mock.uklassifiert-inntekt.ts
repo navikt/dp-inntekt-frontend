@@ -1,4 +1,4 @@
-import type { IUklassifisertInntekt, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
 
 function generateMockInntektDataFromRange(start: string, end: string) {
   const [startYear, startMonth] = start.split("-").map(Number);
@@ -48,7 +48,7 @@ function generateMockInntektDataFromRange(start: string, end: string) {
   return data;
 }
 
-function updateTotalBelop(virksomheter: IVirksomhetsinntekt[]) {
+function updateTotalBelop(virksomheter: IVirksomhet[]) {
   virksomheter.forEach((virksomhet) => {
     const totalInntekt = virksomhet.inntekter.reduce((sum, inntekt) => {
       return sum + parseInt(inntekt.belop, 10);

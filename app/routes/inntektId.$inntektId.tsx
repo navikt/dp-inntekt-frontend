@@ -6,7 +6,7 @@ import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInnte
 import { Personalia } from "~/components/Personalia";
 import { Virksomheter } from "~/components/Virksomheter";
 import { InntektProvider } from "~/context/inntekt-context";
-import { hentInntek } from "~/models/inntekt.server";
+import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
 
@@ -15,7 +15,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     return redirect("/sok");
   }
 
-  const inntektResponse = await hentInntek(request, params.inntektId);
+  const inntektResponse = await hentInntekt(request, params.inntektId);
 
   if (!inntektResponse.ok) {
     throw new Response("Feil ved henting av inntekter", {
@@ -26,10 +26,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   const inntektData: IUklassifisertInntekt = await inntektResponse.json();
 
-  return data({
-    ...inntektData,
-    inntektId: params.inntektId,
-  });
+  return data(inntektData);
 }
 
 export default function Inntekt() {

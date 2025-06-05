@@ -1,8 +1,8 @@
 import { differenceInMonths, format } from "date-fns";
 import { parse } from "date-fns/parse";
-import type { IInntekt, IPeriode, IVirksomhetsinntekt } from "~/types/inntekt.types";
+import type { IInntekt, IPeriode, IVirksomhet } from "~/types/inntekt.types";
 
-export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhetsinntekt[]): number {
+export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhet[]): number {
   return virksomheter.reduce(
     (total, virksomhet) =>
       total +
