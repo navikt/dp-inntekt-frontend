@@ -1,11 +1,10 @@
-import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
+import type { IInntekt, IPeriode, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "./constants";
 
 export interface INyInntektKilde {
   inntektstype: string;
   inntektskilde: string;
   virksomhetsnummer: string;
-  periode: { fraOgMed: string; tilOgMed: string };
   inntekter: IFormInntekt[];
 }
 
@@ -15,9 +14,10 @@ export interface IFormInntekt {
 }
 
 export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet {
-  const { virksomhetsnummer, periode } = nyInntektKilde;
+  const { virksomhetsnummer } = nyInntektKilde;
 
   const generertInntekter = lagNyInntektskildeInntekter(nyInntektKilde);
+  const periode = finnTidligsteOgSenesteDato(nyInntektKilde.inntekter);
 
   const totaltBelop = generertInntekter
     .reduce((sum, inntekt) => sum + Number(inntekt.belop), 0)
@@ -30,6 +30,15 @@ export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet
     inntekter: generertInntekter,
     totalBelop: totaltBelop,
     avvikListe: [],
+  };
+}
+
+export function finnTidligsteOgSenesteDato(inntekter: IFormInntekt[]): IPeriode {
+  const datoer = inntekter.map((inntekt) => inntekt.dato).sort();
+
+  return {
+    fraOgMed: datoer[0],
+    tilOgMed: datoer[datoer.length - 1],
   };
 }
 

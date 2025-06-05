@@ -109,7 +109,6 @@ export default function LeggTilInntektsKilde() {
         inntektstype: form.value("inntektstype"),
         inntektskilde: form.value("inntektskilde"),
         virksomhetsnummer: form.value("virksomhetsnummer"),
-        periode: inntekt.periode,
         inntekter: inntekterArray,
       };
 

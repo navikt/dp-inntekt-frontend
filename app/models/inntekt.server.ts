@@ -1,12 +1,7 @@
-import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import { getDPInntektOboToken } from "~/utils/auth.util.server";
 import { getEnv } from "~/utils/env.utils";
 
-export async function lagreInntekt(
-  request: Request,
-  inntektId: string,
-  oppdaterteInntektData: IUklassifisertInntekt
-) {
+export async function lagreInntekt(request: Request, inntektId: string, payload: string) {
   const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
 
@@ -18,7 +13,7 @@ export async function lagreInntekt(
       Authorization: `Bearer ${onBehalfOfToken}`,
       connection: "keep-alive",
     },
-    body: JSON.stringify(oppdaterteInntektData),
+    body: payload,
   });
 }
 

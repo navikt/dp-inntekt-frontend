@@ -1,6 +1,5 @@
 import { redirect } from "react-router";
 import { lagreInntekt } from "~/models/inntekt.server";
-import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/_index";
 
 // Lagring av inntekten
@@ -11,8 +10,7 @@ export async function action({ request }: Route.ActionArgs) {
   const inntektId = entries["inntektId"] as string;
   const payload = entries["payload"] as string;
 
-  const parsedPayload = JSON.parse(payload) as IUklassifisertInntekt;
-  const lagreInntektResponse = await lagreInntekt(request, inntektId, parsedPayload);
+  const lagreInntektResponse = await lagreInntekt(request, inntektId, payload);
 
   if (!lagreInntektResponse.ok) {
     throw new Response("Feil ved lagring av inntekt", {
