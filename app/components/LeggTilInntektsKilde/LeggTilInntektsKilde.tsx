@@ -11,6 +11,7 @@ import {
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
@@ -29,6 +30,7 @@ import styles from "./LeggTilInntektskilde.module.css";
 import { hentVirksomhetsNavn } from "~/models/inntekt.server";
 
 export default function LeggTilInntektsKilde() {
+  const params = useParams();
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
@@ -107,7 +109,6 @@ export default function LeggTilInntektsKilde() {
         inntektstype: form.value("inntektstype"),
         inntektskilde: form.value("inntektskilde"),
         virksomhetsnummer: form.value("virksomhetsnummer"),
-        virksomhetsnavn: form.value("virksomhetsnavn"),
         periode: inntekt.periode,
         inntekter: inntekterArray,
       };
@@ -124,7 +125,7 @@ export default function LeggTilInntektsKilde() {
       };
 
       // Sette verdier for skjulte input-felter
-      form.setValue("inntektId", inntekt.inntektId);
+      form.setValue("inntektId", params.inntektId);
       form.setValue("payload", JSON.stringify(payload));
 
       setContextViksomheter(oppdatertVirksomheter);
@@ -161,12 +162,6 @@ export default function LeggTilInntektsKilde() {
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
-                <TextField
-                  name="virksomhetsnavn"
-                  label="Virksomhetsnavn"
-                  size="small"
-                  error={form.error("virksomhetsnavn")}
-                />
                 <input type="hidden" name="payload" />
                 <input type="hidden" name="inntektId" />
                 <TextField

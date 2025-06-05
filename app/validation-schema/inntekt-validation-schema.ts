@@ -6,12 +6,6 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
     inntektskilde: z.string({
       required_error: "Inntektskilde er påkrevd",
     }),
-    virksomhetsnavn: z
-      .string({
-        required_error: "virksomhetsnavn er påkrevd",
-      })
-      .min(1, "Virksomhetsnavn er påkrevd")
-      .max(50, "Virksomhetsnavn er for langt"),
     inntektId: z.string(),
     payload: z.string(),
     virksomhetsnummer: z

@@ -1,4 +1,4 @@
-import { Alert, Box, Button, TextField, VStack } from "@navikt/ds-react";
+import { Box, Button, TextField, VStack } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { redirect } from "react-router";
 import invariant from "tiny-invariant";
@@ -39,11 +39,6 @@ export default function Sok() {
     <main>
       <VStack gap="6">
         <Header tittel="Dagpenger inntekt" />
-
-        <Alert variant="error">
-          Mangler inntekts-ID. Bruk søkefeltet for å søke etter inntekt.
-        </Alert>
-
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <form {...form.getFormProps()}>
             <TextField
