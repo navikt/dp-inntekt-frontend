@@ -3,13 +3,15 @@ import { useRef } from "react";
 import { data, redirect, useLoaderData } from "react-router";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
-import LeggTilInntektsKilde from "~/components/LeggTilInntektsKilde/LeggTilInntektsKilde";
+import InntektsKildeModal from "~/components/LeggTilInntektsKilde/InntektsKildeModal";
 import { Personalia } from "~/components/Personalia";
 import { Virksomheter } from "~/components/Virksomheter";
 import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
+import { InntektForm } from "~/components/InntektForm";
+import { GlobalModal } from "~/components/GlobalModal";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   if (!params.inntektId) {
@@ -47,18 +49,11 @@ export default function Inntekt() {
             <VStack gap="4">
               <Virksomheter />
             </VStack>
-            <LeggTilInntektsKilde />
+            <InntektsKildeModal />
           </Box>
         </VStack>
-        <Modal
-          ref={globalModalRef}
-          header={{ heading: "Du har ingen endring å lagre" }}
-          closeOnBackdropClick
-        >
-          <Modal.Body>
-            <BodyLong>Du har ikke gjort noen endringer som kan lagres.</BodyLong>
-          </Modal.Body>
-        </Modal>
+        <InntektForm />
+        <GlobalModal />
       </main>
     </InntektProvider>
   );

@@ -11,31 +11,29 @@ import {
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
-import {
-  lagNyInntektskilde,
-  type IFormInntekt,
-  type INyInntektKilde,
-} from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
 
-import styles from "./LeggTilInntektskilde.module.css";
+import styles from "./InntektsKildeModal.module.css";
+import {
+  lagNyVirksomhet,
+  type IFormInntekt,
+  type INyVirksomhet,
+} from "~/utils/ny-intekt-kilde.util";
 
-export default function LeggTilInntektsKilde() {
-  const params = useParams();
+export default function InntektsKildeModal() {
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
   const inntektModalRef = useRef<HTMLDialogElement>(null);
-  const { setInntektEndret, klarForLagring, contextVirsomheter, setContextViksomheter } =
+  const { setInntektEndret, contextVirksomheter, setContextVirksomheter, setContextPayload } =
     useInntekt();
 
   const form = useForm({
@@ -57,13 +55,6 @@ export default function LeggTilInntektsKilde() {
     const generertePerioder = generereFirePerioder(inntekt.periode);
     setGenerertePerioder(generertePerioder);
   }, []);
-
-  useEffect(() => {
-    if (klarForLagring) {
-      form.submit();
-      setInntektEndret(false);
-    }
-  }, [klarForLagring]);
 
   const inntektsKilde = form.value("inntektskilde") as string;
   const identifikator = form.value("identifikator") as string;
@@ -111,7 +102,7 @@ export default function LeggTilInntektsKilde() {
     .filter((felt) => form.value(felt) !== undefined && form.value(felt) !== "")
     .map((felt) => ({ dato: felt, belop: form.value(felt) }));
 
-  function validate() {
+  function settInn() {
     setManglerInntekt(true);
     form.validate();
 
@@ -120,8 +111,7 @@ export default function LeggTilInntektsKilde() {
       setManglerInntekt(false);
       inntektModalRef.current?.close();
 
-      // Todo: finn bedre navn
-      const inntektskildeData: INyInntektKilde = {
+      const nyVirsomhetData: INyVirksomhet = {
         inntektstype: form.value("inntektstype"),
         inntektskilde: form.value("inntektskilde"),
         identifikator: form.value("identifikator"),
@@ -130,22 +120,17 @@ export default function LeggTilInntektsKilde() {
         inntekter: inntekterArray,
       };
 
-      // Todo: finn bedre navn
-      const nyInntektskilde = lagNyInntektskilde(inntektskildeData);
-      const oppdatertVirksomheter = [nyInntektskilde, ...contextVirsomheter];
+      const nyVirksomhet = lagNyVirksomhet(nyVirsomhetData);
+      const oppdatertVirksomheter = [nyVirksomhet, ...contextVirksomheter];
 
-      // Todo: finn bedre navn
       const payload: IUklassifisertInntekt = {
         virksomheter: oppdatertVirksomheter,
         mottaker: inntekt.mottaker,
         periode: inntekt.periode,
       };
 
-      // Sette verdier for skjulte input-felter
-      form.setValue("inntektId", params.inntektId);
-      form.setValue("payload", JSON.stringify(payload));
-
-      setContextViksomheter(oppdatertVirksomheter);
+      setContextPayload(JSON.stringify(payload));
+      setContextVirksomheter(oppdatertVirksomheter);
       form.resetForm();
     }
   }
@@ -173,9 +158,6 @@ export default function LeggTilInntektsKilde() {
           <Modal.Body>
             <VStack gap="4">
               <VStack gap="4" className={styles.inntektInputContainer}>
-                <input type="hidden" name="identifikatorsnavn" />
-                <input type="hidden" name="payload" />
-                <input type="hidden" name="inntektId" />
                 <RadioGroup
                   {...form.getInputProps("inntektskilde")}
                   name="inntektskilde"
@@ -238,7 +220,7 @@ export default function LeggTilInntektsKilde() {
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <Button type="button" size="small" onClick={() => validate()}>
+            <Button type="button" size="small" onClick={() => settInn()}>
               Sett inn
             </Button>
             <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>

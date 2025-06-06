@@ -18,24 +18,20 @@ interface IInntektContextValue {
   setInntektEndret: (value: boolean) => void;
   klarForLagring: boolean;
   setKlarForLagring: (value: boolean) => void;
-  contextVirsomheter: IVirksomhet[];
-  setContextViksomheter: (value: IVirksomhet[]) => void;
+  contextVirksomheter: IVirksomhet[];
+  setContextVirksomheter: (value: IVirksomhet[]) => void;
   globalModalRef: RefObject<HTMLDialogElement | null> | undefined;
+  contextPayload: string | null;
+  setContextPayload: (value: string | null) => void;
 }
 
 export const InntektContext = createContext<IInntektContextValue | undefined>(undefined);
 
 function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
-  const [contextVirsomheter, setContextViksomheter] = useState(props.virksomheter || []);
+  const [contextVirksomheter, setContextVirksomheter] = useState(props.virksomheter || []);
   const [inntektEndret, setInntektEndret] = useState(false);
+  const [contextPayload, setContextPayload] = useState<string | null>(null);
   const [klarForLagring, setKlarForLagring] = useState(false);
-
-  // Oppdaterer konteksten hvis virksomheter endres
-  // useEffect(() => {
-  //   if (JSON.stringify(props.virksomheter) !== JSON.stringify(contextVirsomheter)) {
-  //     setContextViksomheter(props.virksomheter);
-  //   }
-  // }, [props.virksomheter]);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
   useEffect(() => {
@@ -61,8 +57,10 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
         setInntektEndret,
         klarForLagring,
         setKlarForLagring,
-        contextVirsomheter,
-        setContextViksomheter,
+        contextVirksomheter,
+        setContextVirksomheter,
+        contextPayload,
+        setContextPayload,
       }}
     >
       {props.children}

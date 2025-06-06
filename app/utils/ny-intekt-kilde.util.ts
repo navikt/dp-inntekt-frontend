@@ -1,7 +1,7 @@
 import type { IInntekt, IPeriode, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "./constants";
 
-export interface INyInntektKilde {
+export interface INyVirksomhet {
   inntektstype: string;
   inntektskilde: string;
   identifikator: string;
@@ -14,7 +14,7 @@ export interface IFormInntekt {
   belop: string;
 }
 
-export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet {
+export function lagNyVirksomhet(nyInntektKilde: INyVirksomhet): IVirksomhet {
   const { identifikator, identifikatorsnavn } = nyInntektKilde;
 
   const generertInntekter = lagNyInntektskildeInntekter(nyInntektKilde);
@@ -26,7 +26,7 @@ export function lagNyInntektskilde(nyInntektKilde: INyInntektKilde): IVirksomhet
 
   return {
     virksomhetsnummer: identifikator,
-    virksomhetsnavn: identifikatorsnavn,
+    virksomhetsnavn: identifikatorsnavn ?? "",
     periode: periode,
     inntekter: generertInntekter,
     totalBelop: totaltBelop,
@@ -43,7 +43,7 @@ export function finnTidligsteOgSenesteDato(inntekter: IFormInntekt[]): IPeriode 
   };
 }
 
-function lagNyInntektskildeInntekter(nyInntektKilde: INyInntektKilde): IInntekt[] {
+function lagNyInntektskildeInntekter(nyInntektKilde: INyVirksomhet): IInntekt[] {
   const { inntektstype, inntektskilde, identifikator, inntekter } = nyInntektKilde;
 
   const virksomhet = { aktoerType: inntektskilde, identifikator: identifikator };
@@ -55,11 +55,13 @@ function lagNyInntektskildeInntekter(nyInntektKilde: INyInntektKilde): IInntekt[
   };
 
   // Todo: Sjekk disse hardkodede verdiene
+  // Todo: Sjekk disse hardkodede verdiene
   return inntekter.map(({ dato, belop }) => ({
     belop: belop,
     fordel: "",
-    beskrivelse:
-      inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
+    // beskrivelse:
+    // inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
+    beskrivelse: "fastloenn",
     inntektskilde: "A-ordningen",
     inntektsstatus: "LoependeInnrapportert",
     inntektsperiodetype: "Maaned",
@@ -70,7 +72,7 @@ function lagNyInntektskildeInntekter(nyInntektKilde: INyInntektKilde): IInntekt[
     inngaarIGrunnlagForTrekk: true,
     utloeserArbeidsgiveravgift: true,
     informasjonsstatus: "InngaarAlltid",
-    inntektType: inntektstype,
+    inntektType: "LOENNSINNTEKT",
     aarMaaned: dato,
   }));
 }

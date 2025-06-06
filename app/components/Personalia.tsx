@@ -5,10 +5,12 @@ import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import { erEnKvinne } from "~/utils/generell.util";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
+import { useNavigation } from "react-router";
 
 export function Personalia() {
   const { mottaker } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const { inntektEndret, setKlarForLagring, globalModalRef } = useInntekt();
+  const { state } = useNavigation();
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
@@ -29,6 +31,7 @@ export function Personalia() {
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
+            loading={state !== "idle"}
             onClick={() => {
               if (!inntektEndret) {
                 globalModalRef?.current?.showModal();
