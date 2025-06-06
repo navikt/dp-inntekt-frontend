@@ -5,12 +5,12 @@ import { useEffect } from "react";
 
 export function Virksomheter() {
   const { periode } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
-  const { contextVirksomheter, setContextViksomheter, setInntektEndret } = useInntekt();
+  const { contextVirksomheter, setContextVirksomheter, setInntektEndret } = useInntekt();
 
   function slettVirksomhetInntekt (virksomhetsnummer: string) {
     setInntektEndret(true)
     var oppdatertKontekstVirksomheter = contextVirksomheter.filter(virksomhet => virksomhet.virksomhetsnummer !== virksomhetsnummer)
-    setContextViksomheter(oppdatertKontekstVirksomheter)
+    setContextVirksomheter(oppdatertKontekstVirksomheter)
   }
 
   useEffect(() => {
