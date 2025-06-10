@@ -12,9 +12,9 @@ export async function loader({ params }: Route.LoaderArgs) {
   const response = await hentVirksomhetsNavn(params.virksomhetsnummer);
 
   if (response.ok) {
-    const virsomhetsinfo = await response.json();
+    const virksomhetsinfo = await response.json();
 
-    return new Response(JSON.stringify(virsomhetsinfo), {
+    return new Response(JSON.stringify(virksomhetsinfo), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

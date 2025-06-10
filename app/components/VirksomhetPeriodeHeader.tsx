@@ -6,7 +6,7 @@ interface IProps {
   periode: IPeriode;
 }
 
-export function VirsomhetPeriodeHeader({ periodeNummer, periode }: IProps) {
+export function VirksomhetPeriodeHeader({ periodeNummer, periode }: IProps) {
   return (
     <div>
       <div>

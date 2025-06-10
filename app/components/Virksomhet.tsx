@@ -1,6 +1,6 @@
 import { PlusCircleIcon, TrashIcon } from "@navikt/aksel-icons";
 import { Button, ExpansionCard, HStack, VStack } from "@navikt/ds-react";
-import VirsomhetInntekter from "~/components/VirsomhetInntekter";
+import VirksomhetInntekter from "~/components/VirksomhetInntekter";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import type { IPeriode, IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
@@ -71,7 +71,7 @@ export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
         </ExpansionCard.Description>
       </ExpansionCard.Header>
       <ExpansionCard.Content>
-        <VirsomhetInntekter virksomhet={virksomhet} inntektsPeriode={inntektsPeriode} />
+        <VirksomhetInntekter virksomhet={virksomhet} inntektsPeriode={inntektsPeriode} />
         <HStack gap="2">
           <Button icon={<PlusCircleIcon />} size="small" className="mt-4">
             Legg til inntekt

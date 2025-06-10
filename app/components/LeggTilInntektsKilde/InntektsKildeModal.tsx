@@ -109,7 +109,7 @@ export default function InntektsKildeModal() {
       setManglerInntekt(false);
       inntektModalRef.current?.close();
 
-      const nyVirsomhetData: INyVirksomhet = {
+      const nyVirksomhetData: INyVirksomhet = {
         inntektstype: form.value("inntektstype"),
         inntektskilde: form.value("inntektskilde"),
         identifikator: form.value("identifikator"),
@@ -118,7 +118,7 @@ export default function InntektsKildeModal() {
         inntekter: inntekterArray,
       };
 
-      const nyVirksomhet = lagNyVirksomhet(nyVirsomhetData);
+      const nyVirksomhet = lagNyVirksomhet(nyVirksomhetData);
       const oppdatertVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
 
       setUklassifisertInntekt({
