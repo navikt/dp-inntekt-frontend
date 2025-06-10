@@ -50,6 +50,19 @@ export default function VirksomhetInntekter({ virksomhet, inntektsPeriode }: IPr
     setInntektEndret(true);
   }
 
+  function slettVirksomhet() {
+    var oppdatertKontekstVirksomheter = uklassifisertInntekt.virksomheter.filter(
+      (v) => virksomhet.virksomhetsnummer !== v.virksomhetsnummer
+    );
+
+    setUklassifisertInntekt({
+      ...uklassifisertInntekt,
+      virksomheter: oppdatertKontekstVirksomheter,
+    });
+
+    setInntektEndret(true);
+  }
+
   return (
     <Table>
       <Table.Header>
@@ -92,7 +105,11 @@ export default function VirksomhetInntekter({ virksomhet, inntektsPeriode }: IPr
                   variant="tertiary"
                   size="small"
                   icon={<TrashIcon />}
-                  onClick={() => fjernInntekt(inntekt.inntektType)}
+                  onClick={() =>
+                    gruppertinntektTyperBeskrivelse.length > 1
+                      ? fjernInntekt(inntekt.inntektType)
+                      : slettVirksomhet()
+                  }
                 />
               </HStack>
             </Table.DataCell>
