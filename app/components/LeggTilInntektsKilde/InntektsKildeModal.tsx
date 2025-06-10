@@ -100,11 +100,20 @@ export default function InntektsKildeModal() {
     .filter((felt) => form.value(felt) !== undefined && form.value(felt) !== "")
     .map((felt) => ({ dato: felt, belop: form.value(felt) }));
 
-  function settInn() {
-    setManglerInntekt(true);
-    form.validate();
+  async function settInn() {
+    const formState = await form.validate();
+    const harFeil = Object.keys(formState).length > 0;
 
-    if (form.formState.isValid && minstEnInntektFyltUt) {
+    if (harFeil) {
+      return;
+    }
+
+    if (!harFeil && !minstEnInntektFyltUt) {
+      setManglerInntekt(true);
+      return;
+    }
+
+    if (!harFeil && minstEnInntektFyltUt) {
       setInntektEndret(true);
       setManglerInntekt(false);
       inntektModalRef.current?.close();
