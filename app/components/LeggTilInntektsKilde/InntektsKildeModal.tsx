@@ -101,8 +101,8 @@ export default function InntektsKildeModal() {
     .map((felt) => ({ dato: felt, belop: form.value(felt) }));
 
   async function settInn() {
-    const formState = await form.validate();
-    const harFeil = Object.keys(formState).length > 0;
+    const validering = await form.validate();
+    const harFeil = Object.keys(validering).length > 0;
 
     if (harFeil) {
       return;
