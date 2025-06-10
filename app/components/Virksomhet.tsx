@@ -1,6 +1,9 @@
-import { Button, ExpansionCard, VStack } from "@navikt/ds-react";
+import { PlusCircleIcon, TrashIcon } from "@navikt/aksel-icons";
+import { Button, ExpansionCard, HStack, VStack } from "@navikt/ds-react";
 import VirsomhetInntekter from "~/components/VirsomhetInntekter";
-import type { IPeriode, IVirksomhet } from "~/types/inntekt.types";
+import { useInntekt } from "~/context/inntekt-context";
+import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
+import type { IPeriode, IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 import { erPersonnummer, maskerePersonnummer } from "~/utils/generell.util";
 
@@ -24,8 +27,33 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 }
 
 export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
+  const { periode: totalPeriode, mottaker } = useTypedRouteLoaderData(
+    "routes/inntektId.$inntektId"
+  );
+
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
+  const { contextVirksomheter, setContextVirksomheter, setInntektEndret, setContextPayload } =
+    useInntekt();
+
   const erPrivatPerson = erPersonnummer(virksomhetsnummer);
+
+  function slettVirksomhet() {
+    var oppdatertKontekstVirksomheter = contextVirksomheter.filter(
+      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer
+    );
+
+    setContextVirksomheter(oppdatertKontekstVirksomheter);
+
+    const payload: IUklassifisertInntekt = {
+      virksomheter: contextVirksomheter,
+      mottaker: mottaker,
+      periode: totalPeriode,
+    };
+
+    setContextPayload(JSON.stringify(payload));
+
+    setInntektEndret(true);
+  }
 
   return (
     <ExpansionCard aria-label={`Inntekt for ${virksomhetsnummer}`}>
@@ -54,9 +82,20 @@ export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
       </ExpansionCard.Header>
       <ExpansionCard.Content>
         <VirsomhetInntekter virksomhet={virksomhet} inntektsPeriode={inntektsPeriode} />
-        <Button size="small" className="mt-4">
-          Legg til inntekt
-        </Button>
+        <HStack gap="2">
+          <Button icon={<PlusCircleIcon />} size="small" className="mt-4">
+            Legg til inntekt
+          </Button>
+          <Button
+            icon={<TrashIcon />}
+            variant="tertiary"
+            size="small"
+            className="mt-4"
+            onClick={() => slettVirksomhet()}
+          >
+            Slett inntekt
+          </Button>
+        </HStack>
       </ExpansionCard.Content>
     </ExpansionCard>
   );
