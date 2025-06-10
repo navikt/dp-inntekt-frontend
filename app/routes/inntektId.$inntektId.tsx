@@ -1,6 +1,7 @@
-import { BodyLong, Box, Modal, VStack } from "@navikt/ds-react";
+import { Box, VStack } from "@navikt/ds-react";
 import { useRef } from "react";
 import { data, redirect, useLoaderData } from "react-router";
+import { GlobalModal } from "~/components/GlobalModal";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import InntektsKildeModal from "~/components/LeggTilInntektsKilde/InntektsKildeModal";
@@ -10,7 +11,6 @@ import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
-import { GlobalModal } from "~/components/GlobalModal";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   if (!params.inntektId) {

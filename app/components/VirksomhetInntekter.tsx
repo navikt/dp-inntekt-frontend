@@ -1,5 +1,6 @@
 import { Button, HStack, Table } from "@navikt/ds-react";
-import type { IPeriode, IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
+import { useInntekt } from "~/context/inntekt-context";
+import type { IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formatterNorskTall } from "~/utils/formattering.util";
 import {
@@ -13,12 +14,14 @@ import { useInntekt } from "~/context/inntekt-context";
 
 interface IProps {
   virksomhet: IVirksomhet;
-  inntektsPeriode: IPeriode;
 }
 
 export default function VirksomhetInntekter({ virksomhet, inntektsPeriode }: IProps) {
+export default function VirsomhetInntekter({ virksomhet }: IProps) {
+  const { uklassifisertInntekt } = useInntekt();
+
   const gruppertinntektTyperBeskrivelse = grupperEtterInntektType(virksomhet.inntekter);
-  const oppdeltPerioder = delOppPeriodeTilTrePerioder(inntektsPeriode);
+  const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
   const periode1 = oppdeltPerioder[0];
   const periode2 = oppdeltPerioder[1];
   const periode3 = oppdeltPerioder[2];
@@ -82,21 +85,21 @@ export default function VirksomhetInntekter({ virksomhet, inntektsPeriode }: IPr
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {gruppertinntektTyperBeskrivelse.map((inntekt) => (
-          <Table.Row key={inntekt.inntektType}>
+        {gruppertinntektTyperBeskrivelse.map((virsomhet) => (
+          <Table.Row key={virsomhet.inntektType}>
             <Table.DataCell>
-              {inntektTyperBeskrivelse.find((type) => type.key === inntekt.inntektType)?.text ||
-                inntekt.inntektType}
+              {inntektTyperBeskrivelse.find((type) => type.key === virsomhet.inntektType)?.text ||
+                virsomhet.inntektType}
             </Table.DataCell>
-            <Table.DataCell>{inntekt.inntektType}</Table.DataCell>
+            <Table.DataCell>{virsomhet.inntektType}</Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode1))}
-            </Table.DataCell>
-            <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode2))}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode1))}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode3))}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode2))}
+            </Table.DataCell>
+            <Table.DataCell align="right">
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode3))}
             </Table.DataCell>
             <Table.DataCell align="right">
               <HStack gap="1" justify="end">
