@@ -37,7 +37,7 @@ export default function Inntekt() {
   const globalModalRef = useRef<HTMLDialogElement>(null);
 
   return (
-    <InntektProvider virksomheter={loaderData.virksomheter} globalModalRef={globalModalRef}>
+    <InntektProvider uklassifisertInntekt={loaderData} globalModalRef={globalModalRef}>
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />

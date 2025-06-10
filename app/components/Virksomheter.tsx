@@ -4,11 +4,11 @@ import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 
 export function Virksomheter() {
   const { periode } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
-  const { contextVirksomheter } = useInntekt();
+  const { uklassifisertInntekt } = useInntekt();
 
   return (
     <>
-      {contextVirksomheter.map((virksomhet) => (
+      {uklassifisertInntekt.virksomheter.map((virksomhet) => (
         <Virksomhet
           key={virksomhet.virksomhetsnummer}
           virksomhet={virksomhet}

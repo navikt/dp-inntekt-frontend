@@ -27,30 +27,20 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 }
 
 export default function Virksomhet({ virksomhet, inntektsPeriode }: IProps) {
-  const { periode: totalPeriode, mottaker } = useTypedRouteLoaderData(
-    "routes/inntektId.$inntektId"
-  );
-
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
-  const { contextVirksomheter, setContextVirksomheter, setInntektEndret, setContextPayload } =
-    useInntekt();
+  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
 
   const erPrivatPerson = erPersonnummer(virksomhetsnummer);
 
   function slettVirksomhet() {
-    var oppdatertKontekstVirksomheter = contextVirksomheter.filter(
+    var oppdatertKontekstVirksomheter = uklassifisertInntekt.virksomheter.filter(
       (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer
     );
 
-    setContextVirksomheter(oppdatertKontekstVirksomheter);
-
-    const payload: IUklassifisertInntekt = {
-      virksomheter: contextVirksomheter,
-      mottaker: mottaker,
-      periode: totalPeriode,
-    };
-
-    setContextPayload(JSON.stringify(payload));
+    setUklassifisertInntekt({
+      ...uklassifisertInntekt,
+      virksomheter: oppdatertKontekstVirksomheter,
+    });
 
     setInntektEndret(true);
   }

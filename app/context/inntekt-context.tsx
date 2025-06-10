@@ -6,10 +6,10 @@ import {
   type PropsWithChildren,
   type RefObject,
 } from "react";
-import type { IVirksomhet } from "~/types/inntekt.types";
+import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 
 interface IInntektContextProps {
-  virksomheter: IVirksomhet[];
+  uklassifisertInntekt: IUklassifisertInntekt;
   globalModalRef?: RefObject<HTMLDialogElement | null>;
 }
 
@@ -18,17 +18,17 @@ interface IInntektContextValue {
   setInntektEndret: (value: boolean) => void;
   klarForLagring: boolean;
   setKlarForLagring: (value: boolean) => void;
-  contextVirksomheter: IVirksomhet[];
-  setContextVirksomheter: (value: IVirksomhet[]) => void;
+  uklassifisertInntekt: IUklassifisertInntekt;
+  setUklassifisertInntekt: (value: IUklassifisertInntekt) => void;
   globalModalRef: RefObject<HTMLDialogElement | null> | undefined;
-  contextPayload: string | null;
-  setContextPayload: (value: string | null) => void;
 }
 
 export const InntektContext = createContext<IInntektContextValue | undefined>(undefined);
 
 function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
-  const [contextVirksomheter, setContextVirksomheter] = useState(props.virksomheter || []);
+  const [uklassifisertInntekt, setUklassifisertInntekt] = useState<IUklassifisertInntekt>(
+    props.uklassifisertInntekt
+  );
   const [inntektEndret, setInntektEndret] = useState(false);
   const [contextPayload, setContextPayload] = useState<string | null>(null);
   const [klarForLagring, setKlarForLagring] = useState(false);
@@ -57,10 +57,8 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
         setInntektEndret,
         klarForLagring,
         setKlarForLagring,
-        contextVirksomheter,
-        setContextVirksomheter,
-        contextPayload,
-        setContextPayload,
+        uklassifisertInntekt,
+        setUklassifisertInntekt,
       }}
     >
       {props.children}

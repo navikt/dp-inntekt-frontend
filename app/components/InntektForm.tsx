@@ -16,7 +16,7 @@ const schema = z.object({
 });
 
 export function InntektForm() {
-  const { contextPayload, klarForLagring, setInntektEndret } = useInntekt();
+  const { uklassifisertInntekt, klarForLagring, setInntektEndret } = useInntekt();
   const params = useParams();
 
   if (!params.inntektId) {
@@ -34,10 +34,10 @@ export function InntektForm() {
   });
 
   useEffect(() => {
-    if (contextPayload) {
-      form.setValue("payload", contextPayload);
+    if (uklassifisertInntekt) {
+      form.setValue("payload", JSON.stringify(uklassifisertInntekt));
     }
-  }, [contextPayload]);
+  }, [uklassifisertInntekt]);
 
   useEffect(() => {
     if (klarForLagring) {

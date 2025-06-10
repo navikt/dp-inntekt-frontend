@@ -13,19 +13,18 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
-import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
-import { InntektPerioder } from "./InntektPerioder";
-
-import styles from "./InntektsKildeModal.module.css";
 import {
   lagNyVirksomhet,
   type IFormInntekt,
   type INyVirksomhet,
 } from "~/utils/ny-intekt-kilde.util";
+import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
+import { InntektPerioder } from "./InntektPerioder";
+
+import styles from "./InntektsKildeModal.module.css";
 
 export default function InntektsKildeModal() {
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
@@ -33,8 +32,7 @@ export default function InntektsKildeModal() {
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
   const inntektModalRef = useRef<HTMLDialogElement>(null);
-  const { setInntektEndret, contextVirksomheter, setContextVirksomheter, setContextPayload } =
-    useInntekt();
+  const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
 
   const form = useForm({
     submitSource: "state",
@@ -121,16 +119,12 @@ export default function InntektsKildeModal() {
       };
 
       const nyVirksomhet = lagNyVirksomhet(nyVirsomhetData);
-      const oppdatertVirksomheter = [nyVirksomhet, ...contextVirksomheter];
+      const oppdatertVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
 
-      const payload: IUklassifisertInntekt = {
+      setUklassifisertInntekt({
+        ...uklassifisertInntekt,
         virksomheter: oppdatertVirksomheter,
-        mottaker: inntekt.mottaker,
-        periode: inntekt.periode,
-      };
-
-      setContextPayload(JSON.stringify(payload));
-      setContextVirksomheter(oppdatertVirksomheter);
+      });
       form.resetForm();
     }
   }

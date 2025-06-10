@@ -6,8 +6,10 @@ import { sumTotaltInntekterForAlleVirksomheter } from "~/utils/inntekt.util";
 
 export function InntektPerioderOppsummering() {
   const { periode } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
-  const { contextVirksomheter } = useInntekt();
-  const inntektPerioderTotaltBelop = sumTotaltInntekterForAlleVirksomheter(contextVirksomheter);
+  const { uklassifisertInntekt } = useInntekt();
+  const inntektPerioderTotaltBelop = sumTotaltInntekterForAlleVirksomheter(
+    uklassifisertInntekt.virksomheter
+  );
 
   return (
     <Box padding="2">
