@@ -1,48 +1,144 @@
 import { FloppydiskIcon } from "@navikt/aksel-icons";
-import { BodyShort, Box, Button, CopyButton, HStack, Spacer } from "@navikt/ds-react";
+import {
+  BodyLong,
+  BodyShort,
+  Box,
+  Button,
+  CopyButton,
+  HStack,
+  Modal,
+  Spacer,
+  Textarea,
+} from "@navikt/ds-react";
+import { useNavigation, useParams } from "react-router";
 import { useInntekt } from "~/context/inntekt-context";
-import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import { erEnKvinne } from "~/utils/generell.util";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-import { useNavigation } from "react-router";
+import { useEffect, useRef } from "react";
+import { useForm } from "@rvf/react-router";
+import { z } from "zod";
+
+const schema = z.object({
+  payload: z
+    .string({
+      required_error: "Payload er påkrevd",
+    })
+    .optional(),
+  inntektId: z.string({
+    required_error: "InntektId er påkrevd",
+  }),
+  begrunnelse: z
+    .string({
+      required_error: "Begrunnelse er påkrevd",
+    })
+    .refine((val) => /[a-zA-ZæøåÆØÅ]/.test(val ?? ""), {
+      message: "Begrunnelse må inneholde minst én bokstav",
+    }),
+});
 
 export function Personalia() {
-  const { mottaker } = useTypedRouteLoaderData("routes/inntektId.$inntektId");
-  const { inntektEndret, setKlarForLagring, globalModalRef } = useInntekt();
+  const params = useParams();
   const { state } = useNavigation();
+  const { inntektEndret, globalModalRef, uklassifisertInntekt, setInntektEndret } = useInntekt();
+  const ref = useRef<HTMLDialogElement>(null);
+
+  if (!params.inntektId) {
+    throw new Error("inntektId mangler i URL");
+  }
+
+  const form = useForm({
+    submitSource: "state",
+    schema: schema,
+    defaultValues: {
+      inntektId: params.inntektId,
+      begrunnelse: "",
+    },
+    method: "post",
+    action: "/inntektId/$inntektId/action",
+  });
+
+  const begrunnelse = form.value("begrunnelse");
+
+  useEffect(() => {
+    if (uklassifisertInntekt) {
+      const uklasifisertInntektMedBegrunnelse = JSON.stringify({
+        ...uklassifisertInntekt,
+        begrunnelse: begrunnelse,
+      });
+
+      form.setValue("payload", uklasifisertInntektMedBegrunnelse);
+    }
+  }, [uklassifisertInntekt, begrunnelse]);
+
+  function lagreEndringer() {
+    if (!inntektEndret) {
+      globalModalRef?.current?.showModal();
+      return;
+    }
+
+    ref.current?.showModal();
+  }
+
+  async function handleSubmit() {
+    const validering = await form.validate();
+    const harFeil = Object.keys(validering).length > 0;
+
+    if (harFeil) {
+      return;
+    }
+
+    form.submit();
+    form.resetForm();
+    ref.current?.close();
+    setInntektEndret(false);
+  }
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
       <HStack gap="4" wrap={false} align="center">
-        {erEnKvinne(mottaker.pnr) ? <KvinneIkon /> : <MennIkon />}
+        {erEnKvinne(uklassifisertInntekt.mottaker.pnr) ? <KvinneIkon /> : <MennIkon />}
         <HStack gap="4" align="center">
-          <BodyShort weight="semibold">{mottaker.navn}</BodyShort>
+          <BodyShort weight="semibold">{uklassifisertInntekt.mottaker.navn}</BodyShort>
           <BodyShort>/</BodyShort>
           <HStack align="center" gap="2">
-            <BodyShort>F.nr: {mottaker.pnr}</BodyShort>
-            <CopyButton copyText={mottaker.pnr} />
+            <BodyShort>F.nr: {uklassifisertInntekt.mottaker.pnr}</BodyShort>
+            <CopyButton copyText={uklassifisertInntekt.mottaker.pnr} />
           </HStack>
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
           <Button
-            variant="primary"
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
-            loading={state !== "idle"}
-            onClick={() => {
-              if (!inntektEndret) {
-                globalModalRef?.current?.showModal();
-                return;
-              }
-
-              setKlarForLagring(true);
-            }}
+            disabled={state !== "idle"}
+            onClick={() => lagreEndringer()}
           >
             Lagre endringer
           </Button>
+          <Modal ref={ref} header={{ heading: "Begrunn og lagre endringer" }} width="medium">
+            <form {...form.getFormProps()}>
+              <Modal.Body>
+                <input type="hidden" name="payload" />
+                <input type="hidden" name="inntektId" />
+                <input type="hidden" name="inntektId" />
+                <Textarea
+                  name="begrunnelse"
+                  label="Begrunnelse for endringer"
+                  error={form.error("begrunnelse")}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button type="button" onClick={() => handleSubmit()} loading={state !== "idle"}>
+                  Bekreft
+                </Button>
+                <Button type="button" variant="secondary" onClick={() => ref.current?.close()}>
+                  Avbryt
+                </Button>
+              </Modal.Footer>
+            </form>
+          </Modal>
         </HStack>
       </HStack>
     </Box>

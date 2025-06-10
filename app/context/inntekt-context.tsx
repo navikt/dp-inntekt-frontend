@@ -16,8 +16,6 @@ interface IInntektContextProps {
 interface IInntektContextValue {
   inntektEndret: boolean;
   setInntektEndret: (value: boolean) => void;
-  klarForLagring: boolean;
-  setKlarForLagring: (value: boolean) => void;
   uklassifisertInntekt: IUklassifisertInntekt;
   setUklassifisertInntekt: (value: IUklassifisertInntekt) => void;
   globalModalRef: RefObject<HTMLDialogElement | null> | undefined;
@@ -30,7 +28,6 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
     props.uklassifisertInntekt
   );
   const [inntektEndret, setInntektEndret] = useState(false);
-  const [klarForLagring, setKlarForLagring] = useState(false);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
   useEffect(() => {
@@ -54,8 +51,6 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
         globalModalRef: props.globalModalRef,
         inntektEndret,
         setInntektEndret,
-        klarForLagring,
-        setKlarForLagring,
         uklassifisertInntekt,
         setUklassifisertInntekt,
       }}
