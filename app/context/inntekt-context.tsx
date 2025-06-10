@@ -30,7 +30,6 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
     props.uklassifisertInntekt
   );
   const [inntektEndret, setInntektEndret] = useState(false);
-  const [contextPayload, setContextPayload] = useState<string | null>(null);
   const [klarForLagring, setKlarForLagring] = useState(false);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer

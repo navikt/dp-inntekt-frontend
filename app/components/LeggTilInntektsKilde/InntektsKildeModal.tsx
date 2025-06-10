@@ -125,6 +125,7 @@ export default function InntektsKildeModal() {
         ...uklassifisertInntekt,
         virksomheter: oppdatertVirksomheter,
       });
+
       form.resetForm();
     }
   }

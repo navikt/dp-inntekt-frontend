@@ -16,7 +16,8 @@ const schema = z.object({
 });
 
 export function InntektForm() {
-  const { uklassifisertInntekt, klarForLagring, setInntektEndret } = useInntekt();
+  const { uklassifisertInntekt, klarForLagring, setInntektEndret, setKlarForLagring } =
+    useInntekt();
   const params = useParams();
 
   if (!params.inntektId) {
@@ -43,6 +44,7 @@ export function InntektForm() {
     if (klarForLagring) {
       form.submit();
       setInntektEndret(false);
+      setKlarForLagring(false);
     }
   }, [klarForLagring]);
 
