@@ -1,6 +1,5 @@
 import { FloppydiskIcon } from "@navikt/aksel-icons";
 import {
-  BodyLong,
   BodyShort,
   Box,
   Button,
@@ -10,14 +9,14 @@ import {
   Spacer,
   Textarea,
 } from "@navikt/ds-react";
+import { useForm } from "@rvf/react-router";
+import { useEffect, useRef } from "react";
 import { useNavigation, useParams } from "react-router";
+import { z } from "zod";
 import { useInntekt } from "~/context/inntekt-context";
 import { erEnKvinne } from "~/utils/generell.util";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-import { useEffect, useRef } from "react";
-import { useForm } from "@rvf/react-router";
-import { z } from "zod";
 
 const schema = z.object({
   payload: z
