@@ -56,6 +56,11 @@ export function Personalia() {
     },
     method: "post",
     action: "/inntektId/$inntektId/action",
+    onSubmitSuccess: () => {
+      form.resetForm();
+      ref.current?.close();
+      setInntektEndret(false);
+    },
   });
 
   const begrunnelse = form.value("begrunnelse");
@@ -70,29 +75,6 @@ export function Personalia() {
       form.setValue("payload", uklasifisertInntektMedBegrunnelse);
     }
   }, [uklassifisertInntekt, begrunnelse]);
-
-  function lagreEndringer() {
-    if (!inntektEndret) {
-      globalModalRef?.current?.showModal();
-      return;
-    }
-
-    ref.current?.showModal();
-  }
-
-  async function handleSubmit() {
-    const validering = await form.validate();
-    const harFeil = Object.keys(validering).length > 0;
-
-    if (harFeil) {
-      return;
-    }
-
-    form.submit();
-    form.resetForm();
-    ref.current?.close();
-    setInntektEndret(false);
-  }
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
@@ -113,7 +95,14 @@ export function Personalia() {
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
             disabled={state !== "idle"}
-            onClick={() => lagreEndringer()}
+            onClick={() => {
+              if (!inntektEndret) {
+                globalModalRef?.current?.showModal();
+                return;
+              }
+
+              ref.current?.showModal();
+            }}
           >
             Lagre endringer
           </Button>
@@ -130,7 +119,7 @@ export function Personalia() {
                 />
               </Modal.Body>
               <Modal.Footer>
-                <Button type="button" onClick={() => handleSubmit()} loading={state !== "idle"}>
+                <Button type="submit" loading={state !== "idle"}>
                   Bekreft
                 </Button>
                 <Button type="button" variant="secondary" onClick={() => ref.current?.close()}>
