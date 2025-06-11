@@ -12,29 +12,11 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef } from "react";
 import { useNavigation, useParams } from "react-router";
-import { z } from "zod";
 import { useInntekt } from "~/context/inntekt-context";
 import { erEnKvinne } from "~/utils/generell.util";
+import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-
-const schema = z.object({
-  payload: z
-    .string({
-      required_error: "Payload er påkrevd",
-    })
-    .optional(),
-  inntektId: z.string({
-    required_error: "InntektId er påkrevd",
-  }),
-  begrunnelse: z
-    .string({
-      required_error: "Begrunnelse er påkrevd",
-    })
-    .refine((val) => /[a-zA-ZæøåÆØÅ]/.test(val ?? ""), {
-      message: "Begrunnelse må inneholde minst én bokstav",
-    }),
-});
 
 export function Personalia() {
   const params = useParams();
@@ -48,7 +30,7 @@ export function Personalia() {
 
   const form = useForm({
     submitSource: "state",
-    schema: schema,
+    schema: lagreEndringerSchema,
     defaultValues: {
       inntektId: params.inntektId,
       begrunnelse: "",
@@ -93,7 +75,6 @@ export function Personalia() {
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
-            disabled={state !== "idle"}
             onClick={() => {
               if (!inntektEndret) {
                 globalModalRef?.current?.showModal();
@@ -109,7 +90,6 @@ export function Personalia() {
             <form {...form.getFormProps()}>
               <Modal.Body>
                 <input type="hidden" name="payload" />
-                <input type="hidden" name="inntektId" />
                 <input type="hidden" name="inntektId" />
                 <Textarea
                   name="begrunnelse"
