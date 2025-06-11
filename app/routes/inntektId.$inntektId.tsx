@@ -10,7 +10,6 @@ import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
-import { InntektForm } from "~/components/InntektForm";
 import { GlobalModal } from "~/components/GlobalModal";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -52,7 +51,6 @@ export default function Inntekt() {
             <InntektsKildeModal />
           </Box>
         </VStack>
-        <InntektForm />
         <GlobalModal />
       </main>
     </InntektProvider>
