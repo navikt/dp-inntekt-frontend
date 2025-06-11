@@ -6,7 +6,7 @@ import {
   delOppPeriodeTilTrePerioder,
   sumTotaltInntekterForAlleVirksomheter,
 } from "~/utils/inntekt.util";
-import { VirsomhetPeriodeHeader } from "./VirsomhetPeriodeHeader";
+import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
 
 export function InntektPerioderOppsummering() {
   const { uklassifisertInntekt } = useInntekt();
@@ -42,13 +42,13 @@ export function InntektPerioderOppsummering() {
             <Table.Row>
               <Table.HeaderCell scope="col">Inntektskilde</Table.HeaderCell>
               <Table.HeaderCell scope="col" align="right">
-                <VirsomhetPeriodeHeader periodeNummer={1} periode={periode1} />
+                <VirksomhetPeriodeHeader periodeNummer={1} periode={periode1} />
               </Table.HeaderCell>
               <Table.HeaderCell scope="col" align="right">
-                <VirsomhetPeriodeHeader periodeNummer={2} periode={periode2} />
+                <VirksomhetPeriodeHeader periodeNummer={2} periode={periode2} />
               </Table.HeaderCell>
               <Table.HeaderCell scope="col" align="right">
-                <VirsomhetPeriodeHeader periodeNummer={3} periode={periode3} />
+                <VirksomhetPeriodeHeader periodeNummer={3} periode={periode3} />
               </Table.HeaderCell>
               <Table.HeaderCell scope="col"></Table.HeaderCell>
             </Table.Row>

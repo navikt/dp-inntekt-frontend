@@ -69,7 +69,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
         </ExpansionCard.Description>
       </ExpansionCard.Header>
       <ExpansionCard.Content>
-        <VirksomhetInntekter virksomhet={virksomhet} inntektsPeriode={inntektsPeriode} />
+        <VirksomhetInntekter virksomhet={virksomhet} />
         <HStack gap="2">
           <Button icon={<PlusCircleIcon />} size="small" className="mt-4">
             Legg til inntekt

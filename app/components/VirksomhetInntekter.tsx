@@ -1,3 +1,4 @@
+import { NotePencilIcon, TrashIcon } from "@navikt/aksel-icons";
 import { Button, HStack, Table } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
 import type { IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
@@ -9,23 +10,19 @@ import {
   grupperEtterInntektType,
 } from "~/utils/inntekt.util";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
-import { NotePencilIcon, TrashIcon } from "@navikt/aksel-icons";
-import { useInntekt } from "~/context/inntekt-context";
 
 interface IProps {
   virksomhet: IVirksomhet;
 }
 
-export default function VirksomhetInntekter({ virksomhet, inntektsPeriode }: IProps) {
 export default function VirsomhetInntekter({ virksomhet }: IProps) {
-  const { uklassifisertInntekt } = useInntekt();
+  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
 
   const gruppertinntektTyperBeskrivelse = grupperEtterInntektType(virksomhet.inntekter);
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
   const periode1 = oppdeltPerioder[0];
   const periode2 = oppdeltPerioder[1];
   const periode3 = oppdeltPerioder[2];
-  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
 
   function fjernInntekt(inntektType: string) {
     const oppdatertInntektForGittVirksomhet = virksomhet.inntekter.filter(
@@ -85,21 +82,21 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {gruppertinntektTyperBeskrivelse.map((virsomhet) => (
-          <Table.Row key={virsomhet.inntektType}>
+        {gruppertinntektTyperBeskrivelse.map((virksomhet) => (
+          <Table.Row key={virksomhet.inntektType}>
             <Table.DataCell>
-              {inntektTyperBeskrivelse.find((type) => type.key === virsomhet.inntektType)?.text ||
-                virsomhet.inntektType}
+              {inntektTyperBeskrivelse.find((type) => type.key === virksomhet.inntektType)?.text ||
+                virksomhet.inntektType}
             </Table.DataCell>
-            <Table.DataCell>{virsomhet.inntektType}</Table.DataCell>
+            <Table.DataCell>{virksomhet.inntektType}</Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode1))}
-            </Table.DataCell>
-            <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode2))}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode1))}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode3))}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode2))}
+            </Table.DataCell>
+            <Table.DataCell align="right">
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode3))}
             </Table.DataCell>
             <Table.DataCell align="right">
               <HStack gap="1" justify="end">
@@ -110,7 +107,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   icon={<TrashIcon />}
                   onClick={() =>
                     gruppertinntektTyperBeskrivelse.length > 1
-                      ? fjernInntekt(inntekt.inntektType)
+                      ? fjernInntekt(virksomhet.inntektType)
                       : slettVirksomhet()
                   }
                 />
