@@ -34,9 +34,14 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function Inntekt() {
   const loaderData = useLoaderData<typeof loader>();
   const globalModalRef = useRef<HTMLDialogElement>(null);
+  const inntektModalRef = useRef<HTMLDialogElement>(null);
 
   return (
-    <InntektProvider uklassifisertInntekt={loaderData} globalModalRef={globalModalRef}>
+    <InntektProvider
+      uklassifisertInntekt={loaderData}
+      globalModalRef={globalModalRef}
+      inntektModalRef={inntektModalRef}
+    >
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />
@@ -48,9 +53,9 @@ export default function Inntekt() {
             <VStack gap="4">
               <Virksomheter />
             </VStack>
-            <InntektsKildeModal />
           </Box>
         </VStack>
+        <InntektsKildeModal />
         <GlobalModal />
       </main>
     </InntektProvider>

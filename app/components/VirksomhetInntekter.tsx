@@ -16,7 +16,8 @@ interface IProps {
 }
 
 export default function VirsomhetInntekter({ virksomhet }: IProps) {
-  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret, inntektModalRef } =
+    useInntekt();
 
   const gruppertinntektTyperBeskrivelse = grupperEtterInntektType(virksomhet.inntekter);
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
@@ -50,7 +51,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
     setInntektEndret(true);
   }
 
-  function slettVirksomhet() {
+  function fjernVirksomhet() {
     var oppdatertKontekstVirksomheter = uklassifisertInntekt.virksomheter.filter(
       (v) => virksomhet.virksomhetsnummer !== v.virksomhetsnummer
     );
@@ -100,7 +101,15 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
             </Table.DataCell>
             <Table.DataCell align="right">
               <HStack gap="1" justify="end">
-                <Button variant="tertiary" size="small" icon={<NotePencilIcon />} />
+                <Button
+                  variant="tertiary"
+                  size="small"
+                  icon={<NotePencilIcon />}
+                  onClick={() => {
+                    console.log("rediger inntekt");
+                    inntektModalRef?.current?.showModal();
+                  }}
+                />
                 <Button
                   variant="tertiary"
                   size="small"
@@ -108,7 +117,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   onClick={() =>
                     gruppertinntektTyperBeskrivelse.length > 1
                       ? fjernInntekt(virksomhet.inntektType)
-                      : slettVirksomhet()
+                      : fjernVirksomhet()
                   }
                 />
               </HStack>

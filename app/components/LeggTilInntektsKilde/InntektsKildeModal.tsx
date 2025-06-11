@@ -12,7 +12,6 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
-import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
@@ -27,12 +26,11 @@ import { InntektPerioder } from "./InntektPerioder";
 import styles from "./InntektsKildeModal.module.css";
 
 export default function InntektsKildeModal() {
-  const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
-  const inntektModalRef = useRef<HTMLDialogElement>(null);
-  const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
+  const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt, inntektModalRef } =
+    useInntekt();
 
   const form = useForm({
     submitSource: "state",
@@ -50,7 +48,7 @@ export default function InntektsKildeModal() {
   });
 
   useEffect(() => {
-    const generertePerioder = generereFirePerioder(inntekt.periode);
+    const generertePerioder = generereFirePerioder(uklassifisertInntekt.periode);
     setGenerertePerioder(generertePerioder);
   }, []);
 
@@ -81,7 +79,7 @@ export default function InntektsKildeModal() {
     setVirksomhetsnavn(undefined);
 
     form.resetForm();
-    inntektModalRef.current?.close();
+    inntektModalRef?.current?.close();
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
@@ -116,7 +114,7 @@ export default function InntektsKildeModal() {
     if (!harFeil && minstEnInntektFyltUt) {
       setInntektEndret(true);
       setManglerInntekt(false);
-      inntektModalRef.current?.close();
+      inntektModalRef?.current?.close();
 
       const nyVirksomhetData: INyVirksomhet = {
         inntektstype: form.value("inntektstype"),
@@ -147,7 +145,7 @@ export default function InntektsKildeModal() {
       <Button
         variant="primary"
         icon={<PlusCircleIcon aria-hidden />}
-        onClick={() => inntektModalRef.current?.showModal()}
+        onClick={() => inntektModalRef?.current?.showModal()}
       >
         Legg til inntektskilde
       </Button>

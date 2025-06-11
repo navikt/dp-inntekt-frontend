@@ -26,7 +26,8 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 
 export default function Virksomhet({ virksomhet }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
-  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret, inntektModalRef } =
+    useInntekt();
 
   const erPrivatPerson = erPersonnummer(virksomhetsnummer);
 
@@ -71,7 +72,14 @@ export default function Virksomhet({ virksomhet }: IProps) {
       <ExpansionCard.Content>
         <VirksomhetInntekter virksomhet={virksomhet} />
         <HStack gap="2">
-          <Button icon={<PlusCircleIcon />} size="small" className="mt-4">
+          <Button
+            icon={<PlusCircleIcon />}
+            size="small"
+            className="mt-4"
+            onClick={() => {
+              inntektModalRef?.current?.showModal();
+            }}
+          >
             Legg til inntekt
           </Button>
           <Button
