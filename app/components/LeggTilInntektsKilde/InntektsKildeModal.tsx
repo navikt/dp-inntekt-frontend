@@ -16,10 +16,12 @@ import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import {
-  finnTidligsteOgSenesteDato,
-  finnTotalBelop,
-  lagInntektListe,
+    finnTidligsteOgSenesteDato,
+    finnTotalBelop,
+    lagInntektListe,
+  lagNyVirksomhet,
   type IFormInntekt,
+  type INyVirksomhet,
 } from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
@@ -27,14 +29,29 @@ import type { IVirksomhet } from "~/types/inntekt.types";
 import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 import styles from "./InntektsKildeModal.module.css";
+import VirsomhetInntekter from "../VirksomhetInntekter";
 
-export default function InntektsKildeModal() {
+interface IProps {
+  erNyVirksomhet: boolean;
+  virksomhetsnummer: string | undefined;
+}
+
+export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }: IProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
-  const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
+  const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(
+    erNyVirksomhet ? undefined : virksomhetsnummer
+  );
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
+
+  function finnInntektKildeVerdi() {
+    if (erNyVirksomhet) {
+      return "ORGANISASJON";
+    }
+    return virksomhetsnummer?.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT";
+  }
 
   const form = useForm({
     submitSource: "state",
@@ -42,6 +59,10 @@ export default function InntektsKildeModal() {
       initial: "onChange",
       whenTouched: "onChange",
       whenSubmitted: "onChange",
+    },
+    defaultValues: {
+      inntektskilde: finnInntektKildeVerdi(),
+      identifikator: erNyVirksomhet ? "" : virksomhetsnummer,
     },
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
@@ -152,7 +173,7 @@ export default function InntektsKildeModal() {
         icon={<PlusCircleIcon aria-hidden />}
         onClick={() => ref.current?.showModal()}
       >
-        Legg til inntektskilde
+        {erNyVirksomhet ? "Legg til inntektskilde" : "Legg til inntekt"}
       </Button>
 
       <Modal
@@ -170,6 +191,7 @@ export default function InntektsKildeModal() {
                   size="small"
                   error={form.error("inntektskilde")}
                   legend="Type inntektskilde"
+                  disabled={!erNyVirksomhet}
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
@@ -178,6 +200,8 @@ export default function InntektsKildeModal() {
                   {...form.getInputProps("identifikator")}
                   label={identifikatorLabel}
                   size="small"
+                  value={form.value("identifikator")}
+                  disabled={!erNyVirksomhet}
                   error={
                     form.error("identifikator")
                       ? `${identifikatorLabel} ${form.error("identifikator")}`
