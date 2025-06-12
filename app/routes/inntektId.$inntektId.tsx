@@ -1,4 +1,4 @@
-import { Box, VStack } from "@navikt/ds-react";
+import { Box, Button, VStack } from "@navikt/ds-react";
 import { useRef } from "react";
 import { data, redirect, useLoaderData } from "react-router";
 import { GlobalModal } from "~/components/GlobalModal";
@@ -11,6 +11,7 @@ import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
+import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   if (!params.inntektId) {
@@ -34,6 +35,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function Inntekt() {
   const loaderData = useLoaderData<typeof loader>();
   const globalModalRef = useRef<HTMLDialogElement>(null);
+  const inntektModalRef = useRef<HTMLDialogElement>(null);
 
   return (
     <InntektProvider uklassifisertInntekt={loaderData} globalModalRef={globalModalRef}>
@@ -48,9 +50,18 @@ export default function Inntekt() {
             <VStack gap="4">
               <Virksomheter />
             </VStack>
-            <InntektsKildeModal />
           </Box>
         </VStack>
+
+        <Button
+          variant="primary"
+          className="mt-6"
+          icon={<PlusCircleIcon aria-hidden />}
+          onClick={() => inntektModalRef.current?.showModal()}
+        >
+          Legg til inntektskilde
+        </Button>
+        <InntektsKildeModal ref={inntektModalRef} />
         <GlobalModal />
       </main>
     </InntektProvider>
