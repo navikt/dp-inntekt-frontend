@@ -1,16 +1,17 @@
-import { Box, VStack } from "@navikt/ds-react";
+import { Box, Button, VStack } from "@navikt/ds-react";
 import { useRef } from "react";
 import { data, redirect, useLoaderData } from "react-router";
 import { GlobalModal } from "~/components/GlobalModal";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
-import InntektsKildeModal from "~/components/LeggTilInntektsKilde/InntektsKildeModal";
+import InntektsKildeModal from "~/components/InntektsKildeModal/InntektsKildeModal";
 import { Personalia } from "~/components/Personalia";
 import { Virksomheter } from "~/components/Virksomheter";
 import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
+import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   if (!params.inntektId) {
@@ -34,14 +35,10 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function Inntekt() {
   const loaderData = useLoaderData<typeof loader>();
   const globalModalRef = useRef<HTMLDialogElement>(null);
-  const inntektModalRef = useRef<HTMLDialogElement>(null);
+  const inntektsKildeModalRef = useRef<HTMLDialogElement>(null);
 
   return (
-    <InntektProvider
-      uklassifisertInntekt={loaderData}
-      globalModalRef={globalModalRef}
-      inntektModalRef={inntektModalRef}
-    >
+    <InntektProvider uklassifisertInntekt={loaderData} globalModalRef={globalModalRef}>
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />
@@ -55,7 +52,15 @@ export default function Inntekt() {
             </VStack>
           </Box>
         </VStack>
-        <InntektsKildeModal />
+        <Button
+          variant="primary"
+          className="mt-4"
+          icon={<PlusCircleIcon aria-hidden />}
+          onClick={() => inntektsKildeModalRef?.current?.showModal()}
+        >
+          Legg til inntektskilde
+        </Button>
+        <InntektsKildeModal ref={inntektsKildeModalRef} />
         <GlobalModal />
       </main>
     </InntektProvider>

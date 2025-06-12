@@ -1,4 +1,3 @@
-import { PlusCircleIcon } from "@navikt/aksel-icons";
 import {
   Button,
   Label,
@@ -10,7 +9,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
@@ -25,12 +24,15 @@ import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
 
-export default function InntektsKildeModal() {
+interface IProps {
+  ref: React.RefObject<HTMLDialogElement | null>;
+}
+
+export default function InntektsKildeModal({ ref }: IProps) {
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
-  const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt, inntektModalRef } =
-    useInntekt();
+  const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
 
   const form = useForm({
     submitSource: "state",
@@ -38,9 +40,6 @@ export default function InntektsKildeModal() {
       initial: "onChange",
       whenTouched: "onChange",
       whenSubmitted: "onChange",
-    },
-    defaultValues: {
-      inntektskilde: "ORGANISASJON",
     },
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
@@ -79,7 +78,7 @@ export default function InntektsKildeModal() {
     setVirksomhetsnavn(undefined);
 
     form.resetForm();
-    inntektModalRef?.current?.close();
+    ref?.current?.close();
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
@@ -114,7 +113,7 @@ export default function InntektsKildeModal() {
     if (!harFeil && minstEnInntektFyltUt) {
       setInntektEndret(true);
       setManglerInntekt(false);
-      inntektModalRef?.current?.close();
+      ref?.current?.close();
 
       const nyVirksomhetData: INyVirksomhet = {
         inntektstype: form.value("inntektstype"),
@@ -138,20 +137,12 @@ export default function InntektsKildeModal() {
   }
 
   const identifikatorLabel =
-    inntektsKilde === "ORGANISASJON" ? "Virksomhetsnummer" : "Fødselsnummer";
+    inntektsKilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
 
   return (
     <div className="mt-6">
-      <Button
-        variant="primary"
-        icon={<PlusCircleIcon aria-hidden />}
-        onClick={() => inntektModalRef?.current?.showModal()}
-      >
-        Legg til inntektskilde
-      </Button>
-
       <Modal
-        ref={inntektModalRef}
+        ref={ref}
         header={{ heading: "Inntektskilde og inntekt" }}
         width={"1150px"}
         size="small"

@@ -16,8 +16,7 @@ interface IProps {
 }
 
 export default function VirsomhetInntekter({ virksomhet }: IProps) {
-  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret, inntektModalRef } =
-    useInntekt();
+  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
 
   const gruppertinntektTyperBeskrivelse = grupperEtterInntektType(virksomhet.inntekter);
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
@@ -83,21 +82,21 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {gruppertinntektTyperBeskrivelse.map((virksomhet) => (
-          <Table.Row key={virksomhet.inntektType}>
+        {gruppertinntektTyperBeskrivelse.map((inntekt) => (
+          <Table.Row key={inntekt.inntektstype}>
             <Table.DataCell>
-              {inntektTyperBeskrivelse.find((type) => type.key === virksomhet.inntektType)?.text ||
-                virksomhet.inntektType}
+              {inntektTyperBeskrivelse.find((type) => type.key === inntekt.inntektstype)?.text ||
+                inntekt.inntektstype}
             </Table.DataCell>
-            <Table.DataCell>{virksomhet.inntektType}</Table.DataCell>
+            <Table.DataCell>{inntekt.inntektstype}</Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode1))}
-            </Table.DataCell>
-            <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode2))}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode1))}
             </Table.DataCell>
             <Table.DataCell align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode3))}
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode2))}
+            </Table.DataCell>
+            <Table.DataCell align="right">
+              {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode3))}
             </Table.DataCell>
             <Table.DataCell align="right">
               <HStack gap="1" justify="end">
@@ -107,7 +106,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   icon={<NotePencilIcon />}
                   onClick={() => {
                     console.log("rediger inntekt");
-                    inntektModalRef?.current?.showModal();
+                    // inntektModalRef?.current?.showModal();
                   }}
                 />
                 <Button
@@ -116,7 +115,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   icon={<TrashIcon />}
                   onClick={() =>
                     gruppertinntektTyperBeskrivelse.length > 1
-                      ? fjernInntekt(virksomhet.inntektType)
+                      ? fjernInntekt(inntekt.inntektstype)
                       : fjernVirksomhet()
                   }
                 />
