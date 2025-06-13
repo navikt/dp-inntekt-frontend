@@ -269,6 +269,9 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
             <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
               Avbryt
             </Button>
+            <Button type="button" size="small" variant="secondary" onClick={() => form.resetForm()}>
+              Nullstill
+            </Button>
           </Modal.Footer>
         </form>
       </Modal>
