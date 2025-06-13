@@ -16,12 +16,10 @@ import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import {
-    finnTidligsteOgSenesteDato,
-    finnTotalBelop,
-    lagInntektListe,
-  lagNyVirksomhet,
+  finnTidligsteOgSenesteDato,
+  finnTotalBelop,
+  lagInntektListe,
   type IFormInntekt,
-  type INyVirksomhet,
 } from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
