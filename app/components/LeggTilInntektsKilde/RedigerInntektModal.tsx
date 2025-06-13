@@ -39,7 +39,7 @@ export interface IRedigeringsData {
   inntektskilde: string;
 }
 
-export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
+export default function RedigerModal({ ref, redigeringsData }: IProps) {
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
@@ -60,21 +60,22 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
   });
 
   function getDefaultValues() {
-    if (!data) {
+    if (!redigeringsData) {
       return;
     }
 
-    const virsomhet = uklassifisertInntekt.virksomheter.find(
-      (virksomhet: IVirksomhet) => virksomhet.virksomhetsnummer === data.virksomhetsnummer
+    const virksomhet = uklassifisertInntekt.virksomheter.find(
+      (virksomhet: IVirksomhet) =>
+        virksomhet.virksomhetsnummer === redigeringsData.virksomhetsnummer
     );
 
     return {
-      inntektskilde: data.inntektskilde,
-      inntektstype: data.inntektstype,
-      identifikator: data.virksomhetsnummer,
-      // Sette default verdi for inntekt basert på data?.inntekter
+      inntektskilde: redigeringsData.inntektskilde,
+      inntektstype: redigeringsData.inntektstype,
+      identifikator: redigeringsData.virksomhetsnummer,
+      // Sette default verdi for inntekt basert på redigeringsData?.inntekter
       // med dette format 2021-11 : 10000
-      ...virsomhet?.inntekter.reduce((acc, inntekt) => {
+      ...virksomhet?.inntekter.reduce((acc, inntekt) => {
         acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
         return acc;
       }, {} as Record<string, string>),

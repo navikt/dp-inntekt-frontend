@@ -1,5 +1,4 @@
 import type { IInntekt, IPeriode } from "~/types/inntekt.types";
-import { inntektTyperBeskrivelse } from "./constants";
 
 export interface IFormInntekt {
   dato: string;
@@ -37,7 +36,7 @@ export function lagInntektListe(
     fordel: "",
     beskrivelse: inntekstype,
     inntektskilde: "dp-inntekt-frontend",
-    inntektsstatus: "LoependeInnrapportert",
+    inntektsstatus: "",
     inntektsperiodetype: "Maaned",
     leveringstidspunkt: inntekt.dato,
     utbetaltIMaaned: inntekt.dato,

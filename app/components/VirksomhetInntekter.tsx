@@ -125,8 +125,6 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                         inntektstype: inntekt.inntektsbeskrivelse,
                         inntektskilde: erPrivatPerson ? "NATURLIG_IDENT" : "ORGANISASJON",
                       });
-
-                      ref.current?.showModal();
                     }}
                   />
                   <Button

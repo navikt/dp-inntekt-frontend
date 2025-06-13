@@ -123,7 +123,7 @@ export default function InntektsKildeModal() {
 
       const nyVirksomhet: IVirksomhet = {
         virksomhetsnummer: identifikator,
-        virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
+        virksomhetsnavn: identifikator, // Todo: Sett riktig navn når backend er klar
         periode: finnTidligsteOgSenesteDato(inntekterArray),
         inntekter: lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray),
         totalBelop: finnTotalBelop(inntekterArray),
