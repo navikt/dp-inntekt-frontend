@@ -50,29 +50,24 @@ function lagNyInntektskildeInntekter(nyInntektKilde: INyVirksomhet): IInntekt[] 
 
   // Todo: Finn ut om mottaker alltid er en person!
   const inntektsmottaker = {
-    aktoerType: "NATURLIG_IDENT",
+    aktoerType: identifikator.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT",
     identifikator: identifikator,
   };
 
-  // Todo: Sjekk disse hardkodede verdiene
-  // Todo: Sjekk disse hardkodede verdiene
   return inntekter.map(({ dato, belop }) => ({
     belop: belop,
     fordel: "",
-    // beskrivelse:
-    // inntektTyperBeskrivelse.find((type) => type.key === inntektstype)?.key || inntektstype,
-    beskrivelse: "fastloenn",
-    inntektskilde: "A-ordningen",
+    beskrivelse: inntektstype,
+    inntektskilde: "dagpenger-inntekt-frontend",
     inntektsstatus: "LoependeInnrapportert",
     inntektsperiodetype: "Maaned",
-    leveringstidspunkt: dato,
     utbetaltIMaaned: dato,
     virksomhet: virksomhet,
     inntektsmottaker: inntektsmottaker,
-    inngaarIGrunnlagForTrekk: true,
-    utloeserArbeidsgiveravgift: true,
-    informasjonsstatus: "InngaarAlltid",
-    inntektType: "LOENNSINNTEKT",
+    inngaarIGrunnlagForTrekk: null,
+    utloeserArbeidsgiveravgift: null,
+    informasjonsstatus: null,
+    inntektType: null,
     aarMaaned: dato,
   }));
 }
