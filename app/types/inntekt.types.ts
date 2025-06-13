@@ -31,7 +31,7 @@ export interface IInntekt {
   inngaarIGrunnlagForTrekk: boolean | null;
   utloeserArbeidsgiveravgift: boolean | null;
   informasjonsstatus: string | null;
-  inntektType: string;
+  inntektType: string | null;
   aarMaaned: string;
 }
 
