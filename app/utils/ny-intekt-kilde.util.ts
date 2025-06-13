@@ -25,22 +25,28 @@ export function lagInntektListe(
   identifikator: string,
   inntekter: IFormInntekt[]
 ): IInntekt[] {
+  const virksomhet = { aktoerType: inntektskilde, identifikator: identifikator };
+
+  const inntektsmottaker = {
+    aktoerType: identifikator.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT",
+    identifikator: identifikator,
+  };
+
   return inntekter.map((inntekt) => ({
     belop: inntekt.belop,
     fordel: "",
-    beskrivelse:
-      inntektTyperBeskrivelse.find((type) => type.key === inntekstype)?.key || inntekstype,
-    inntektskilde: inntektskilde,
+    beskrivelse: inntekstype,
+    inntektskilde: "dp-inntekt-frontend",
     inntektsstatus: "LoependeInnrapportert",
     inntektsperiodetype: "Maaned",
     leveringstidspunkt: inntekt.dato,
     utbetaltIMaaned: inntekt.dato,
-    virksomhet: { aktoerType: "NATURLIG_IDENT", identifikator },
-    inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator },
-    inngaarIGrunnlagForTrekk: true,
-    utloeserArbeidsgiveravgift: true,
-    informasjonsstatus: "InngaarAlltid",
-    inntektType: "LOENNSINNTEKT",
+    virksomhet: virksomhet,
+    inntektsmottaker: inntektsmottaker,
+    inngaarIGrunnlagForTrekk: null,
+    utloeserArbeidsgiveravgift: null,
+    informasjonsstatus: null,
+    inntektType: null,
     aarMaaned: inntekt.dato,
   }));
 }

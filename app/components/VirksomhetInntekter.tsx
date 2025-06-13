@@ -8,7 +8,7 @@ import { formatterNorskTall } from "~/utils/formattering.util";
 import {
   beregnTotalInntektForEnPeriode,
   delOppPeriodeTilTrePerioder,
-  grupperEtterInntektType,
+  grupperEtterInntektBeskrivelse,
 } from "~/utils/inntekt.util";
 import RedigerModal, { type IRedigeringsData } from "./LeggTilInntektsKilde/RedigerInntektModal";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
@@ -24,7 +24,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
   const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
 
   const erPrivatPerson = erPersonnummer(virksomhet.virksomhetsnummer);
-  const gruppertinntektTyperBeskrivelse = grupperEtterInntektType(virksomhet.inntekter);
+  const gruppertinntektTyperBeskrivelse = grupperEtterInntektBeskrivelse(virksomhet.inntekter);
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
   const periode1 = oppdeltPerioder[0];
   const periode2 = oppdeltPerioder[1];
@@ -103,7 +103,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                 {inntektTyperBeskrivelse.find((type) => type.key === inntekt.inntektsbeskrivelse)
                   ?.text || inntekt.inntektsbeskrivelse}
               </Table.DataCell>
-              <Table.DataCell>{inntekt.inntektsbeskrivelse}</Table.DataCell>
+              <Table.DataCell>{inntekt.inntektskilde}</Table.DataCell>
               <Table.DataCell align="right">
                 {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode1))}
               </Table.DataCell>
