@@ -9,7 +9,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
@@ -23,15 +23,13 @@ import {
 } from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
-
 import type { IVirksomhet } from "~/types/inntekt.types";
+import { PlusCircleIcon } from "@navikt/aksel-icons";
+
 import styles from "./InntektsKildeModal.module.css";
 
-interface IProps {
-  ref: React.RefObject<HTMLDialogElement | null>;
-}
-
-export default function InntektsKildeModal({ ref }: IProps) {
+export default function InntektsKildeModal() {
+  const ref = useRef<HTMLDialogElement>(null);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
@@ -148,6 +146,15 @@ export default function InntektsKildeModal({ ref }: IProps) {
 
   return (
     <div className="mt-6">
+      <Button
+        variant="primary"
+        className="mt-6"
+        icon={<PlusCircleIcon aria-hidden />}
+        onClick={() => ref.current?.showModal()}
+      >
+        Legg til inntektskilde
+      </Button>
+
       <Modal
         ref={ref}
         header={{ heading: "Inntektskilde og inntekt" }}
