@@ -22,14 +22,24 @@ import {
 } from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
+import type { IInntekt } from "~/types/inntekt.types";
 
 import styles from "./InntektsKildeModal.module.css";
 
 interface IProps {
   ref: React.RefObject<HTMLDialogElement | null>;
+  redigeringsData: IRedigeringsData | undefined;
 }
 
-export default function InntektsKildeModal({ ref }: IProps) {
+// Denne skal matche valideringen i hentInntektValidationSchema
+export interface IRedigeringsData {
+  virksomhetsnummer: string;
+  inntektstype: string;
+  inntektskilde: string;
+  inntekter: IInntekt[];
+}
+
+export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
@@ -46,6 +56,17 @@ export default function InntektsKildeModal({ ref }: IProps) {
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
+    defaultValues: {
+      inntektskilde: data?.inntektskilde,
+      inntektstype: data?.inntektstype,
+      identifikator: data?.virksomhetsnummer,
+      // Sette default verdi for inntekt basert på data?.inntekter
+      // med dette format 2021-11 : 10000
+      ...data?.inntekter.reduce((acc, inntekt) => {
+        acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
+        return acc;
+      }, {} as Record<string, string>),
+    },
   });
 
   useEffect(() => {
@@ -155,19 +176,19 @@ export default function InntektsKildeModal({ ref }: IProps) {
               <VStack gap="4" className={styles.inntektInputContainer}>
                 <RadioGroup
                   {...form.getInputProps("inntektskilde")}
-                  name="inntektskilde"
                   size="small"
                   error={form.error("inntektskilde")}
                   legend="Type inntektskilde"
+                  readOnly
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
                 </RadioGroup>
                 <TextField
                   {...form.getInputProps("identifikator")}
-                  name="identifikator"
                   label={identifikatorLabel}
                   size="small"
+                  readOnly
                   error={
                     form.error("identifikator")
                       ? `${identifikatorLabel} ${form.error("identifikator")}`
@@ -182,10 +203,10 @@ export default function InntektsKildeModal({ ref }: IProps) {
                 )}
                 <Select
                   {...form.getInputProps("inntektstype")}
-                  name="inntektstype"
                   label="Inntektstype"
                   size="small"
                   error={form.error("inntektstype")}
+                  readOnly
                 >
                   <option value="">Velg inntekstype</option>
                   {inntektTyperBeskrivelse.map((inntektType) => (
