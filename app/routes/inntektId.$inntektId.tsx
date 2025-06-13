@@ -51,7 +51,7 @@ export default function Inntekt() {
           </Box>
         </VStack>
 
-        <InntektsKildeModal />
+        <InntektsKildeModal erNyVirksomhet={true} virksomhetsnummer={undefined} />
         <GlobalModal />
       </main>
     </InntektProvider>

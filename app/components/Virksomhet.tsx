@@ -1,10 +1,12 @@
 import { PlusCircleIcon, TrashIcon } from "@navikt/aksel-icons";
 import { Button, ExpansionCard, HStack, VStack } from "@navikt/ds-react";
+import { useRef } from "react";
 import VirksomhetInntekter from "~/components/VirksomhetInntekter";
 import { useInntekt } from "~/context/inntekt-context";
 import type { IVirksomhet } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 import { erPersonnummer, maskerePersonnummer } from "~/utils/generell.util";
+import InntektsKildeModal from "./LeggTilInntektsKilde/InntektsKildeModal";
 
 interface IProps {
   virksomhet: IVirksomhet;
@@ -27,6 +29,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 export default function Virksomhet({ virksomhet }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
   const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const ref = useRef<HTMLDialogElement>(null);
 
   const erPrivatPerson = erPersonnummer(virksomhetsnummer);
 
@@ -71,9 +74,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
       <ExpansionCard.Content>
         <VirksomhetInntekter virksomhet={virksomhet} />
         <HStack gap="2">
-          <Button icon={<PlusCircleIcon />} size="small" className="mt-4">
-            Legg til inntekt
-          </Button>
+          <InntektsKildeModal erNyVirksomhet={false} virksomhetsnummer={virksomhetsnummer} />
           <Button
             icon={<TrashIcon />}
             variant="tertiary"
