@@ -23,8 +23,13 @@ export function Personalia() {
   const params = useParams();
   const loaderData = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const { state } = useNavigation();
-  const { inntektEndret, uklassifisertInntekt, setInntektEndret, setUklassifisertInntekt } =
-    useInntekt();
+  const {
+    inntektEndret,
+    globalModalRef,
+    uklassifisertInntekt,
+    setInntektEndret,
+    setUklassifisertInntekt,
+  } = useInntekt();
   const ref = useRef<HTMLDialogElement>(null);
 
   if (!params.inntektId) {
@@ -80,9 +85,7 @@ export function Personalia() {
             icon={<ArrowCirclepathIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
             onClick={() => {
-              if (inntektEndret) {
-                window.location.reload();
-              }
+              setUklassifisertInntekt(loaderData);
             }}
           >
             Nullstill endringer
@@ -92,7 +95,12 @@ export function Personalia() {
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
             onClick={() => {
-              setUklassifisertInntekt(loaderData);
+              if (!inntektEndret) {
+                globalModalRef?.current?.showModal();
+                return;
+              }
+
+              ref.current?.showModal();
             }}
           >
             Lagre endringer

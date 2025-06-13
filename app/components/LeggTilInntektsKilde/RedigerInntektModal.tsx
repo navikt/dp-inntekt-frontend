@@ -112,6 +112,7 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
     setManglerInntekt(false);
     setVirksomhetsnavn(undefined);
     ref?.current?.close();
+    form.resetForm();
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
