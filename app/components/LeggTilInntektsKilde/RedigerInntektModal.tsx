@@ -65,7 +65,7 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
     }
 
     const virsomhet = uklassifisertInntekt.virksomheter.find(
-      (v: IVirksomhet) => v.virksomhetsnummer === data.virksomhetsnummer
+      (virksomhet: IVirksomhet) => virksomhet.virksomhetsnummer === data.virksomhetsnummer
     );
 
     return {
@@ -111,8 +111,6 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
   function avbryt() {
     setManglerInntekt(false);
     setVirksomhetsnavn(undefined);
-
-    form.resetForm();
     ref?.current?.close();
   }
 
@@ -183,8 +181,6 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
         ...uklassifisertInntekt,
         virksomheter: oppdaterteVirksomheter,
       });
-
-      form.resetForm();
     }
   }
 
