@@ -79,17 +79,20 @@ export function Personalia() {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
-          <Button
-            size="small"
-            variant="secondary"
-            icon={<ArrowCirclepathIcon title="a11y-title" fontSize="1.2rem" />}
-            type="submit"
-            onClick={() => {
-              setUklassifisertInntekt(loaderData);
-            }}
-          >
-            Nullstill endringer
-          </Button>
+          {inntektEndret && (
+            <Button
+              size="small"
+              variant="secondary"
+              icon={<ArrowCirclepathIcon title="a11y-title" fontSize="1.2rem" />}
+              type="submit"
+              onClick={() => {
+                setUklassifisertInntekt(loaderData);
+                setInntektEndret(false);
+              }}
+            >
+              Nullstill endringer
+            </Button>
+          )}
           <Button
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
