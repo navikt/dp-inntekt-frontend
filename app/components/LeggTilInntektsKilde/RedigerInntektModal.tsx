@@ -9,9 +9,10 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
+import type { IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
@@ -23,13 +24,22 @@ import {
 } from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
-import type { IVirksomhet } from "~/types/inntekt.types";
-import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 import styles from "./InntektsKildeModal.module.css";
 
-export default function InntektsKildeModal() {
-  const ref = useRef<HTMLDialogElement>(null);
+interface IProps {
+  ref: React.RefObject<HTMLDialogElement | null>;
+  redigeringsData: IRedigeringsData | undefined;
+}
+
+// Denne skal matche valideringen i hentInntektValidationSchema
+export interface IRedigeringsData {
+  virksomhetsnummer: string;
+  inntektstype: string;
+  inntektskilde: string;
+}
+
+export default function RedigerModal({ ref, redigeringsData }: IProps) {
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
@@ -46,14 +56,38 @@ export default function InntektsKildeModal() {
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
+    defaultValues: getDefaultValues(),
   });
+
+  function getDefaultValues() {
+    if (!redigeringsData) {
+      return;
+    }
+
+    const virksomhet = uklassifisertInntekt.virksomheter.find(
+      (virksomhet: IVirksomhet) =>
+        virksomhet.virksomhetsnummer === redigeringsData.virksomhetsnummer
+    );
+
+    return {
+      inntektskilde: redigeringsData.inntektskilde,
+      inntektstype: redigeringsData.inntektstype,
+      identifikator: redigeringsData.virksomhetsnummer,
+      // Sette default verdi for inntekt basert på redigeringsData?.inntekter
+      // med dette format 2021-11 : 10000
+      ...virksomhet?.inntekter.reduce((acc, inntekt) => {
+        acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
+        return acc;
+      }, {} as Record<string, string>),
+    };
+  }
 
   useEffect(() => {
     const generertePerioder = generereFirePerioder(inntekt.periode);
     setGenerertePerioder(generertePerioder);
   }, []);
 
-  const inntektskilde = form.value("inntektskilde") as string;
+  const inntektsKilde = form.value("inntektskilde") as string;
   const identifikator = form.value("identifikator") as string;
 
   useEffect(() => {
@@ -78,9 +112,8 @@ export default function InntektsKildeModal() {
   function avbryt() {
     setManglerInntekt(false);
     setVirksomhetsnavn(undefined);
-
-    form.resetForm();
     ref?.current?.close();
+    form.resetForm();
   }
 
   // Henter ut alle aktive inntekts måneder som ikke er readOnly
@@ -121,40 +154,43 @@ export default function InntektsKildeModal() {
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
 
-      const nyVirksomhet: IVirksomhet = {
-        virksomhetsnummer: identifikator,
-        virksomhetsnavn: identifikator, // Todo: Sett riktig navn når backend er klar
-        periode: finnTidligsteOgSenesteDato(inntekterArray),
-        inntekter: lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray),
-        totalBelop: finnTotalBelop(inntekterArray),
-        avvikListe: [],
-      };
+      const oppdaterteInntekter = lagInntektListe(
+        inntektstype,
+        inntektskilde,
+        identifikator,
+        inntekterArray
+      );
 
-      const oppdaterteVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
+      // Denne kan være vanskelig å lese
+      // Todo: Vurdere å bryte den opp i flere funksjoner
+      const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
+        virksomhet.virksomhetsnummer === identifikator
+          ? {
+              ...virksomhet,
+              virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
+              periode: finnTidligsteOgSenesteDato(inntekterArray),
+              inntekter: [
+                ...virksomhet.inntekter.filter((i) => i.beskrivelse !== inntektstype),
+                ...oppdaterteInntekter,
+              ],
+              totalBelop: finnTotalBelop(inntekterArray),
+              avvikListe: [],
+            }
+          : virksomhet
+      );
 
       setUklassifisertInntekt({
         ...uklassifisertInntekt,
         virksomheter: oppdaterteVirksomheter,
       });
-
-      form.resetForm();
     }
   }
 
   const identifikatorLabel =
-    inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
+    inntektsKilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
 
   return (
     <div className="mt-6">
-      <Button
-        variant="primary"
-        className="mt-6"
-        icon={<PlusCircleIcon aria-hidden />}
-        onClick={() => ref.current?.showModal()}
-      >
-        Legg til inntektskilde
-      </Button>
-
       <Modal
         ref={ref}
         header={{ heading: "Inntektskilde og inntekt" }}
@@ -170,6 +206,7 @@ export default function InntektsKildeModal() {
                   size="small"
                   error={form.error("inntektskilde")}
                   legend="Type inntektskilde"
+                  readOnly
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
@@ -178,13 +215,14 @@ export default function InntektsKildeModal() {
                   {...form.getInputProps("identifikator")}
                   label={identifikatorLabel}
                   size="small"
+                  readOnly
                   error={
                     form.error("identifikator")
                       ? `${identifikatorLabel} ${form.error("identifikator")}`
                       : undefined
                   }
                 />
-                {inntektskilde === "ORGANISASJON" && virksomhetsnavn && (
+                {inntektsKilde === "ORGANISASJON" && virksomhetsnavn && (
                   <div>
                     <p className="bold">Virksomhet</p>
                     <p>{virksomhetsnavn}</p>
@@ -195,6 +233,7 @@ export default function InntektsKildeModal() {
                   label="Inntektstype"
                   size="small"
                   error={form.error("inntektstype")}
+                  readOnly
                 >
                   <option value="">Velg inntekstype</option>
                   {inntektTyperBeskrivelse.map((inntektType) => (

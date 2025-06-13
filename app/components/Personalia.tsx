@@ -1,4 +1,4 @@
-import { FloppydiskIcon } from "@navikt/aksel-icons";
+import { ArrowCirclepathIcon, FloppydiskIcon } from "@navikt/aksel-icons";
 import {
   BodyShort,
   Box,
@@ -17,11 +17,19 @@ import { erEnKvinne } from "~/utils/generell.util";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
+import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 
 export function Personalia() {
   const params = useParams();
+  const loaderData = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const { state } = useNavigation();
-  const { inntektEndret, globalModalRef, uklassifisertInntekt, setInntektEndret } = useInntekt();
+  const {
+    inntektEndret,
+    globalModalRef,
+    uklassifisertInntekt,
+    setInntektEndret,
+    setUklassifisertInntekt,
+  } = useInntekt();
   const ref = useRef<HTMLDialogElement>(null);
 
   if (!params.inntektId) {
@@ -71,6 +79,20 @@ export function Personalia() {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
+          {inntektEndret && (
+            <Button
+              size="small"
+              variant="secondary"
+              icon={<ArrowCirclepathIcon title="a11y-title" fontSize="1.2rem" />}
+              type="submit"
+              onClick={() => {
+                setUklassifisertInntekt(loaderData);
+                setInntektEndret(false);
+              }}
+            >
+              Nullstill endringer
+            </Button>
+          )}
           <Button
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}

@@ -21,30 +21,31 @@ export function inntektsPeriodeEr36Maneder(periode: IPeriode): boolean {
 }
 
 // Funksjon som grupperer inntekter etter inntektstype og returnerer en array av grupper
-// Grupperer inntekter etter både inntektType og inntektKilde, og returnerer en array
-export function grupperEtterInntektType(
-  inntekter: IInntekt[]
-): { inntektType: string; inntekter: IInntekt[] }[] {
-  const grupper = inntekter.reduce((acc: Record<string, IInntekt[]>, inntekt) => {
-    const key = `${inntekt.inntektType}__${inntekt.inntektskilde}`; // Kombinert nøkkel
+// Grupperer inntekter etter både inntektstype og inntektKilde, og returnerer en array
+interface IVirksomhetInntekt {
+  inntektsbeskrivelse: string;
+  inntektskilde: string;
+  inntekter: IInntekt[];
+}
 
-    if (!acc[key]) {
-      acc[key] = [];
+export function grupperEtterInntektBeskrivelse(inntekter: IInntekt[]): IVirksomhetInntekt[] {
+  const grupper: Record<string, IVirksomhetInntekt> = {};
+
+  inntekter.forEach((inntekt) => {
+    const key = inntekt.beskrivelse;
+
+    if (!grupper[key]) {
+      grupper[key] = {
+        inntektsbeskrivelse: inntekt.beskrivelse,
+        inntektskilde: inntekt.inntektskilde,
+        inntekter: [],
+      };
     }
 
-    acc[key].push(inntekt);
-
-    return acc;
-  }, {});
-
-  // Konverterer til array med separate felter
-  return Object.entries(grupper).map(([key, inntekter]) => {
-    const [inntektType] = key.split("__");
-    return {
-      inntektType,
-      inntekter,
-    };
+    grupper[key].inntekter.push(inntekt);
   });
+
+  return Object.values(grupper);
 }
 
 // Deler opp inntektsperioden i tre separate perioder, hver på 12 måneder

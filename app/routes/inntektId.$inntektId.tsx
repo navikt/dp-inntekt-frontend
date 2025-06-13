@@ -48,9 +48,10 @@ export default function Inntekt() {
             <VStack gap="4">
               <Virksomheter />
             </VStack>
-            <InntektsKildeModal />
           </Box>
         </VStack>
+
+        <InntektsKildeModal />
         <GlobalModal />
       </main>
     </InntektProvider>

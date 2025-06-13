@@ -1,37 +1,8 @@
-import type { IInntekt, IPeriode, IVirksomhet } from "~/types/inntekt.types";
-import { inntektTyperBeskrivelse } from "./constants";
-
-export interface INyVirksomhet {
-  inntektstype: string;
-  inntektskilde: string;
-  identifikator: string;
-  identifikatorsnavn: string;
-  inntekter: IFormInntekt[];
-}
+import type { IInntekt, IPeriode } from "~/types/inntekt.types";
 
 export interface IFormInntekt {
   dato: string;
   belop: string;
-}
-
-export function lagNyVirksomhet(nyInntektKilde: INyVirksomhet): IVirksomhet {
-  const { identifikator, identifikatorsnavn } = nyInntektKilde;
-
-  const generertInntekter = lagNyInntektskildeInntekter(nyInntektKilde);
-  const periode = finnTidligsteOgSenesteDato(nyInntektKilde.inntekter);
-
-  const totaltBelop = generertInntekter
-    .reduce((sum, inntekt) => sum + Number(inntekt.belop), 0)
-    .toString();
-
-  return {
-    virksomhetsnummer: identifikator,
-    virksomhetsnavn: identifikatorsnavn ?? "",
-    periode: periode,
-    inntekter: generertInntekter,
-    totalBelop: totaltBelop,
-    avvikListe: [],
-  };
 }
 
 export function finnTidligsteOgSenesteDato(inntekter: IFormInntekt[]): IPeriode {
@@ -43,31 +14,38 @@ export function finnTidligsteOgSenesteDato(inntekter: IFormInntekt[]): IPeriode 
   };
 }
 
-function lagNyInntektskildeInntekter(nyInntektKilde: INyVirksomhet): IInntekt[] {
-  const { inntektstype, inntektskilde, identifikator, inntekter } = nyInntektKilde;
+export function finnTotalBelop(inntekter: IFormInntekt[]): string {
+  return inntekter.reduce((sum, inntekt) => sum + Number(inntekt.belop), 0).toString();
+}
 
+export function lagInntektListe(
+  inntekstype: string,
+  inntektskilde: string,
+  identifikator: string,
+  inntekter: IFormInntekt[]
+): IInntekt[] {
   const virksomhet = { aktoerType: inntektskilde, identifikator: identifikator };
 
-  // Todo: Finn ut om mottaker alltid er en person!
   const inntektsmottaker = {
     aktoerType: identifikator.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT",
     identifikator: identifikator,
   };
 
-  return inntekter.map(({ dato, belop }) => ({
-    belop: belop,
+  return inntekter.map((inntekt) => ({
+    belop: inntekt.belop,
     fordel: "",
-    beskrivelse: inntektstype,
-    inntektskilde: "dagpenger-inntekt-frontend",
-    inntektsstatus: "LoependeInnrapportert",
+    beskrivelse: inntekstype,
+    inntektskilde: "dp-inntekt-frontend",
+    inntektsstatus: "",
     inntektsperiodetype: "Maaned",
-    utbetaltIMaaned: dato,
+    leveringstidspunkt: inntekt.dato,
+    utbetaltIMaaned: inntekt.dato,
     virksomhet: virksomhet,
     inntektsmottaker: inntektsmottaker,
     inngaarIGrunnlagForTrekk: null,
     utloeserArbeidsgiveravgift: null,
     informasjonsstatus: null,
     inntektType: null,
-    aarMaaned: dato,
+    aarMaaned: inntekt.dato,
   }));
 }

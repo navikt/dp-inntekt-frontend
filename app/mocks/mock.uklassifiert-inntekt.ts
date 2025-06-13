@@ -1,10 +1,10 @@
-import type { IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
+import type { IInntekt, IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
 
-function generateMockInntektDataFromRange(start: string, end: string) {
+function generateMockInntektDataFromRange(start: string, end: string): IInntekt[] {
   const [startYear, startMonth] = start.split("-").map(Number);
   const [endYear, endMonth] = end.split("-").map(Number);
 
-  const data = [];
+  const data: IInntekt[] = [];
   let year = startYear;
   let month = startMonth;
 
@@ -15,25 +15,16 @@ function generateMockInntektDataFromRange(start: string, end: string) {
       belop: "10000.0", // this could be any mock value
       fordel: "kontantytelse",
       beskrivelse: "fastloenn",
-      inntektskilde: "A-ordningen",
+      inntektskilde: "dp-inntekt-frontend",
       inntektsstatus: "LoependeInnrapportert",
-      leveringstidspunkt: formattedMonth,
       utbetaltIMaaned: formattedMonth,
       virksomhet: { aktoerType: "ORGANISASJON", identifikator: "896929119" },
       inntektsmottaker: { aktoerType: "AKTOER_ID", identifikator: "2044350291600" },
       inngaarIGrunnlagForTrekk: true,
       utloeserArbeidsgiveravgift: true,
-      informasjonsstatus: "InngaarAlltid",
+      informasjonsstatus: null,
       inntektType: "LOENNSINNTEKT",
-      redigert: false,
-      begrunnelse: "FASTLOENN",
       aarMaaned: formattedMonth,
-      opptjeningsland: "",
-      opptjeningsperiode: "",
-      skattemessigBosattLand: "",
-      opplysningspliktig: null,
-      inntektsinnsender: null,
-      tilleggsinformasjon: null,
       inntektsperiodetype: "maaned",
     });
 
@@ -82,10 +73,10 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           utbetaltIMaaned: "2020-12",
           virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
           inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: true,
-          utloeserArbeidsgiveravgift: true,
-          informasjonsstatus: "InngaarAlltid",
-          inntektType: "NAERINGSINNTEKT",
+          inngaarIGrunnlagForTrekk: null,
+          utloeserArbeidsgiveravgift: null,
+          informasjonsstatus: null,
+          inntektType: null,
           aarMaaned: "2020-12",
           inntektsperiodetype: "maaned",
         },
@@ -100,8 +91,8 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
           inngaarIGrunnlagForTrekk: true,
           utloeserArbeidsgiveravgift: true,
-          informasjonsstatus: "InngaarAlltid",
-          inntektType: "NAERINGSINNTEKT",
+          informasjonsstatus: null,
+          inntektType: null,
           aarMaaned: "2023-11",
           inntektsperiodetype: "maaned",
         },
@@ -114,13 +105,14 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           utbetaltIMaaned: "2023-12",
           virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
           inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: true,
-          utloeserArbeidsgiveravgift: true,
-          informasjonsstatus: "InngaarAlltid",
-          inntektType: "FASTLOENN",
+          inngaarIGrunnlagForTrekk: null,
+          utloeserArbeidsgiveravgift: null,
+          informasjonsstatus: null,
+          inntektType: null,
           aarMaaned: "2024-11",
           inntektsperiodetype: "maaned",
-        }, {
+        },
+        {
           belop: "150000.0",
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
@@ -129,13 +121,14 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           utbetaltIMaaned: "2023-12",
           virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
           inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: true,
-          utloeserArbeidsgiveravgift: true,
-          informasjonsstatus: "InngaarAlltid",
-          inntektType: "FASTLOENN",
+          inngaarIGrunnlagForTrekk: null,
+          utloeserArbeidsgiveravgift: null,
+          informasjonsstatus: null,
+          inntektType: null,
           aarMaaned: "2024-10",
           inntektsperiodetype: "maaned",
-        }, {
+        },
+        {
           belop: "150000.0",
           fordel: "kontantytelse",
           beskrivelse: "lottKunTrygdeavgift",
@@ -144,10 +137,10 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
           utbetaltIMaaned: "2023-12",
           virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
           inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: true,
-          utloeserArbeidsgiveravgift: true,
-          informasjonsstatus: "InngaarAlltid",
-          inntektType: "FASTLOENN",
+          inngaarIGrunnlagForTrekk: null,
+          utloeserArbeidsgiveravgift: null,
+          informasjonsstatus: null,
+          inntektType: null,
           aarMaaned: "2024-09",
           inntektsperiodetype: "maaned",
         },
