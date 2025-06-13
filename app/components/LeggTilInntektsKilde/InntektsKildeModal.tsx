@@ -160,7 +160,6 @@ export default function InntektsKildeModal({ ref }: IProps) {
               <VStack gap="4" className={styles.inntektInputContainer}>
                 <RadioGroup
                   {...form.getInputProps("inntektskilde")}
-                  name="inntektskilde"
                   size="small"
                   error={form.error("inntektskilde")}
                   legend="Type inntektskilde"
@@ -170,7 +169,6 @@ export default function InntektsKildeModal({ ref }: IProps) {
                 </RadioGroup>
                 <TextField
                   {...form.getInputProps("identifikator")}
-                  name="identifikator"
                   label={identifikatorLabel}
                   size="small"
                   error={
@@ -187,7 +185,6 @@ export default function InntektsKildeModal({ ref }: IProps) {
                 )}
                 <Select
                   {...form.getInputProps("inntektstype")}
-                  name="inntektstype"
                   label="Inntektstype"
                   size="small"
                   error={form.error("inntektstype")}

@@ -12,7 +12,7 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
+import type { IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
@@ -37,7 +37,6 @@ export interface IRedigeringsData {
   virksomhetsnummer: string;
   inntektstype: string;
   inntektskilde: string;
-  inntekter: IInntekt[];
 }
 
 export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
@@ -57,18 +56,30 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
-    defaultValues: {
-      inntektskilde: data?.inntektskilde,
-      inntektstype: data?.inntektstype,
-      identifikator: data?.virksomhetsnummer,
+    defaultValues: getDefaultValues(),
+  });
+
+  function getDefaultValues() {
+    if (!data) {
+      return;
+    }
+
+    const virsomhet = uklassifisertInntekt.virksomheter.find(
+      (v: IVirksomhet) => v.virksomhetsnummer === data.virksomhetsnummer
+    );
+
+    return {
+      inntektskilde: data.inntektskilde,
+      inntektstype: data.inntektstype,
+      identifikator: data.virksomhetsnummer,
       // Sette default verdi for inntekt basert på data?.inntekter
       // med dette format 2021-11 : 10000
-      ...data?.inntekter.reduce((acc, inntekt) => {
+      ...virsomhet?.inntekter.reduce((acc, inntekt) => {
         acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
         return acc;
       }, {} as Record<string, string>),
-    },
-  });
+    };
+  }
 
   useEffect(() => {
     const generertePerioder = generereFirePerioder(inntekt.periode);
@@ -143,21 +154,35 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
 
-      // const nyVirksomhet: IVirksomhet = {
-      //   virksomhetsnummer: identifikator,
-      //   virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
-      //   periode: finnTidligsteOgSenesteDato(inntekterArray),
-      //   inntekter: lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray),
-      //   totalBelop: finnTotalBelop(inntekterArray),
-      //   avvikListe: [],
-      // };
+      const oppdaterteInntekter = lagInntektListe(
+        inntektstype,
+        inntektskilde,
+        identifikator,
+        inntekterArray
+      );
 
-      // const oppdaterteVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
+      // Denne kan være vanskelig å lese
+      // Todo: Vurdere å bryte den opp i flere funksjoner
+      const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
+        virksomhet.virksomhetsnummer === identifikator
+          ? {
+              ...virksomhet,
+              virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
+              periode: finnTidligsteOgSenesteDato(inntekterArray),
+              inntekter: [
+                ...virksomhet.inntekter.filter((i) => i.beskrivelse !== inntektstype),
+                ...oppdaterteInntekter,
+              ],
+              totalBelop: finnTotalBelop(inntekterArray),
+              avvikListe: [],
+            }
+          : virksomhet
+      );
 
-      // setUklassifisertInntekt({
-      //   ...uklassifisertInntekt,
-      //   virksomheter: oppdaterteVirksomheter,
-      // });
+      setUklassifisertInntekt({
+        ...uklassifisertInntekt,
+        virksomheter: oppdaterteVirksomheter,
+      });
 
       form.resetForm();
     }
