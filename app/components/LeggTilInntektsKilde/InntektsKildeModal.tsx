@@ -16,13 +16,15 @@ import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import {
-  lagNyVirksomhet,
+  finnTidligsteOgSenesteDato,
+  finnTotalBelop,
+  lagInntektListe,
   type IFormInntekt,
-  type INyVirksomhet,
 } from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
 
+import type { IVirksomhet } from "~/types/inntekt.types";
 import styles from "./InntektsKildeModal.module.css";
 
 interface IProps {
@@ -53,7 +55,7 @@ export default function InntektsKildeModal({ ref }: IProps) {
     setGenerertePerioder(generertePerioder);
   }, []);
 
-  const inntektsKilde = form.value("inntektskilde") as string;
+  const inntektskilde = form.value("inntektskilde") as string;
   const identifikator = form.value("identifikator") as string;
 
   useEffect(() => {
@@ -117,21 +119,24 @@ export default function InntektsKildeModal({ ref }: IProps) {
       setManglerInntekt(false);
       ref?.current?.close();
 
-      const nyVirksomhetData: INyVirksomhet = {
-        inntektstype: form.value("inntektstype"),
-        inntektskilde: form.value("inntektskilde"),
-        identifikator: form.value("identifikator"),
-        identifikatorsnavn:
-          inntektsKilde === "ORGANISASJON" ? virksomhetsnavn : form.value("identifikator"),
-        inntekter: inntekterArray,
+      const inntektstype = form.value("inntektstype");
+      const inntektskilde = form.value("inntektskilde");
+      const identifikator = form.value("identifikator");
+
+      const nyVirksomhet: IVirksomhet = {
+        virksomhetsnummer: identifikator,
+        virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
+        periode: finnTidligsteOgSenesteDato(inntekterArray),
+        inntekter: lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray),
+        totalBelop: finnTotalBelop(inntekterArray),
+        avvikListe: [],
       };
 
-      const nyVirksomhet = lagNyVirksomhet(nyVirksomhetData);
-      const oppdatertVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
+      const oppdaterteVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
 
       setUklassifisertInntekt({
         ...uklassifisertInntekt,
-        virksomheter: oppdatertVirksomheter,
+        virksomheter: oppdaterteVirksomheter,
       });
 
       form.resetForm();
@@ -139,7 +144,7 @@ export default function InntektsKildeModal({ ref }: IProps) {
   }
 
   const identifikatorLabel =
-    inntektsKilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
+    inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
 
   return (
     <div className="mt-6">
@@ -174,7 +179,7 @@ export default function InntektsKildeModal({ ref }: IProps) {
                       : undefined
                   }
                 />
-                {inntektsKilde === "ORGANISASJON" && virksomhetsnavn && (
+                {inntektskilde === "ORGANISASJON" && virksomhetsnavn && (
                   <div>
                     <p className="bold">Virksomhet</p>
                     <p>{virksomhetsnavn}</p>

@@ -10,7 +10,7 @@ import {
   delOppPeriodeTilTrePerioder,
   grupperEtterInntektType,
 } from "~/utils/inntekt.util";
-import RedigerModal, { type IRedigeringsData } from "./LeggTilInntektsKilde/RedigerModal";
+import RedigerModal, { type IRedigeringsData } from "./LeggTilInntektsKilde/RedigerInntektModal";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
 import { erPersonnummer } from "~/utils/generell.util";
 

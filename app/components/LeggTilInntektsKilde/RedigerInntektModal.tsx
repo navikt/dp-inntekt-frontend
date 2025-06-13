@@ -12,17 +12,18 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
+import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import {
-  lagNyVirksomhet,
+  finnTidligsteOgSenesteDato,
+  finnTotalBelop,
+  lagInntektListe,
   type IFormInntekt,
-  type INyVirksomhet,
 } from "~/utils/ny-intekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
-import type { IInntekt } from "~/types/inntekt.types";
 
 import styles from "./InntektsKildeModal.module.css";
 
@@ -138,22 +139,25 @@ export default function RedigerModal({ ref, redigeringsData: data }: IProps) {
       setManglerInntekt(false);
       ref?.current?.close();
 
-      const nyVirksomhetData: INyVirksomhet = {
-        inntektstype: form.value("inntektstype"),
-        inntektskilde: form.value("inntektskilde"),
-        identifikator: form.value("identifikator"),
-        identifikatorsnavn:
-          inntektsKilde === "ORGANISASJON" ? virksomhetsnavn : form.value("identifikator"),
-        inntekter: inntekterArray,
-      };
+      const inntektstype = form.value("inntektstype");
+      const inntektskilde = form.value("inntektskilde");
+      const identifikator = form.value("identifikator");
 
-      const nyVirksomhet = lagNyVirksomhet(nyVirksomhetData);
-      const oppdatertVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
+      // const nyVirksomhet: IVirksomhet = {
+      //   virksomhetsnummer: identifikator,
+      //   virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
+      //   periode: finnTidligsteOgSenesteDato(inntekterArray),
+      //   inntekter: lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray),
+      //   totalBelop: finnTotalBelop(inntekterArray),
+      //   avvikListe: [],
+      // };
 
-      setUklassifisertInntekt({
-        ...uklassifisertInntekt,
-        virksomheter: oppdatertVirksomheter,
-      });
+      // const oppdaterteVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];
+
+      // setUklassifisertInntekt({
+      //   ...uklassifisertInntekt,
+      //   virksomheter: oppdaterteVirksomheter,
+      // });
 
       form.resetForm();
     }
