@@ -13,7 +13,6 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useRef } from "react";
 import { useNavigation, useParams } from "react-router";
 import { useInntekt } from "~/context/inntekt-context";
-import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import { erEnKvinne } from "~/utils/generell.util";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
