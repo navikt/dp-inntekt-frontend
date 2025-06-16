@@ -1,8 +1,47 @@
-import type { IInntekt, IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
+import type {
+  IInntekt,
+  IMottaker,
+  IPeriode,
+  IUklassifisertInntekt,
+  IVirksomhet,
+} from "~/types/inntekt.types";
 
-function generateMockInntektDataFromRange(start: string, end: string): IInntekt[] {
-  const [startYear, startMonth] = start.split("-").map(Number);
-  const [endYear, endMonth] = end.split("-").map(Number);
+const mottaker: IMottaker = { pnr: "20443502916", navn: "Ola Nordmann" };
+const inntektsperiode: IPeriode = { fraOgMed: "2020-12", tilOgMed: "2023-11" };
+const kiwiPeriod: IPeriode = { fraOgMed: "2021-01", tilOgMed: "2023-04" };
+const privatPersonPeriod: IPeriode = { fraOgMed: "2021-01", tilOgMed: "2022-10" };
+
+const KIWI_NORGE_AS_VIRKSOMHET: IVirksomhet = {
+  virksomhetsnummer: "937846231",
+  virksomhetsnavn: "KIWI NORGE AS",
+  periode: kiwiPeriod,
+  inntekter: generateMockInntektDataFromPeriode(kiwiPeriod, "fastloenn"),
+  totalBelop: "0",
+  avvikListe: [],
+};
+
+const PRIVAT_PERSON_VIRKSOMHET: IVirksomhet = {
+  virksomhetsnummer: "20443502916",
+  virksomhetsnavn: "",
+  periode: privatPersonPeriod,
+  inntekter: generateMockInntektDataFromPeriode(privatPersonPeriod, "lottKunTrygdeavgift"),
+  totalBelop: "0",
+  avvikListe: [],
+};
+
+export const mockUklassifisertInntekt: IUklassifisertInntekt = {
+  virksomheter: [KIWI_NORGE_AS_VIRKSOMHET, PRIVAT_PERSON_VIRKSOMHET],
+  mottaker: mottaker,
+  periode: inntektsperiode,
+};
+
+updateTotalBelop(mockUklassifisertInntekt.virksomheter);
+
+function generateMockInntektDataFromPeriode(periode: IPeriode, inntektstype: string): IInntekt[] {
+  const { fraOgMed, tilOgMed } = periode;
+
+  const [startYear, startMonth] = fraOgMed.split("-").map(Number);
+  const [endYear, endMonth] = tilOgMed.split("-").map(Number);
 
   const data: IInntekt[] = [];
   let year = startYear;
@@ -14,7 +53,7 @@ function generateMockInntektDataFromRange(start: string, end: string): IInntekt[
     data.push({
       belop: "10000.0", // this could be any mock value
       fordel: "kontantytelse",
-      beskrivelse: "fastloenn",
+      beskrivelse: inntektstype,
       inntektskilde: "dp-inntekt-frontend",
       inntektsstatus: "LoependeInnrapportert",
       utbetaltIMaaned: formattedMonth,
@@ -23,7 +62,7 @@ function generateMockInntektDataFromRange(start: string, end: string): IInntekt[
       inngaarIGrunnlagForTrekk: true,
       utloeserArbeidsgiveravgift: true,
       informasjonsstatus: null,
-      inntektType: "LOENNSINNTEKT",
+      inntektType: "",
       aarMaaned: formattedMonth,
       inntektsperiodetype: "maaned",
     });
@@ -48,109 +87,3 @@ function updateTotalBelop(virksomheter: IVirksomhet[]) {
     virksomhet.totalBelop = totalInntekt.toString(); // Update totalBelop with the calculated sum
   });
 }
-
-export const mockUklassifisertInntekt: IUklassifisertInntekt = {
-  virksomheter: [
-    {
-      virksomhetsnummer: "937846231",
-      virksomhetsnavn: "KIWI NORGE AS",
-      periode: { fraOgMed: "2020-12", tilOgMed: "2023-11" },
-      inntekter: generateMockInntektDataFromRange("2020-12", "2023-11"),
-      totalBelop: "0",
-      avvikListe: [],
-    },
-    {
-      virksomhetsnummer: "12092388024",
-      virksomhetsnavn: "",
-      periode: { fraOgMed: "2021-01", tilOgMed: "2023-12" },
-      inntekter: [
-        {
-          belop: "250000.0",
-          fordel: "kontantytelse",
-          beskrivelse: "lottKunTrygdeavgift",
-          inntektskilde: "A-ordningen",
-          inntektsstatus: "LoependeInnrapportert",
-          utbetaltIMaaned: "2020-12",
-          virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
-          inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: null,
-          utloeserArbeidsgiveravgift: null,
-          informasjonsstatus: null,
-          inntektType: null,
-          aarMaaned: "2020-12",
-          inntektsperiodetype: "maaned",
-        },
-        {
-          belop: "150000.0",
-          fordel: "kontantytelse",
-          beskrivelse: "lottKunTrygdeavgift",
-          inntektskilde: "A-ordningen",
-          inntektsstatus: "LoependeInnrapportert",
-          utbetaltIMaaned: "2023-12",
-          virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
-          inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: true,
-          utloeserArbeidsgiveravgift: true,
-          informasjonsstatus: null,
-          inntektType: null,
-          aarMaaned: "2023-11",
-          inntektsperiodetype: "maaned",
-        },
-        {
-          belop: "150000.0",
-          fordel: "kontantytelse",
-          beskrivelse: "lottKunTrygdeavgift",
-          inntektskilde: "A-ordningen",
-          inntektsstatus: "LoependeInnrapportert",
-          utbetaltIMaaned: "2023-12",
-          virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
-          inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: null,
-          utloeserArbeidsgiveravgift: null,
-          informasjonsstatus: null,
-          inntektType: null,
-          aarMaaned: "2024-11",
-          inntektsperiodetype: "maaned",
-        },
-        {
-          belop: "150000.0",
-          fordel: "kontantytelse",
-          beskrivelse: "lottKunTrygdeavgift",
-          inntektskilde: "A-ordningen",
-          inntektsstatus: "LoependeInnrapportert",
-          utbetaltIMaaned: "2023-12",
-          virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
-          inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: null,
-          utloeserArbeidsgiveravgift: null,
-          informasjonsstatus: null,
-          inntektType: null,
-          aarMaaned: "2024-10",
-          inntektsperiodetype: "maaned",
-        },
-        {
-          belop: "150000.0",
-          fordel: "kontantytelse",
-          beskrivelse: "lottKunTrygdeavgift",
-          inntektskilde: "A-ordningen",
-          inntektsstatus: "LoependeInnrapportert",
-          utbetaltIMaaned: "2023-12",
-          virksomhet: { aktoerType: "ORGANISASJON", identifikator: "2222222" },
-          inntektsmottaker: { aktoerType: "NATURLIG_IDENT", identifikator: "-1" },
-          inngaarIGrunnlagForTrekk: null,
-          utloeserArbeidsgiveravgift: null,
-          informasjonsstatus: null,
-          inntektType: null,
-          aarMaaned: "2024-09",
-          inntektsperiodetype: "maaned",
-        },
-      ],
-      totalBelop: "0",
-      avvikListe: [],
-    },
-  ],
-  mottaker: { pnr: "20443502916", navn: "Ola Nordmann" },
-  periode: { fraOgMed: "2020-12", tilOgMed: "2023-11" },
-};
-
-updateTotalBelop(mockUklassifisertInntekt.virksomheter);
