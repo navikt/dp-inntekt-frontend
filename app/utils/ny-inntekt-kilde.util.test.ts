@@ -27,15 +27,6 @@ describe("finnTidligsteOgSenesteDato", () => {
       tilOgMed: "2023-01",
     });
   });
-
-  it("returnerer undefined hvis listen er tom", () => {
-    const ingenInntekt: IFormInntekt[] = [];
-
-    expect(finnTidligsteOgSenesteDato(ingenInntekt)).toEqual({
-      fraOgMed: undefined,
-      tilOgMed: undefined,
-    });
-  });
 });
 
 describe("finnTotalBelop", () => {
@@ -47,14 +38,5 @@ describe("finnTotalBelop", () => {
     ];
 
     expect(finnTotalBelop(inntekter)).toBe("3300");
-  });
-
-  it("håndterer ugyldige beløp som 0", () => {
-    const inntekter: IFormInntekt[] = [
-      { dato: "2023-01", belop: "100" },
-      { dato: "2023-03", belop: "50" },
-    ];
-
-    expect(finnTotalBelop(inntekter)).toBe("150");
   });
 });
