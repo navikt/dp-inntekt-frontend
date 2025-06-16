@@ -17,19 +17,11 @@ import { erEnKvinne } from "~/utils/generell.util";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 
 export function Personalia() {
   const params = useParams();
-  const loaderData = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const { state } = useNavigation();
-  const {
-    inntektEndret,
-    globalModalRef,
-    uklassifisertInntekt,
-    setInntektEndret,
-    setUklassifisertInntekt,
-  } = useInntekt();
+  const { inntektEndret, globalModalRef, uklassifisertInntekt, setInntektEndret } = useInntekt();
   const ref = useRef<HTMLDialogElement>(null);
 
   if (!params.inntektId) {
@@ -86,8 +78,7 @@ export function Personalia() {
               icon={<ArrowCirclepathIcon title="a11y-title" fontSize="1.2rem" />}
               type="submit"
               onClick={() => {
-                setUklassifisertInntekt(loaderData);
-                setInntektEndret(false);
+                globalModalRef?.current?.showModal();
               }}
             >
               Nullstill endringer
