@@ -3,26 +3,27 @@ import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 
 export function GlobalModal() {
-  const { globalModalRef, inntektEndret, setUklassifisertInntekt, setInntektEndret } = useInntekt();
   const loaderData = useTypedRouteLoaderData("routes/inntektId.$inntektId");
+  const { globalModalRef, inntektEndret, setUklassifisertInntekt, setInntektEndret } = useInntekt();
 
-  const modalHeader = inntektEndret
+  const heading = inntektEndret
     ? "Du er i ferd med å nullstille endringene"
     : "Du har ingen endring å lagre";
 
-  const modalDescription = inntektEndret
+  const description = inntektEndret
     ? "Er du sikker på at du vil nullstille endringene?"
     : "Du har ikke gjort noen endringer som kan lagres.";
+
   return (
     <Modal
       ref={globalModalRef}
       header={{
-        heading: modalHeader,
+        heading: heading,
       }}
       width="medium"
     >
       <Modal.Body>
-        <BodyLong>{modalDescription}</BodyLong>
+        <BodyLong>{description}</BodyLong>
       </Modal.Body>
 
       {inntektEndret && (
