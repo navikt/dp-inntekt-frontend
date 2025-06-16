@@ -3,13 +3,13 @@ import { formaterNorskDato, formatterNorskTall } from "./formattering.util"; // 
 
 describe("formaterNorskDato", () => {
   it("formaterer dato til norsk måned og år med stor forbokstav", () => {
-    const input = "2023-05-01";
+    const input = "2023-05";
     const output = formaterNorskDato(input);
     expect(output).toBe("Mai 2023");
   });
 
   it("håndterer januar korrekt", () => {
-    const input = "2024-01-15";
+    const input = "2024-01";
     const output = formaterNorskDato(input);
     expect(output).toBe("Januar 2024");
   });
@@ -22,9 +22,9 @@ describe("formatterNorskTall", () => {
     expect(output).toBe("1 234 567 kr");
   });
 
-  it("returnerer '-' for tallet 0", () => {
+  it("returnerer '0 kr' for tallet 0", () => {
     const output = formatterNorskTall(0);
-    expect(output).toBe("-");
+    expect(output).toBe("0 kr");
   });
 
   it("formaterer et negativt tall korrekt", () => {
