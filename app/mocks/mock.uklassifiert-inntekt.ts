@@ -11,7 +11,7 @@ const inntektsperiode: IPeriode = { fraOgMed: "2020-12", tilOgMed: "2023-11" };
 const kiwiPeriod: IPeriode = { fraOgMed: "2021-01", tilOgMed: "2023-04" };
 const privatPersonPeriod: IPeriode = { fraOgMed: "2021-01", tilOgMed: "2022-10" };
 
-const KIWI_NORGE_AS_VIRKSOMHET: IVirksomhet = {
+const kiwiVirksomhet: IVirksomhet = {
   virksomhetsnummer: "937846231",
   virksomhetsnavn: "KIWI NORGE AS",
   periode: kiwiPeriod,
@@ -20,7 +20,7 @@ const KIWI_NORGE_AS_VIRKSOMHET: IVirksomhet = {
   avvikListe: [],
 };
 
-const PRIVAT_PERSON_VIRKSOMHET: IVirksomhet = {
+const privatPerson: IVirksomhet = {
   virksomhetsnummer: "20443502916",
   virksomhetsnavn: "",
   periode: privatPersonPeriod,
@@ -30,7 +30,7 @@ const PRIVAT_PERSON_VIRKSOMHET: IVirksomhet = {
 };
 
 export const mockUklassifisertInntekt: IUklassifisertInntekt = {
-  virksomheter: [KIWI_NORGE_AS_VIRKSOMHET, PRIVAT_PERSON_VIRKSOMHET],
+  virksomheter: [kiwiVirksomhet, privatPerson],
   mottaker: mottaker,
   periode: inntektsperiode,
 };
