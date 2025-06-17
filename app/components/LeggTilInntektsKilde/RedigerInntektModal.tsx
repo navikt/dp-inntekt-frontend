@@ -15,6 +15,7 @@ import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import type { IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
+import { erPersonnummer } from "~/utils/generell.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import {
   finnTidligsteOgSenesteDato,
@@ -56,18 +57,20 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
-    defaultValues: getDefaultValues(),
+    defaultValues: hentDefaultValues(),
   });
 
-  function getDefaultValues() {
+  function hentDefaultValues() {
     if (!redigeringsData) {
       return;
     }
 
-    const inntekter = uklassifisertInntekt.virksomheter.find(
-      (virksomhet: IVirksomhet) =>
-        virksomhet.virksomhetsnummer === redigeringsData.virksomhetsnummer
-    )?.inntekter.filter(inntekt => inntekt.beskrivelse === redigeringsData.inntektstype);
+    const inntekter = uklassifisertInntekt.virksomheter
+      .find(
+        (virksomhet: IVirksomhet) =>
+          virksomhet.virksomhetsnummer === redigeringsData.virksomhetsnummer
+      )
+      ?.inntekter.filter((inntekt) => inntekt.beskrivelse === redigeringsData.inntektstype);
 
     return {
       inntektskilde: redigeringsData.inntektskilde,
@@ -91,10 +94,10 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
   const identifikator = form.value("identifikator") as string;
 
   useEffect(() => {
-    if (identifikator?.length === 9) {
-      hentVirksomhetsNavn();
-    } else {
+    if (erPersonnummer(identifikator)) {
       setVirksomhetsnavn(undefined);
+    } else {
+      hentVirksomhetsNavn();
     }
   }, [identifikator]);
 
@@ -168,13 +171,12 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
           ? {
               ...virksomhet,
               virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
-              periode: finnTidligsteOgSenesteDato(inntekterArray),
+              periode: finnTidligsteOgSenesteDato(oppdaterteInntekter),
               inntekter: [
                 ...virksomhet.inntekter.filter((i) => i.beskrivelse !== inntektstype),
                 ...oppdaterteInntekter,
               ],
-              totalBelop: finnTotalBelop(inntekterArray),
-              avvikListe: [],
+              totalBelop: finnTotalBelop(oppdaterteInntekter),
             }
           : virksomhet
       );

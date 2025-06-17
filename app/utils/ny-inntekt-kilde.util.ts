@@ -1,4 +1,5 @@
 import type { IInntekt, IPeriode } from "~/types/inntekt.types";
+import { erPersonnummer } from "./generell.util";
 
 export interface IFormInntekt {
   dato: string;
@@ -27,7 +28,7 @@ export function lagInntektListe(
   const virksomhet = { aktoerType: inntektskilde, identifikator: identifikator };
 
   const inntektsmottaker = {
-    aktoerType: identifikator.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT",
+    aktoerType: erPersonnummer(identifikator) ? "NATURLIG_IDENT" : "ORGANISASJON",
     identifikator: identifikator,
   };
 

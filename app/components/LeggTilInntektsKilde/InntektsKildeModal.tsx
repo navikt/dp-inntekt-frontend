@@ -16,6 +16,7 @@ import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import type { IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
+import { erPersonnummer } from "~/utils/generell.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
 import {
   finnTidligsteOgSenesteDato,
@@ -43,12 +44,18 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
   );
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
 
-  function finnInntektKilde() {
-    if (erNyVirksomhet) {
-      return "ORGANISASJON";
+  function hentDefaultValues() {
+    if (erNyVirksomhet || !virksomhetsnummer) {
+      return {
+        inntektskilde: "",
+        identifikator: "",
+      };
     }
 
-    return virksomhetsnummer?.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT";
+    return {
+      inntektskilde: erPersonnummer(virksomhetsnummer) ? "NATURLIG_IDENT" : "ORGANISASJON",
+      identifikator: virksomhetsnummer,
+    };
   }
 
   const form = useForm({
@@ -58,10 +65,7 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       whenTouched: "onChange",
       whenSubmitted: "onChange",
     },
-    defaultValues: {
-      inntektskilde: finnInntektKilde(),
-      identifikator: erNyVirksomhet ? "" : virksomhetsnummer,
-    },
+    defaultValues: hentDefaultValues(),
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
@@ -76,10 +80,10 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
   const identifikator = form.value("identifikator") as string;
 
   useEffect(() => {
-    if (identifikator?.length === 9) {
-      hentVirksomhetsNavn();
-    } else {
+    if (erPersonnummer(identifikator)) {
       setVirksomhetsnavn(undefined);
+    } else {
+      hentVirksomhetsNavn();
     }
   }, [identifikator]);
 
