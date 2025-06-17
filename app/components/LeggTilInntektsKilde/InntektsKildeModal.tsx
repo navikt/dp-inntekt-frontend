@@ -140,20 +140,27 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
 
-      const oppdatertVirksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
+      const virksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
         (virksomhet) => virksomhet.virksomhetsnummer === identifikator
       )!!;
 
-      const nyeInntekterForVirksomhet = lagInntektListe(
+      const nyeInntekter = lagInntektListe(
         inntektstype,
         inntektskilde,
         identifikator,
         inntekterArray
       );
 
-      nyeInntekterForVirksomhet.forEach((nyInntekt) => {
-        oppdatertVirksomhet.inntekter = [...oppdatertVirksomhet.inntekter, nyInntekt];
-      });
+      // Oppdaterer eksisterende virksomhet med nye inntekter
+      // Flatter inntektene slik at vi kan legge til flere inntekter for individuelle
+      const oppdaterteInntekter = [...virksomhet.inntekter, nyeInntekter].flat();
+
+      const oppdatertVirksomhet: IVirksomhet = {
+        ...virksomhet,
+        periode: finnTidligsteOgSenesteDato(oppdaterteInntekter),
+        inntekter: oppdaterteInntekter,
+        totalBelop: finnTotalBelop(oppdaterteInntekter),
+      };
 
       setUklassifisertInntekt({
         ...uklassifisertInntekt,
@@ -189,14 +196,15 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       const inntektstype = form.value("inntektstype");
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
+      const inntekter = lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray);
 
       const nyVirksomhet: IVirksomhet = {
-        virksomhetsnummer: identifikator,
-        virksomhetsnavn: identifikator, // Todo: Sett riktig navn når backend er klar
-        periode: finnTidligsteOgSenesteDato(inntekterArray),
-        inntekter: lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray),
-        totalBelop: finnTotalBelop(inntekterArray),
         avvikListe: [],
+        inntekter: inntekter,
+        virksomhetsnavn: identifikator, // Todo: Sett riktig navn når backend er klar
+        virksomhetsnummer: identifikator,
+        totalBelop: finnTotalBelop(inntekter),
+        periode: finnTidligsteOgSenesteDato(inntekter),
       };
 
       const oppdaterteVirksomheter = [nyVirksomhet, ...uklassifisertInntekt.virksomheter];

@@ -5,8 +5,8 @@ export interface IFormInntekt {
   belop: string;
 }
 
-export function finnTidligsteOgSenesteDato(inntekter: IFormInntekt[]): IPeriode {
-  const datoer = inntekter.map((inntekt) => inntekt.dato).sort();
+export function finnTidligsteOgSenesteDato(inntekter: IInntekt[]): IPeriode {
+  const datoer = inntekter.map((inntekt) => inntekt.aarMaaned).sort();
 
   return {
     fraOgMed: datoer[0],
@@ -14,7 +14,7 @@ export function finnTidligsteOgSenesteDato(inntekter: IFormInntekt[]): IPeriode 
   };
 }
 
-export function finnTotalBelop(inntekter: IFormInntekt[]): string {
+export function finnTotalBelop(inntekter: IInntekt[]): string {
   return inntekter.reduce((sum, inntekt) => sum + Number(inntekt.belop), 0).toString();
 }
 
