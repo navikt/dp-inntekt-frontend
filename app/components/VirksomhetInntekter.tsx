@@ -38,7 +38,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
 
   function fjernInntekt(inntektType: string) {
     const oppdatertInntektForGittVirksomhet = virksomhet.inntekter.filter(
-      (inntekt) => inntekt.inntektType !== inntektType
+      (inntekt) => inntekt.beskrivelse !== inntektType
     );
 
     const oppdatertVirksomhet: IVirksomhet = {

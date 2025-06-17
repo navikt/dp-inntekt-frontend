@@ -28,13 +28,28 @@ import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 import styles from "./InntektsKildeModal.module.css";
 
-export default function InntektsKildeModal() {
+interface IProps {
+  erNyVirksomhet: boolean;
+  virksomhetsnummer: string | undefined;
+}
+
+export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }: IProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
-  const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
+  const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(
+    erNyVirksomhet ? undefined : virksomhetsnummer
+  );
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
+
+  function finnInntektKilde() {
+    if (erNyVirksomhet) {
+      return "ORGANISASJON";
+    }
+
+    return virksomhetsnummer?.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT";
+  }
 
   const form = useForm({
     submitSource: "state",
@@ -42,6 +57,10 @@ export default function InntektsKildeModal() {
       initial: "onChange",
       whenTouched: "onChange",
       whenSubmitted: "onChange",
+    },
+    defaultValues: {
+      inntektskilde: finnInntektKilde(),
+      identifikator: erNyVirksomhet ? "" : virksomhetsnummer,
     },
     method: "post",
     schema: hentInntektValidationSchema(genertePerioder),
@@ -96,8 +115,58 @@ export default function InntektsKildeModal() {
 
   // Liste over inntekter som er fylt ut i form
   const inntekterArray: IFormInntekt[] = aktiveInntektsManeder
-    .filter((felt) => form.value(felt) !== undefined && form.value(felt) !== "")
-    .map((felt) => ({ dato: felt, belop: form.value(felt) }));
+    .filter((input) => form.value(input) !== undefined && form.value(input) !== "")
+    .map((input) => ({ dato: input, belop: form.value(input) }));
+
+  async function settInnNyInntekt() {
+    const validering = await form.validate();
+    const harFeil = Object.keys(validering).length > 0;
+
+    if (harFeil) {
+      return;
+    }
+
+    if (!harFeil && !minstEnInntektFyltUt) {
+      setManglerInntekt(true);
+      return;
+    }
+
+    if (!harFeil && minstEnInntektFyltUt) {
+      setInntektEndret(true);
+      setManglerInntekt(false);
+      ref?.current?.close();
+
+      const inntektstype = form.value("inntektstype");
+      const inntektskilde = form.value("inntektskilde");
+      const identifikator = form.value("identifikator");
+
+      const oppdatertVirksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
+        (virksomhet) => virksomhet.virksomhetsnummer === identifikator
+      )!!;
+
+      const nyeInntekterForVirksomhet = lagInntektListe(
+        inntektstype,
+        inntektskilde,
+        identifikator,
+        inntekterArray
+      );
+
+      nyeInntekterForVirksomhet.forEach((nyInntekt) => {
+        oppdatertVirksomhet.inntekter = [...oppdatertVirksomhet.inntekter, nyInntekt];
+      });
+
+      setUklassifisertInntekt({
+        ...uklassifisertInntekt,
+        virksomheter: uklassifisertInntekt.virksomheter.map((virksomhet) =>
+          virksomhet.virksomhetsnummer === oppdatertVirksomhet.virksomhetsnummer
+            ? oppdatertVirksomhet
+            : virksomhet
+        ),
+      });
+
+      form.resetForm();
+    }
+  }
 
   async function settInn() {
     const validering = await form.validate();
@@ -149,10 +218,11 @@ export default function InntektsKildeModal() {
       <Button
         variant="primary"
         className="mt-6"
+        size={erNyVirksomhet ? "medium" : "small"}
         icon={<PlusCircleIcon aria-hidden />}
         onClick={() => ref.current?.showModal()}
       >
-        Legg til inntektskilde
+        {erNyVirksomhet ? "Legg til inntektskilde" : "Legg til inntekt"}
       </Button>
 
       <Modal
@@ -170,6 +240,7 @@ export default function InntektsKildeModal() {
                   size="small"
                   error={form.error("inntektskilde")}
                   legend="Type inntektskilde"
+                  disabled={!erNyVirksomhet}
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privat person</Radio>
@@ -178,6 +249,7 @@ export default function InntektsKildeModal() {
                   {...form.getInputProps("identifikator")}
                   label={identifikatorLabel}
                   size="small"
+                  disabled={!erNyVirksomhet}
                   error={
                     form.error("identifikator")
                       ? `${identifikatorLabel} ${form.error("identifikator")}`
@@ -226,7 +298,11 @@ export default function InntektsKildeModal() {
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <Button type="button" size="small" onClick={() => settInn()}>
+            <Button
+              type="button"
+              size="small"
+              onClick={() => (erNyVirksomhet ? settInn() : settInnNyInntekt())}
+            >
               Sett inn
             </Button>
             <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
