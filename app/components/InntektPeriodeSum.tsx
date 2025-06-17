@@ -7,6 +7,8 @@ import {
   sumTotaltInntekterForAlleVirksomheter,
 } from "~/utils/inntekt.util";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
+import type { IVirksomhet } from "~/types/inntekt.types";
+import { erPersonnummer, maskerePersonnummer } from "~/utils/generell.util";
 
 export function InntektPerioderOppsummering() {
   const { uklassifisertInntekt } = useInntekt();
@@ -22,6 +24,14 @@ export function InntektPerioderOppsummering() {
   const alleInntekter = uklassifisertInntekt.virksomheter.flatMap(
     (virksomhet) => virksomhet.inntekter
   );
+
+  function hentVirksomhetNavn(virksomhet: IVirksomhet) {
+    if (erPersonnummer(virksomhet.virksomhetsnummer)) {
+      return maskerePersonnummer(virksomhet.virksomhetsnummer);
+    }
+
+    return virksomhet.virksomhetsnavn || virksomhet.virksomhetsnummer;
+  }
 
   return (
     <Box padding="2">
@@ -56,9 +66,7 @@ export function InntektPerioderOppsummering() {
           <Table.Body>
             {uklassifisertInntekt.virksomheter.map((virsomhet) => (
               <Table.Row key={virsomhet.virksomhetsnavn}>
-                <Table.DataCell>
-                  {virsomhet.virksomhetsnavn || virsomhet.virksomhetsnummer}
-                </Table.DataCell>
+                <Table.DataCell>{hentVirksomhetNavn(virsomhet)}</Table.DataCell>
                 <Table.DataCell align="right">
                   {formatterNorskTall(
                     beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode1)

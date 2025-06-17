@@ -20,7 +20,7 @@ import {
   finnTotalBelop,
   lagInntektListe,
   type IFormInntekt,
-} from "~/utils/ny-intekt-kilde.util";
+} from "~/utils/ny-inntekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
 import type { IVirksomhet } from "~/types/inntekt.types";

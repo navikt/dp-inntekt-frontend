@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { erEnKvinne } from "./generell.util";
+import { capitalize, erEnKvinne, erPersonnummer, maskerePersonnummer } from "./generell.util";
 
 describe("erEnKvinne", () => {
   it("returnerer true for kvinne-personnummer (partall i 9. siffer)", () => {
@@ -21,5 +21,38 @@ describe("erEnKvinne", () => {
     expect(() => erEnKvinne("123456789012")).toThrowError("Ugyldig pnr. Må være 11 sifre.");
     expect(() => erEnKvinne("abcdefghijk")).toThrowError("Ugyldig pnr. Må være 11 sifre.");
     expect(() => erEnKvinne("")).toThrowError("Ugyldig pnr. Må være 11 sifre.");
+  });
+});
+
+describe("capitalize", () => {
+  it("skal gjøre første bokstav stor", () => {
+    expect(capitalize("test")).toBe("Test");
+    expect(capitalize("Test")).toBe("Test");
+    expect(capitalize("tEST")).toBe("TEST");
+    expect(capitalize("")).toBe("");
+  });
+});
+
+describe("maskerePersonnummer", () => {
+  it("maskerer alltid de siste 5 sifrene og legger til mellomrom", () => {
+    expect(maskerePersonnummer("12345678901")).toBe("123456 *****");
+    expect(maskerePersonnummer("00000012345")).toBe("000000 *****");
+  });
+
+  it("returnerer tom streng hvis input ikke er 11 siffer", () => {
+    expect(maskerePersonnummer("12345")).toBe("");
+    expect(maskerePersonnummer("")).toBe("");
+    expect(maskerePersonnummer("1234567890")).toBe("");
+  });
+});
+
+describe("erPersonnummer", () => {
+  it("returnerer true for 11 siffer", () => {
+    expect(erPersonnummer("12345678901")).toBe(true);
+  });
+  it("returnerer false for mindre enn 11 siffer", () => {
+    expect(erPersonnummer("1234567890")).toBe(false);
+    expect(erPersonnummer("")).toBe(false);
+    expect(erPersonnummer("abcdefghijk")).toBe(false);
   });
 });

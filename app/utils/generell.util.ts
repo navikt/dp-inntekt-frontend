@@ -12,10 +12,9 @@ export function capitalize(str: string): string {
 }
 
 export function maskerePersonnummer(pnr: string): string {
-  if (pnr.length < 5) return "*".repeat(pnr.length);
-
-  const synlig = pnr.slice(0, pnr.length - 5);
-  const maskert = "*".repeat(5);
+  if (pnr.length !== 11) return "";
+  const synlig = pnr.slice(0, 6);
+  const maskert = "*****";
   return `${synlig} ${maskert}`;
 }
 
