@@ -27,7 +27,6 @@ import type { IVirksomhet } from "~/types/inntekt.types";
 import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 import styles from "./InntektsKildeModal.module.css";
-import VirsomhetInntekter from "../VirksomhetInntekter";
 
 interface IProps {
   erNyVirksomhet: boolean;
@@ -44,10 +43,11 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
   );
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
 
-  function finnInntektKildeVerdi() {
+  function finnInntektKilde() {
     if (erNyVirksomhet) {
       return "ORGANISASJON";
     }
+
     return virksomhetsnummer?.length === 9 ? "ORGANISASJON" : "NATURLIG_IDENT";
   }
 
@@ -59,7 +59,7 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       whenSubmitted: "onChange",
     },
     defaultValues: {
-      inntektskilde: finnInntektKildeVerdi(),
+      inntektskilde: finnInntektKilde(),
       identifikator: erNyVirksomhet ? "" : virksomhetsnummer,
     },
     method: "post",
@@ -115,8 +115,58 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
 
   // Liste over inntekter som er fylt ut i form
   const inntekterArray: IFormInntekt[] = aktiveInntektsManeder
-    .filter((felt) => form.value(felt) !== undefined && form.value(felt) !== "")
-    .map((felt) => ({ dato: felt, belop: form.value(felt) }));
+    .filter((input) => form.value(input) !== undefined && form.value(input) !== "")
+    .map((input) => ({ dato: input, belop: form.value(input) }));
+
+  async function settInnNyInntekt() {
+    const validering = await form.validate();
+    const harFeil = Object.keys(validering).length > 0;
+
+    if (harFeil) {
+      return;
+    }
+
+    if (!harFeil && !minstEnInntektFyltUt) {
+      setManglerInntekt(true);
+      return;
+    }
+
+    if (!harFeil && minstEnInntektFyltUt) {
+      setInntektEndret(true);
+      setManglerInntekt(false);
+      ref?.current?.close();
+
+      const inntektstype = form.value("inntektstype");
+      const inntektskilde = form.value("inntektskilde");
+      const identifikator = form.value("identifikator");
+
+      const oppdatertVirksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
+        (virksomhet) => virksomhet.virksomhetsnummer === identifikator
+      )!!;
+
+      const nyeInntekterForVirksomhet = lagInntektListe(
+        inntektstype,
+        inntektskilde,
+        identifikator,
+        inntekterArray
+      );
+
+      nyeInntekterForVirksomhet.forEach((nyInntekt) => {
+        oppdatertVirksomhet.inntekter = [...oppdatertVirksomhet.inntekter, nyInntekt];
+      });
+
+      setUklassifisertInntekt({
+        ...uklassifisertInntekt,
+        virksomheter: uklassifisertInntekt.virksomheter.map((virksomhet) =>
+          virksomhet.virksomhetsnummer === oppdatertVirksomhet.virksomhetsnummer
+            ? oppdatertVirksomhet
+            : virksomhet
+        ),
+      });
+
+      form.resetForm();
+    }
+  }
 
   async function settInn() {
     const validering = await form.validate();
@@ -168,6 +218,7 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       <Button
         variant="primary"
         className="mt-6"
+        size={erNyVirksomhet ? "medium" : "small"}
         icon={<PlusCircleIcon aria-hidden />}
         onClick={() => ref.current?.showModal()}
       >
@@ -198,7 +249,6 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
                   {...form.getInputProps("identifikator")}
                   label={identifikatorLabel}
                   size="small"
-                  value={form.value("identifikator")}
                   disabled={!erNyVirksomhet}
                   error={
                     form.error("identifikator")
@@ -248,7 +298,11 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
             </VStack>
           </Modal.Body>
           <Modal.Footer>
-            <Button type="button" size="small" onClick={() => settInn()}>
+            <Button
+              type="button"
+              size="small"
+              onClick={() => (erNyVirksomhet ? settInn() : settInnNyInntekt())}
+            >
               Sett inn
             </Button>
             <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>

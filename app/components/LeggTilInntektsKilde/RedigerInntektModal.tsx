@@ -64,10 +64,10 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
       return;
     }
 
-    const virksomhet = uklassifisertInntekt.virksomheter.find(
+    const inntekter = uklassifisertInntekt.virksomheter.find(
       (virksomhet: IVirksomhet) =>
         virksomhet.virksomhetsnummer === redigeringsData.virksomhetsnummer
-    );
+    )?.inntekter.filter(inntekt => inntekt.beskrivelse === redigeringsData.inntektstype);
 
     return {
       inntektskilde: redigeringsData.inntektskilde,
@@ -75,7 +75,7 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
       identifikator: redigeringsData.virksomhetsnummer,
       // Sette default verdi for inntekt basert på redigeringsData?.inntekter
       // med dette format 2021-11 : 10000
-      ...virksomhet?.inntekter.reduce((acc, inntekt) => {
+      ...inntekter?.reduce((acc, inntekt) => {
         acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
         return acc;
       }, {} as Record<string, string>),
