@@ -1,3 +1,4 @@
+import { PlusCircleIcon } from "@navikt/aksel-icons";
 import {
   Button,
   Label,
@@ -12,6 +13,7 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
+import type { IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
@@ -23,8 +25,6 @@ import {
 } from "~/utils/ny-inntekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
 import { InntektPerioder } from "./InntektPerioder";
-import type { IVirksomhet } from "~/types/inntekt.types";
-import { PlusCircleIcon } from "@navikt/aksel-icons";
 
 import styles from "./InntektsKildeModal.module.css";
 
@@ -214,10 +214,9 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
     inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
 
   return (
-    <div className="mt-6">
+    <div>
       <Button
         variant="primary"
-        className="mt-6"
         size={erNyVirksomhet ? "medium" : "small"}
         icon={<PlusCircleIcon aria-hidden />}
         onClick={() => ref.current?.showModal()}
