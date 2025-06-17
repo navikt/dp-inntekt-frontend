@@ -44,7 +44,7 @@ export default function Inntekt() {
           <Box background="surface-default" padding="6" borderRadius="xlarge">
             <InntektPerioderOppsummering />
           </Box>
-          <Box background="surface-default" padding="6" borderRadius="xlarge">
+          <Box background="surface-default" padding="6" borderRadius="xlarge" className="mb-6">
             <VStack gap="4">
               <Virksomheter />
             </VStack>

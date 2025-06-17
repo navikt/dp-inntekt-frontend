@@ -29,6 +29,10 @@ p {
   margin-top: var(--a-spacing-8);
 }
 
+.mb-6 {
+  margin-bottom: var(--a-spacing-6);
+}
+
 .bold {
   font-weight: bold;
 }
