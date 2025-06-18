@@ -5,17 +5,24 @@ import { useInntekt } from "~/context/inntekt-context";
 import type { IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formatterNorskTall } from "~/utils/formattering.util";
+import { erPersonnummer } from "~/utils/generell.util";
 import {
   beregnTotalInntektForEnPeriode,
   delOppPeriodeTilTrePerioder,
   grupperEtterInntektBeskrivelse,
 } from "~/utils/inntekt.util";
-import RedigerModal, { type IRedigeringsData } from "./LeggTilInntektsKilde/RedigerInntektModal";
+import RedigerModal from "./LeggTilInntektsKilde/RedigerInntektModal";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
-import { erPersonnummer } from "~/utils/generell.util";
 
 interface IProps {
   virksomhet: IVirksomhet;
+}
+
+// Denne skal matche valideringen i hentInntektValidationSchema
+export interface IRedigeringsData {
+  virksomhetsnummer: string;
+  beskrivelse: string;
+  inntektskilde: string;
 }
 
 export default function VirsomhetInntekter({ virksomhet }: IProps) {
@@ -98,10 +105,10 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
         </Table.Header>
         <Table.Body>
           {gruppertinntektTyperBeskrivelse.map((inntekt) => (
-            <Table.Row key={inntekt.inntektsbeskrivelse}>
+            <Table.Row key={inntekt.beskrivelse}>
               <Table.DataCell>
-                {inntektTyperBeskrivelse.find((type) => type.key === inntekt.inntektsbeskrivelse)
-                  ?.text || inntekt.inntektsbeskrivelse}
+                {inntektTyperBeskrivelse.find((type) => type.key === inntekt.beskrivelse)?.text ||
+                  inntekt.beskrivelse}
               </Table.DataCell>
               <Table.DataCell>{inntekt.inntektskilde}</Table.DataCell>
               <Table.DataCell align="right">
@@ -122,7 +129,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                     onClick={() => {
                       setEndring({
                         virksomhetsnummer: virksomhet.virksomhetsnummer,
-                        inntektstype: inntekt.inntektsbeskrivelse,
+                        beskrivelse: inntekt.beskrivelse,
                         inntektskilde: erPrivatPerson ? "NATURLIG_IDENT" : "ORGANISASJON",
                       });
                     }}
@@ -133,7 +140,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                     icon={<TrashIcon />}
                     onClick={() =>
                       gruppertinntektTyperBeskrivelse.length > 1
-                        ? fjernInntekt(inntekt.inntektsbeskrivelse)
+                        ? fjernInntekt(inntekt.beskrivelse)
                         : slettVirksomhet()
                     }
                   />

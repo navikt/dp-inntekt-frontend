@@ -9,7 +9,7 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
     identifikator: z.string({
       required_error: "er påkrevd",
     }),
-    inntektstype: z.string({
+    beskrivelse: z.string({
       required_error: "Inntektstype er påkrevd",
     }),
   });

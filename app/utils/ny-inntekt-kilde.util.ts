@@ -20,7 +20,7 @@ export function finnTotalBelop(inntekter: IInntekt[]): string {
 }
 
 export function lagInntektListe(
-  inntekstype: string,
+  beskrivelse: string,
   inntektskilde: string,
   identifikator: string,
   inntekter: IFormInntekt[]
@@ -35,7 +35,7 @@ export function lagInntektListe(
   return inntekter.map((inntekt) => ({
     belop: inntekt.belop,
     fordel: "",
-    beskrivelse: inntekstype,
+    beskrivelse: beskrivelse,
     inntektskilde: "dp-inntekt-frontend",
     inntektsstatus: "",
     inntektsperiodetype: "Maaned",

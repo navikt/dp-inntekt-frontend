@@ -10,7 +10,7 @@ export const handlers = [
   http.post(`${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/:inntektId`, () => {
     return HttpResponse.text("1234");
   }),
-  http.get(`${getEnv("DP_INNTEKT_API_URL")}/v1/enhetsregisteret/enhet/:organisasjonsnummer`, () => {
+  http.get(`${getEnv("DP_INNTEKT_API_URL")}/v1/enhetsregisteret/enhet/:virksomhetsnummer`, () => {
     return HttpResponse.json(mockOrganisasjonsinfo);
   }),
 ];

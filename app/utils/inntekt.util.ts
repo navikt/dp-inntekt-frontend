@@ -23,7 +23,7 @@ export function inntektsPeriodeEr36Maneder(periode: IPeriode): boolean {
 // Funksjon som grupperer inntekter etter inntektstype og returnerer en array av grupper
 // Grupperer inntekter etter både inntektstype og inntektKilde, og returnerer en array
 interface IVirksomhetInntekt {
-  inntektsbeskrivelse: string;
+  beskrivelse: string;
   inntektskilde: string;
   inntekter: IInntekt[];
 }
@@ -36,7 +36,7 @@ export function grupperEtterInntektBeskrivelse(inntekter: IInntekt[]): IVirksomh
 
     if (!grupper[key]) {
       grupper[key] = {
-        inntektsbeskrivelse: inntekt.beskrivelse,
+        beskrivelse: inntekt.beskrivelse,
         inntektskilde: inntekt.inntektskilde,
         inntekter: [],
       };

@@ -24,6 +24,7 @@ import {
   type IFormInntekt,
 } from "~/utils/ny-inntekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
+import type { IRedigeringsData } from "../VirksomhetInntekter";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
@@ -31,13 +32,6 @@ import styles from "./InntektsKildeModal.module.css";
 interface IProps {
   ref: React.RefObject<HTMLDialogElement | null>;
   redigeringsData: IRedigeringsData | undefined;
-}
-
-// Denne skal matche valideringen i hentInntektValidationSchema
-export interface IRedigeringsData {
-  virksomhetsnummer: string;
-  inntektstype: string;
-  inntektskilde: string;
 }
 
 export default function RedigerModal({ ref, redigeringsData }: IProps) {
@@ -70,11 +64,11 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
         (virksomhet: IVirksomhet) =>
           virksomhet.virksomhetsnummer === redigeringsData.virksomhetsnummer
       )
-      ?.inntekter.filter((inntekt) => inntekt.beskrivelse === redigeringsData.inntektstype);
+      ?.inntekter.filter((inntekt) => inntekt.beskrivelse === redigeringsData.beskrivelse);
 
     return {
       inntektskilde: redigeringsData.inntektskilde,
-      inntektstype: redigeringsData.inntektstype,
+      beskrivelse: redigeringsData.beskrivelse,
       identifikator: redigeringsData.virksomhetsnummer,
       // Sette default verdi for inntekt basert på redigeringsData?.inntekter
       // med dette format 2021-11 : 10000
@@ -153,7 +147,7 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
       setManglerInntekt(false);
       ref?.current?.close();
 
-      const inntektstype = form.value("inntektstype");
+      const beskrivelse = form.value("beskrivelse");
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
 
@@ -162,7 +156,7 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
       )!!;
 
       const oppdatertInntektListe = lagInntektListe(
-        inntektstype,
+        beskrivelse,
         inntektskilde,
         identifikator,
         inntekterArray
@@ -173,7 +167,7 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
         virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
         periode: finnTidligsteOgSenesteDato(oppdatertInntektListe),
         inntekter: [
-          ...virksomhet.inntekter.filter((i) => i.beskrivelse !== inntektstype),
+          ...virksomhet.inntekter.filter((i) => i.beskrivelse !== beskrivelse),
           ...oppdatertInntektListe,
         ],
         totalBelop: finnTotalBelop(oppdatertInntektListe),
@@ -235,10 +229,10 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
                   </div>
                 )}
                 <Select
-                  {...form.getInputProps("inntektstype")}
+                  {...form.getInputProps("beskrivelse")}
                   label="Inntektstype"
                   size="small"
-                  error={form.error("inntektstype")}
+                  error={form.error("beskrivelse")}
                   readOnly
                 >
                   <option value="">Velg inntekstype</option>
