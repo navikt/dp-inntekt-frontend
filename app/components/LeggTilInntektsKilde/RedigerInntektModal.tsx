@@ -157,28 +157,32 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
 
-      const oppdaterteInntekter = lagInntektListe(
+      const virksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
+        (virksomhet) => virksomhet.virksomhetsnummer === identifikator
+      )!!;
+
+      const oppdatertInntektListe = lagInntektListe(
         inntektstype,
         inntektskilde,
         identifikator,
         inntekterArray
       );
 
+      const oppdatertVirksomhet: IVirksomhet = {
+        ...virksomhet,
+        virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
+        periode: finnTidligsteOgSenesteDato(oppdatertInntektListe),
+        inntekter: [
+          ...virksomhet.inntekter.filter((i) => i.beskrivelse !== inntektstype),
+          ...oppdatertInntektListe,
+        ],
+        totalBelop: finnTotalBelop(oppdatertInntektListe),
+      };
+
       // Denne kan være vanskelig å lese
       // Todo: Vurdere å bryte den opp i flere funksjoner
       const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
-        virksomhet.virksomhetsnummer === identifikator
-          ? {
-              ...virksomhet,
-              virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
-              periode: finnTidligsteOgSenesteDato(oppdaterteInntekter),
-              inntekter: [
-                ...virksomhet.inntekter.filter((i) => i.beskrivelse !== inntektstype),
-                ...oppdaterteInntekter,
-              ],
-              totalBelop: finnTotalBelop(oppdaterteInntekter),
-            }
-          : virksomhet
+        virksomhet.virksomhetsnummer === identifikator ? oppdatertVirksomhet : virksomhet
       );
 
       setUklassifisertInntekt({
