@@ -20,7 +20,6 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   const nyInntektId = await lagreInntektResponse.text();
-  console.log(`🔥 nyInntektId :`, nyInntektId);
 
   return redirect(`/inntektId/${nyInntektId}`);
 }

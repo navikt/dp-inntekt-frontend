@@ -44,20 +44,6 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
   );
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
 
-  function hentDefaultValues() {
-    if (erNyVirksomhet || !virksomhetsnummer) {
-      return {
-        inntektskilde: "",
-        identifikator: "",
-      };
-    }
-
-    return {
-      inntektskilde: erPersonnummer(virksomhetsnummer) ? "NATURLIG_IDENT" : "ORGANISASJON",
-      identifikator: virksomhetsnummer,
-    };
-  }
-
   const form = useForm({
     submitSource: "state",
     validationBehaviorConfig: {
@@ -70,6 +56,20 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
     schema: hentInntektValidationSchema(genertePerioder),
     action: "/inntektId/$inntektId/action",
   });
+
+  function hentDefaultValues() {
+    if (erNyVirksomhet || !virksomhetsnummer) {
+      return {
+        inntektskilde: undefined,
+        identifikator: undefined,
+      };
+    }
+
+    return {
+      inntektskilde: erPersonnummer(virksomhetsnummer) ? "NATURLIG_IDENT" : "ORGANISASJON",
+      identifikator: virksomhetsnummer,
+    };
+  }
 
   useEffect(() => {
     const generertePerioder = generereFirePerioder(inntekt.periode);
@@ -140,7 +140,7 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       setManglerInntekt(false);
       ref?.current?.close();
 
-      const inntektstype = form.value("inntektstype");
+      const beskrivelse = form.value("beskrivelse");
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
 
@@ -149,7 +149,7 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       )!!;
 
       const nyeInntekter = lagInntektListe(
-        inntektstype,
+        beskrivelse,
         inntektskilde,
         identifikator,
         inntekterArray
@@ -197,10 +197,10 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
       setManglerInntekt(false);
       ref?.current?.close();
 
-      const inntektstype = form.value("inntektstype");
+      const beskrivelse = form.value("beskrivelse");
       const inntektskilde = form.value("inntektskilde");
       const identifikator = form.value("identifikator");
-      const inntekter = lagInntektListe(inntektstype, inntektskilde, identifikator, inntekterArray);
+      const inntekter = lagInntektListe(beskrivelse, inntektskilde, identifikator, inntekterArray);
 
       const nyVirksomhet: IVirksomhet = {
         avvikListe: [],
@@ -274,15 +274,15 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
                   </div>
                 )}
                 <Select
-                  {...form.getInputProps("inntektstype")}
+                  {...form.getInputProps("beskrivelse")}
                   label="Inntektstype"
                   size="small"
-                  error={form.error("inntektstype")}
+                  error={form.error("beskrivelse")}
                 >
                   <option value="">Velg inntekstype</option>
-                  {inntektTyperBeskrivelse.map((inntektType) => (
-                    <option value={inntektType.key} key={inntektType.key}>
-                      {inntektType.text}
+                  {inntektTyperBeskrivelse.map((beskrivelse) => (
+                    <option value={beskrivelse.key} key={beskrivelse.key}>
+                      {beskrivelse.text}
                     </option>
                   ))}
                 </Select>
