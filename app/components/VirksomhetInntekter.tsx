@@ -2,7 +2,7 @@ import { TrashIcon } from "@navikt/aksel-icons";
 import { Button, HStack, Table } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
 import type { IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
-import { inntektTyperBeskrivelse } from "~/utils/constants";
+import { INNTEKTSBESKRIVELSER } from "~/utils/constants";
 import { formatterNorskTall } from "~/utils/formattering.util";
 import {
   beregnTotalInntektForEnPeriode,
@@ -104,7 +104,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
         {gruppertinntektsbeskrivelser.map((virksomhetInntekt) => (
           <Table.Row key={virksomhetInntekt.beskrivelse}>
             <Table.DataCell>
-              {inntektTyperBeskrivelse.find((type) => type.key === virksomhetInntekt.beskrivelse)
+              {INNTEKTSBESKRIVELSER.find((type) => type.key === virksomhetInntekt.beskrivelse)
                 ?.text || virksomhetInntekt.beskrivelse}
             </Table.DataCell>
             <Table.DataCell>{virksomhetInntekt.inntektskilde}</Table.DataCell>

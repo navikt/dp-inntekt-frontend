@@ -44,6 +44,10 @@ export default function Virksomhet({ virksomhet }: IProps) {
     setInntektEndret(true);
   }
 
+  const eksistertInntektsbeskrivelser = Array.from(
+    new Set(virksomhet?.inntekter.map((i) => i.beskrivelse))
+  );
+
   return (
     <ExpansionCard aria-label={`Inntekt for ${virksomhetsnummer}`}>
       <ExpansionCard.Header>
@@ -72,7 +76,11 @@ export default function Virksomhet({ virksomhet }: IProps) {
       <ExpansionCard.Content>
         <VirksomhetInntekter virksomhet={virksomhet} />
         <HStack gap="2" className="mt-8" align="baseline">
-          <InntektsKildeModal erNyVirksomhet={false} virksomhetsnummer={virksomhetsnummer} />
+          <InntektsKildeModal
+            erNyVirksomhet={false}
+            virksomhetsnummer={virksomhetsnummer}
+            eksistertInntektsbeskrivelser={eksistertInntektsbeskrivelser}
+          />
           <Button
             icon={<TrashIcon />}
             variant="tertiary"

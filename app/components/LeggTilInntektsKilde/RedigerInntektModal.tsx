@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
-import { inntektTyperBeskrivelse } from "~/utils/constants";
+import { INNTEKTSBESKRIVELSER } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { erPersonnummer } from "~/utils/generell.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
@@ -221,7 +221,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                   readOnly
                 >
                   <option value="">Velg inntekstype</option>
-                  {inntektTyperBeskrivelse.map((inntektType) => (
+                  {INNTEKTSBESKRIVELSER.map((inntektType) => (
                     <option value={inntektType.key} key={inntektType.key}>
                       {inntektType.text}
                     </option>

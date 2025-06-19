@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
 import type { IVirksomhet } from "~/types/inntekt.types";
-import { inntektTyperBeskrivelse } from "~/utils/constants";
+import { INNTEKTSBESKRIVELSER } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { erPersonnummer } from "~/utils/generell.util";
 import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
@@ -32,9 +32,14 @@ import styles from "./InntektsKildeModal.module.css";
 interface IProps {
   erNyVirksomhet: boolean;
   virksomhetsnummer: string | undefined;
+  eksistertInntektsbeskrivelser?: string[];
 }
 
-export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }: IProps) {
+export default function InntektsKildeModal({
+  erNyVirksomhet,
+  virksomhetsnummer,
+  eksistertInntektsbeskrivelser,
+}: IProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
@@ -280,8 +285,15 @@ export default function InntektsKildeModal({ erNyVirksomhet, virksomhetsnummer }
                   error={form.error("beskrivelse")}
                 >
                   <option value="">Velg inntekstype</option>
-                  {inntektTyperBeskrivelse.map((beskrivelse) => (
-                    <option value={beskrivelse.key} key={beskrivelse.key}>
+                  {INNTEKTSBESKRIVELSER.map((beskrivelse) => (
+                    <option
+                      value={beskrivelse.key}
+                      key={beskrivelse.key}
+                      disabled={
+                        !!eksistertInntektsbeskrivelser?.length &&
+                        eksistertInntektsbeskrivelser.includes(beskrivelse.key)
+                      }
+                    >
                       {beskrivelse.text}
                     </option>
                   ))}

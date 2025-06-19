@@ -1,4 +1,4 @@
-export const norskManeder = [
+export const NORSK_MANEDER = [
   "Januar",
   "Februar",
   "Mars",
@@ -13,7 +13,7 @@ export const norskManeder = [
   "Desember",
 ];
 
-export const inntektTyperBeskrivelse = [
+export const INNTEKTSBESKRIVELSER = [
   { key: "fastloenn", text: "Fastlønn" },
   { key: "timeloenn", text: "Timelønn" },
   { key: "feriepenger", text: "Feriepenger" },
@@ -23,7 +23,10 @@ export const inntektTyperBeskrivelse = [
   { key: "arbeidsoppholdLosji", text: "Arbeidsopphold losji" },
   { key: "beregnetSkatt", text: "Beregnet skatt" },
   { key: "besoeksreiserHjemmetAnnet", text: "Besøksreiser hjemmet annet" },
-  { key: "besoeksreiserHjemmetKilometergodtgjoerelseBil", text: "Besøksreiser hjemmet kilometergodtgjørelse bil" },
+  {
+    key: "besoeksreiserHjemmetKilometergodtgjoerelseBil",
+    text: "Besøksreiser hjemmet kilometergodtgjørelse bil",
+  },
   { key: "betaltUtenlandskSkatt", text: "Betalt utenlandsk skatt" },
   { key: "bil", text: "Bil" },
   { key: "bolig", text: "Bolig" },
@@ -36,17 +39,32 @@ export const inntektTyperBeskrivelse = [
   { key: "helligdagstillegg", text: "Helligdagstillegg" },
   { key: "honorarAkkordProsentProvisjon", text: "Honorar akkord prosent provisjon" },
   { key: "hyretillegg", text: "Hyretillegg" },
-  { key: "innbetalingTilUtenlandskPensjonsordning", text: "Innbetaling til utenlandsk pensjonsordning" },
+  {
+    key: "innbetalingTilUtenlandskPensjonsordning",
+    text: "Innbetaling til utenlandsk pensjonsordning",
+  },
   { key: "kilometergodtgjoerelseBil", text: "Kilometergodtgjørelse bil" },
-  { key: "kommunalOmsorgsloennOgFosterhjemsgodtgjoerelse", text: "Kommunal omsorgslønn og fosterhjemsgodtgjørelse" },
+  {
+    key: "kommunalOmsorgsloennOgFosterhjemsgodtgjoerelse",
+    text: "Kommunal omsorgslønn og fosterhjemsgodtgjørelse",
+  },
   { key: "kostDager", text: "Kost dager" },
   { key: "kostDoegn", text: "Kost døgn" },
   { key: "kostbesparelseIHjemmet", text: "Kostbesparelse i hjemmet" },
   { key: "losji", text: "Losji" },
-  { key: "ikkeSkattepliktigLoennFraUtenlandskDiplomKonsulStasjon", text: "Ikke skattepliktig lønn fra utenlandsk diplom konsul stasjon" },
+  {
+    key: "ikkeSkattepliktigLoennFraUtenlandskDiplomKonsulStasjon",
+    text: "Ikke skattepliktig lønn fra utenlandsk diplom konsul stasjon",
+  },
   { key: "loennForBarnepassIBarnetsHjem", text: "Lønn for barnepass i barnets hjem" },
-  { key: "loennTilPrivatpersonerForArbeidIHjemmet", text: "Lønn til privatpersoner for arbeid i hjemmet" },
-  { key: "loennUtbetaltAvVeldedigEllerAllmennyttigInstitusjonEllerOrganisasjon", text: "Lønn utbetalt av veldedig eller allmennyttig institusjon eller organisasjon" },
+  {
+    key: "loennTilPrivatpersonerForArbeidIHjemmet",
+    text: "Lønn til privatpersoner for arbeid i hjemmet",
+  },
+  {
+    key: "loennUtbetaltAvVeldedigEllerAllmennyttigInstitusjonEllerOrganisasjon",
+    text: "Lønn utbetalt av veldedig eller allmennyttig institusjon eller organisasjon",
+  },
   { key: "loennTilVergeFraFylkesmannen", text: "Lønn til verge fra fylkesmannen" },
   { key: "loennTilVergeFraStatsforvalteren", text: "Lønn til verge fra statsforvalteren" },
   { key: "opsjoner", text: "Opsjoner" },
@@ -62,19 +80,34 @@ export const inntektTyperBeskrivelse = [
   { key: "styrehonorarOgGodtgjoerelseVerv", text: "Styrehonorar og godtgjørelse verv" },
   { key: "tips", text: "Tips" },
   { key: "skattepliktigPersonalrabatt", text: "Skattepliktig personalrabatt" },
-  { key: "skattepliktigGodtgjoerelseSaeravtaleUtland", text: "Skattepliktig godtgjørelse særavtale utland" },
+  {
+    key: "skattepliktigGodtgjoerelseSaeravtaleUtland",
+    text: "Skattepliktig godtgjørelse særavtale utland",
+  },
   { key: "trekkILoennForFerie", text: "Trekk i lønn for ferie" },
-  { key: "uregelmessigeTilleggKnyttetTilArbeidetTid", text: "Uregelmessige tillegg knyttet til arbeidet tid" },
-  { key: "uregelmessigeTilleggKnyttetTilIkkeArbeidetTid", text: "Uregelmessige tillegg knyttet til ikke arbeidet tid" },
+  {
+    key: "uregelmessigeTilleggKnyttetTilArbeidetTid",
+    text: "Uregelmessige tillegg knyttet til arbeidet tid",
+  },
+  {
+    key: "uregelmessigeTilleggKnyttetTilIkkeArbeidetTid",
+    text: "Uregelmessige tillegg knyttet til ikke arbeidet tid",
+  },
   { key: "yrkebilTjenestligbehovKilometer", text: "Yrkebil tjenestligbehov kilometer" },
   { key: "yrkebilTjenestligbehovListepris", text: "Yrkebil tjenestligbehov listepris" },
   { key: "lottKunTrygdeavgift", text: "Lott kun trygdeavgift" },
   { key: "vederlag", text: "Vederlag" },
   { key: "dagpengerVedArbeidsloeshet", text: "Dagpenger ved arbeidsløshet" },
-  { key: "ferietilleggDagpengerVedArbeidsloeshet", text: "Dagpenger ved arbeidsløshet - Ferietillegg" },
+  {
+    key: "ferietilleggDagpengerVedArbeidsloeshet",
+    text: "Dagpenger ved arbeidsløshet - Ferietillegg",
+  },
   { key: "dagpengerTilFisker", text: "Dagpenger til fisker" },
   { key: "dagpengerTilFiskerSomBareHarHyre", text: "Dagpenger til fisker som bare har hyre" },
-  { key: "ferietilleggDagpengerTilFiskerSomBareHarHyre", text: "Dagpenger til fisker som bare har hyre - Ferietillegg" },
+  {
+    key: "ferietilleggDagpengerTilFiskerSomBareHarHyre",
+    text: "Dagpenger til fisker som bare har hyre - Ferietillegg",
+  },
   { key: "foreldrepenger", text: "Foreldrepenger" },
   { key: "feriepengerForeldrepenger", text: "Foreldrepenger - Feriepenger" },
   { key: "svangerskapspenger", text: "Svangerskapspenger" },
@@ -83,11 +116,14 @@ export const inntektTyperBeskrivelse = [
   { key: "feriepengerSykepenger", text: "Sykepenger - Feriepenger" },
   { key: "sykepengerTilFisker", text: "Sykepenger til fisker" },
   { key: "sykepengerTilFiskerSomBareHarHyre", text: "Sykepenger til fisker som bare har hyre" },
-  { key: "feriepengerSykepengerTilFiskerSomBareHarHyre", text: "Sykepenger til fisker som bare har hyre - Feriepenger" },
+  {
+    key: "feriepengerSykepengerTilFiskerSomBareHarHyre",
+    text: "Sykepenger til fisker som bare har hyre - Feriepenger",
+  },
   { key: "pleiepenger", text: "Pleiepenger" },
   { key: "feriepengerPleiepenger", text: "Pleiepenger - Feriepenger" },
   { key: "omsorgspenger", text: "Omsorgspenger" },
   { key: "feriepengerOmsorgspenger", text: "Omsorgspenger - Feriepenger" },
   { key: "opplaeringspenger", text: "Opplæringspenger" },
-  { key: "feriepengerOpplaeringspenger", text: "Opplæringspenger - Feriepenger" }
+  { key: "feriepengerOpplaeringspenger", text: "Opplæringspenger - Feriepenger" },
 ];
