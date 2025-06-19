@@ -7,6 +7,11 @@
   font-weight: 600;
 }
 
+/* Quick fix, tvinge teksten til venstre */
+.redigeringsModal {
+  text-align: left !important;
+}
+
 @media only screen and (min-width: 890px) {
   .inntektInputContainer {
     max-width: 30%;

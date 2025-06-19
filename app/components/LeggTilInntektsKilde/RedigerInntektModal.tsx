@@ -12,7 +12,7 @@ import { useForm } from "@rvf/react-router";
 import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import { useTypedRouteLoaderData } from "~/hooks/useTypedRouteLoaderData";
-import type { IVirksomhet } from "~/types/inntekt.types";
+import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { erPersonnummer } from "~/utils/generell.util";
@@ -24,17 +24,21 @@ import {
   type IFormInntekt,
 } from "~/utils/ny-inntekt-kilde.util";
 import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validation-schema";
-import type { IRedigeringsData } from "../VirksomhetInntekter";
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
 
 interface IProps {
   ref: React.RefObject<HTMLDialogElement | null>;
-  redigeringsData: IRedigeringsData | undefined;
+  virksomhet: IVirksomhet;
+  formDefaultValues: {
+    beskrivelse: string;
+    inntektskilde: string;
+    inntekter: IInntekt[];
+  };
 }
 
-export default function RedigerModal({ ref, redigeringsData }: IProps) {
+export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IProps) {
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
@@ -55,24 +59,13 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
   });
 
   function hentDefaultValues() {
-    if (!redigeringsData) {
-      return;
-    }
-
-    const inntekter = uklassifisertInntekt.virksomheter
-      .find(
-        (virksomhet: IVirksomhet) =>
-          virksomhet.virksomhetsnummer === redigeringsData.virksomhetsnummer
-      )
-      ?.inntekter.filter((inntekt) => inntekt.beskrivelse === redigeringsData.beskrivelse);
-
     return {
-      inntektskilde: redigeringsData.inntektskilde,
-      beskrivelse: redigeringsData.beskrivelse,
-      identifikator: redigeringsData.virksomhetsnummer,
-      // Sette default verdi for inntekt basert på redigeringsData?.inntekter
+      inntektskilde: formDefaultValues.inntektskilde,
+      beskrivelse: formDefaultValues.beskrivelse,
+      identifikator: virksomhet.virksomhetsnummer,
+      // Sette default verdi for inntekt basert på formDefaultValues?.inntekter
       // med dette format 2021-11 : 10000
-      ...inntekter?.reduce((acc, inntekt) => {
+      ...formDefaultValues.inntekter?.reduce((acc, inntekt) => {
         acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
         return acc;
       }, {} as Record<string, string>),
@@ -147,34 +140,25 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
       setManglerInntekt(false);
       ref?.current?.close();
 
-      const beskrivelse = form.value("beskrivelse");
-      const inntektskilde = form.value("inntektskilde");
-      const identifikator = form.value("identifikator");
-
-      const virksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
-        (virksomhet) => virksomhet.virksomhetsnummer === identifikator
-      )!!;
-
       const oppdatertInntektListe = lagInntektListe(
-        beskrivelse,
-        inntektskilde,
-        identifikator,
+        formDefaultValues.beskrivelse,
+        formDefaultValues.inntektskilde,
+        virksomhet.virksomhetsnummer,
         inntekterArray
       );
 
+      const inntekter = [
+        ...virksomhet.inntekter.filter((i) => i.beskrivelse !== formDefaultValues.beskrivelse),
+        ...oppdatertInntektListe,
+      ];
+
       const oppdatertVirksomhet: IVirksomhet = {
         ...virksomhet,
-        virksomhetsnavn: inntektskilde === "ORGANISASJON" ? virksomhetsnavn : identifikator,
-        periode: finnTidligsteOgSenesteDato(oppdatertInntektListe),
-        inntekter: [
-          ...virksomhet.inntekter.filter((i) => i.beskrivelse !== beskrivelse),
-          ...oppdatertInntektListe,
-        ],
-        totalBelop: finnTotalBelop(oppdatertInntektListe),
+        inntekter: inntekter,
+        periode: finnTidligsteOgSenesteDato(inntekter),
+        totalBelop: finnTotalBelop(inntekter),
       };
 
-      // Denne kan være vanskelig å lese
-      // Todo: Vurdere å bryte den opp i flere funksjoner
       const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
         virksomhet.virksomhetsnummer === identifikator ? oppdatertVirksomhet : virksomhet
       );
@@ -196,6 +180,7 @@ export default function RedigerModal({ ref, redigeringsData }: IProps) {
         header={{ heading: "Inntektskilde og inntekt" }}
         width={"1150px"}
         size="small"
+        className={styles.redigeringsModal}
       >
         <form {...form.getFormProps()}>
           <Modal.Body>

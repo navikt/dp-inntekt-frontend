@@ -20,15 +20,14 @@ export function inntektsPeriodeEr36Maneder(periode: IPeriode): boolean {
   return antallManeder === 36;
 }
 
-// Funksjon som grupperer inntekter etter inntektstype og returnerer en array av grupper
-// Grupperer inntekter etter både inntektstype og inntektKilde, og returnerer en array
-interface IVirksomhetInntekt {
+export interface IVirksomhetInntekt {
   beskrivelse: string;
   inntektskilde: string;
   inntekter: IInntekt[];
 }
 
-export function grupperEtterInntektBeskrivelse(inntekter: IInntekt[]): IVirksomhetInntekt[] {
+// Funksjon som grupperer inntekter etter inntektsbeskrivelse
+export function grupperEtterInntektsbeskrivelse(inntekter: IInntekt[]): IVirksomhetInntekt[] {
   const grupper: Record<string, IVirksomhetInntekt> = {};
 
   inntekter.forEach((inntekt) => {

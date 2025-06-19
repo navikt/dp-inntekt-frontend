@@ -1,17 +1,15 @@
-import { NotePencilIcon, TrashIcon } from "@navikt/aksel-icons";
+import { TrashIcon } from "@navikt/aksel-icons";
 import { Button, HStack, Table } from "@navikt/ds-react";
-import { useEffect, useRef, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
 import type { IUklassifisertInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { inntektTyperBeskrivelse } from "~/utils/constants";
 import { formatterNorskTall } from "~/utils/formattering.util";
-import { erPersonnummer } from "~/utils/generell.util";
 import {
   beregnTotalInntektForEnPeriode,
   delOppPeriodeTilTrePerioder,
-  grupperEtterInntektBeskrivelse,
+  grupperEtterInntektsbeskrivelse,
 } from "~/utils/inntekt.util";
-import RedigerModal from "./LeggTilInntektsKilde/RedigerInntektModal";
+import { RedigerVirksomhetInntekt } from "./RedigerVirksomhetInntekt";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
 
 interface IProps {
@@ -26,145 +24,148 @@ export interface IRedigeringsData {
 }
 
 export default function VirsomhetInntekter({ virksomhet }: IProps) {
-  const ref = useRef<HTMLDialogElement>(null);
-  const [endring, setEndring] = useState<IRedigeringsData | undefined>(undefined);
   const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const gruppertinntektsbeskrivelser = grupperEtterInntektsbeskrivelse(virksomhet.inntekter);
 
-  const erPrivatPerson = erPersonnummer(virksomhet.virksomhetsnummer);
-  const gruppertinntektTyperBeskrivelse = grupperEtterInntektBeskrivelse(virksomhet.inntekter);
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
   const periode1 = oppdeltPerioder[0];
   const periode2 = oppdeltPerioder[1];
   const periode3 = oppdeltPerioder[2];
 
-  useEffect(() => {
-    if (endring) {
-      ref.current?.showModal();
-    }
-  }, [endring]);
-
-  function fjernInntekt(inntektType: string) {
-    const oppdatertInntektForGittVirksomhet = virksomhet.inntekter.filter(
-      (inntekt) => inntekt.beskrivelse !== inntektType
+  function fjernEnInntektBeskrivelfraFraVirksomhet(
+    inntektsbeskrivelse: string,
+    virksomhetsnummer: string
+  ) {
+    // Filtrer ut inntekten med den spesifikke inntektsbeskrivelse
+    const oppdaterteVirksomhetInntekter = virksomhet.inntekter.filter(
+      (inntekt) => inntekt.beskrivelse !== inntektsbeskrivelse
     );
 
-    const oppdatertVirksomhet: IVirksomhet = {
+    // Oppdater virksomheten med de filtrerte inntektene
+    const oppdaterteVirksomhet: IVirksomhet = {
       ...virksomhet,
-      inntekter: oppdatertInntektForGittVirksomhet,
+      inntekter: oppdaterteVirksomhetInntekter,
     };
 
-    const oppdatertVirksomheter = [
+    // Filtrer ut den spesifikke virksomheten fra context
+    // og oppdater den med den oppdaterte virksomheten
+    const oppdaterteVirksomheter = [
       ...uklassifisertInntekt.virksomheter.filter(
-        (v) => v.virksomhetsnummer !== virksomhet.virksomhetsnummer
+        (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer
       ),
-      oppdatertVirksomhet,
+      oppdaterteVirksomhet,
     ];
 
+    // Oppdater hele uklassifisertInntekt med de oppdaterte virksomhetene
     const oppdatertUklassifisertInntekt: IUklassifisertInntekt = {
       ...uklassifisertInntekt,
-      virksomheter: oppdatertVirksomheter,
+      virksomheter: oppdaterteVirksomheter,
     };
 
     setUklassifisertInntekt(oppdatertUklassifisertInntekt);
     setInntektEndret(true);
   }
 
-  function slettVirksomhet() {
-    var oppdatertKontekstVirksomheter = uklassifisertInntekt.virksomheter.filter(
-      (v) => virksomhet.virksomhetsnummer !== v.virksomhetsnummer
+  function fjernHeleVirksomhet(virksomhetsnummer: string) {
+    // Filtrer ut den spesifikke virksomheten fra uklassifisertInntekt
+    var oppdatertVirksomheter = uklassifisertInntekt.virksomheter.filter(
+      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer
     );
 
+    // Oppdater hele uklassifisertInntekt med de oppdaterte virksomhetene
+    // Dette vil fjerne hele virksomheten fra listen
     setUklassifisertInntekt({
       ...uklassifisertInntekt,
-      virksomheter: oppdatertKontekstVirksomheter,
+      virksomheter: oppdatertVirksomheter,
     });
 
     setInntektEndret(true);
   }
 
   return (
-    <>
-      {endring && <RedigerModal ref={ref} redigeringsData={endring} />}
-
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell scope="col">Inntektstype</Table.HeaderCell>
-            <Table.HeaderCell scope="col">Kilde</Table.HeaderCell>
-            <Table.HeaderCell scope="col" align="right">
-              <VirksomhetPeriodeHeader periodeNummer={1} periode={periode1} />
-            </Table.HeaderCell>
-            <Table.HeaderCell scope="col" align="right">
-              <VirksomhetPeriodeHeader periodeNummer={2} periode={periode2} />
-            </Table.HeaderCell>
-            <Table.HeaderCell scope="col" align="right">
-              <VirksomhetPeriodeHeader periodeNummer={3} periode={periode3} />
-            </Table.HeaderCell>
-            <Table.HeaderCell scope="col"></Table.HeaderCell>
+    <Table>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell scope="col">Inntektstype</Table.HeaderCell>
+          <Table.HeaderCell scope="col">Kilde</Table.HeaderCell>
+          <Table.HeaderCell scope="col" align="right">
+            <VirksomhetPeriodeHeader periodeNummer={1} periode={periode1} />
+          </Table.HeaderCell>
+          <Table.HeaderCell scope="col" align="right">
+            <VirksomhetPeriodeHeader periodeNummer={2} periode={periode2} />
+          </Table.HeaderCell>
+          <Table.HeaderCell scope="col" align="right">
+            <VirksomhetPeriodeHeader periodeNummer={3} periode={periode3} />
+          </Table.HeaderCell>
+          <Table.HeaderCell scope="col"></Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {gruppertinntektsbeskrivelser.map((virksomhetInntekt) => (
+          <Table.Row key={virksomhetInntekt.beskrivelse}>
+            <Table.DataCell>
+              {inntektTyperBeskrivelse.find((type) => type.key === virksomhetInntekt.beskrivelse)
+                ?.text || virksomhetInntekt.beskrivelse}
+            </Table.DataCell>
+            <Table.DataCell>{virksomhetInntekt.inntektskilde}</Table.DataCell>
+            <Table.DataCell align="right">
+              {formatterNorskTall(
+                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode1)
+              )}
+            </Table.DataCell>
+            <Table.DataCell align="right">
+              {formatterNorskTall(
+                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode2)
+              )}
+            </Table.DataCell>
+            <Table.DataCell align="right">
+              {formatterNorskTall(
+                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode3)
+              )}
+            </Table.DataCell>
+            <Table.DataCell align="right">
+              <HStack gap="1" justify="end">
+                <RedigerVirksomhetInntekt
+                  virksomhet={virksomhet}
+                  formDefaultValues={{
+                    beskrivelse: virksomhetInntekt.beskrivelse,
+                    inntektskilde: virksomhetInntekt.inntektskilde,
+                    inntekter: virksomhetInntekt.inntekter,
+                  }}
+                />
+                <Button
+                  variant="tertiary"
+                  size="small"
+                  icon={<TrashIcon />}
+                  onClick={() =>
+                    gruppertinntektsbeskrivelser.length === 1
+                      ? fjernHeleVirksomhet(virksomhet.virksomhetsnummer)
+                      : fjernEnInntektBeskrivelfraFraVirksomhet(
+                          virksomhetInntekt.beskrivelse,
+                          virksomhet.virksomhetsnummer
+                        )
+                  }
+                />
+              </HStack>
+            </Table.DataCell>
           </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {gruppertinntektTyperBeskrivelse.map((inntekt) => (
-            <Table.Row key={inntekt.beskrivelse}>
-              <Table.DataCell>
-                {inntektTyperBeskrivelse.find((type) => type.key === inntekt.beskrivelse)?.text ||
-                  inntekt.beskrivelse}
-              </Table.DataCell>
-              <Table.DataCell>{inntekt.inntektskilde}</Table.DataCell>
-              <Table.DataCell align="right">
-                {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode1))}
-              </Table.DataCell>
-              <Table.DataCell align="right">
-                {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode2))}
-              </Table.DataCell>
-              <Table.DataCell align="right">
-                {formatterNorskTall(beregnTotalInntektForEnPeriode(inntekt.inntekter, periode3))}
-              </Table.DataCell>
-              <Table.DataCell align="right">
-                <HStack gap="1" justify="end">
-                  <Button
-                    variant="tertiary"
-                    size="small"
-                    icon={<NotePencilIcon />}
-                    onClick={() => {
-                      setEndring({
-                        virksomhetsnummer: virksomhet.virksomhetsnummer,
-                        beskrivelse: inntekt.beskrivelse,
-                        inntektskilde: erPrivatPerson ? "NATURLIG_IDENT" : "ORGANISASJON",
-                      });
-                    }}
-                  />
-                  <Button
-                    variant="tertiary"
-                    size="small"
-                    icon={<TrashIcon />}
-                    onClick={() =>
-                      gruppertinntektTyperBeskrivelse.length > 1
-                        ? fjernInntekt(inntekt.beskrivelse)
-                        : slettVirksomhet()
-                    }
-                  />
-                </HStack>
-              </Table.DataCell>
-            </Table.Row>
-          ))}
+        ))}
 
-          <Table.Row>
-            <Table.DataCell className="bold">Totalt</Table.DataCell>
-            <Table.DataCell className="bold"></Table.DataCell>
-            <Table.DataCell className="bold" align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode1))}
-            </Table.DataCell>
-            <Table.DataCell className="bold" align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode2))}
-            </Table.DataCell>
-            <Table.DataCell className="bold" align="right">
-              {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode3))}
-            </Table.DataCell>
-            <Table.DataCell></Table.DataCell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
-    </>
+        <Table.Row>
+          <Table.DataCell className="bold">Totalt</Table.DataCell>
+          <Table.DataCell className="bold"></Table.DataCell>
+          <Table.DataCell className="bold" align="right">
+            {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode1))}
+          </Table.DataCell>
+          <Table.DataCell className="bold" align="right">
+            {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode2))}
+          </Table.DataCell>
+          <Table.DataCell className="bold" align="right">
+            {formatterNorskTall(beregnTotalInntektForEnPeriode(virksomhet.inntekter, periode3))}
+          </Table.DataCell>
+          <Table.DataCell></Table.DataCell>
+        </Table.Row>
+      </Table.Body>
+    </Table>
   );
 }
