@@ -11,6 +11,7 @@ import {
 } from "~/utils/inntekt.util";
 import { RedigerVirksomhetInntekt } from "./RedigerVirksomhetInntekt";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
+import { erPersonnummer } from "~/utils/generell.util";
 
 interface IProps {
   virksomhet: IVirksomhet;
@@ -129,7 +130,9 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   virksomhet={virksomhet}
                   formDefaultValues={{
                     beskrivelse: virksomhetInntekt.beskrivelse,
-                    inntektskilde: virksomhetInntekt.inntektskilde,
+                    inntektskilde: erPersonnummer(virksomhet.virksomhetsnummer)
+                      ? "NATURLIG_IDENT"
+                      : "ORGANISASJON",
                     inntekter: virksomhetInntekt.inntekter,
                   }}
                 />

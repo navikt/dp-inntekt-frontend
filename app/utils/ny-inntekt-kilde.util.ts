@@ -25,10 +25,13 @@ export function lagInntektListe(
   identifikator: string,
   inntekter: IFormInntekt[]
 ): IInntekt[] {
-  const virksomhet = { aktoerType: inntektskilde, identifikator: identifikator };
+  const virksomhet = {
+    aktoerType: inntektskilde,
+    identifikator: identifikator,
+  };
 
   const inntektsmottaker = {
-    aktoerType: erPersonnummer(identifikator) ? "NATURLIG_IDENT" : "ORGANISASJON",
+    aktoerType: "NATURLIG_IDENT",
     identifikator: identifikator,
   };
 
