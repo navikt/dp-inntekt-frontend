@@ -36,7 +36,7 @@ export function InntektPerioderOppsummering() {
   return (
     <Box padding="2">
       <VStack>
-        <BodyShort>Inntektsperiode</BodyShort>
+        <BodyShort weight="semibold">Inntektsperiode</BodyShort>
         <BodyShort spacing>
           {formaterNorskDato(uklassifisertInntekt.periode.fraOgMed)} -{" "}
           {formaterNorskDato(uklassifisertInntekt.periode.tilOgMed)}

@@ -171,7 +171,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
   }
 
   const identifikatorLabel =
-    inntektsKilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
+    inntektsKilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Organisasjonsnummer";
 
   return (
     <div className="mt-6">
@@ -194,7 +194,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                   readOnly
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
-                  <Radio value="NATURLIG_IDENT">Privat person</Radio>
+                  <Radio value="NATURLIG_IDENT">Privatperson</Radio>
                 </RadioGroup>
                 <TextField
                   {...form.getInputProps("identifikator")}
@@ -229,7 +229,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                 </Select>
               </VStack>
               <VStack gap="2">
-                <Label size="small">Periode</Label>
+                <Label size="small">Utbetalingsperiode</Label>
                 <InntektPerioder perioder={genertePerioder} form={form} />
                 <div className={styles.errorSummary}>
                   {aktiveInntektsManeder.map(

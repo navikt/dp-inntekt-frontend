@@ -228,7 +228,7 @@ export default function InntektsKildeModal({
   }
 
   const identifikatorLabel =
-    inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Virksomhetsnummer";
+    inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Organisasjonsnummer";
 
   return (
     <div>
@@ -259,7 +259,7 @@ export default function InntektsKildeModal({
                   disabled={!erNyVirksomhet}
                 >
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
-                  <Radio value="NATURLIG_IDENT">Privat person</Radio>
+                  <Radio value="NATURLIG_IDENT">Privatperson</Radio>
                 </RadioGroup>
                 <TextField
                   {...form.getInputProps("identifikator")}
@@ -300,7 +300,7 @@ export default function InntektsKildeModal({
                 </Select>
               </VStack>
               <VStack gap="2">
-                <Label size="small">Periode</Label>
+                <Label size="small">Utbetalingsperiode</Label>
                 <InntektPerioder perioder={genertePerioder} form={form} />
                 <div className={styles.errorSummary}>
                   {aktiveInntektsManeder.map(

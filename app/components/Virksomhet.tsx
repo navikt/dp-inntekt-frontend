@@ -57,11 +57,11 @@ export default function Virksomhet({ virksomhet }: IProps) {
         <ExpansionCard.Description>
           <VStack gap="4">
             <InntektInfo
-              overskrift={erPrivatPerson ? "Personnummer" : "Organisasjonsnummer"}
+              overskrift={erPrivatPerson ? "Fødselsnummer" : "Organisasjonsnummer"}
               verdi={erPrivatPerson ? maskerePersonnummer(virksomhetsnummer) : virksomhetsnummer}
             />
             <InntektInfo
-              overskrift="Periode"
+              overskrift="Utbetalingsperiode"
               verdi={`${formaterNorskDato(periode.fraOgMed)} - ${formaterNorskDato(
                 periode.tilOgMed
               )}`}
