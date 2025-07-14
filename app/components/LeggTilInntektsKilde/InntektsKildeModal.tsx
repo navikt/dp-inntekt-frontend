@@ -210,7 +210,7 @@ export default function InntektsKildeModal({
       const nyVirksomhet: IVirksomhet = {
         avvikListe: [],
         inntekter: inntekter,
-        virksomhetsnavn: identifikator, // Todo: Sett riktig navn når backend er klar
+        virksomhetsnavn: virksomhetsnavn ?? identifikator,
         virksomhetsnummer: identifikator,
         totalBelop: finnTotalBelop(inntekter),
         periode: finnTidligsteOgSenesteDato(inntekter),
