@@ -189,21 +189,11 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
           <Modal.Body>
             <VStack gap="4">
               <VStack gap="4" className={styles.inntektInputContainer}>
-                <RadioGroup
-                  {...form.getInputProps("inntektskilde")}
-                  size="small"
-                  legend="Type inntektskilde"
-                  readOnly
-                >
+                <RadioGroup name="inntektskilde" size="small" legend="Type inntektskilde" readOnly>
                   <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
                   <Radio value="NATURLIG_IDENT">Privatperson</Radio>
                 </RadioGroup>
-                <TextField
-                  {...form.getInputProps("identifikator")}
-                  label={identifikatorLabel}
-                  size="small"
-                  readOnly
-                />
+                <TextField name="identifikator" label={identifikatorLabel} size="small" readOnly />
                 {inntektsKilde === "ORGANISASJON" && virksomhetsnavn && (
                   <div>
                     <p className="bold">Virksomhet</p>

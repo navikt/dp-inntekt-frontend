@@ -225,7 +225,6 @@ export default function InntektsKildeModal({
         virksomheter: oppdaterteVirksomheter,
       });
 
-      console.log("Kjør reset");
       form.resetForm();
     }
   }
@@ -255,7 +254,7 @@ export default function InntektsKildeModal({
             <VStack gap="4">
               <VStack gap="4" className={styles.inntektInputContainer}>
                 <RadioGroup
-                  {...form.getInputProps("inntektskilde")}
+                  name="inntektskilde"
                   size="small"
                   error={form.error("inntektskilde")}
                   legend="Type inntektskilde"
@@ -265,7 +264,7 @@ export default function InntektsKildeModal({
                   <Radio value="NATURLIG_IDENT">Privatperson</Radio>
                 </RadioGroup>
                 <TextField
-                  {...form.getInputProps("identifikator")}
+                  name="identifikator"
                   label={identifikatorLabel}
                   size="small"
                   disabled={!erNyVirksomhet}
@@ -282,7 +281,7 @@ export default function InntektsKildeModal({
                   </div>
                 )}
                 <Select
-                  {...form.getInputProps("beskrivelse")}
+                  name="beskrivelse"
                   label="Inntektstype"
                   size="small"
                   error={form.error("beskrivelse")}

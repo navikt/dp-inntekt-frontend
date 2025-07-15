@@ -22,7 +22,7 @@ export function InntektPerioder({ perioder, form }: IProps) {
           <div className={styles.manederContainer}>
             {periode.maneder.map((month) => (
               <TextField
-                {...form.getInputProps(month.dato)}
+                name={month.dato}
                 className={styles.maaned}
                 key={month.dato}
                 label={capitalize(format(month.dato, "MMMM", { locale: nb }))}
