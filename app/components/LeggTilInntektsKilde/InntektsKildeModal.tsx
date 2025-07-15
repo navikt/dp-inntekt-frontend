@@ -87,7 +87,9 @@ export default function InntektsKildeModal({
   useEffect(() => {
     if (erPersonnummer(identifikator)) {
       setVirksomhetsnavn(undefined);
-    } else {
+    }
+
+    if (identifikator?.length === 9 && inntektskilde === "ORGANISASJON") {
       hentVirksomhetsNavn();
     }
   }, [identifikator]);
@@ -223,6 +225,7 @@ export default function InntektsKildeModal({
         virksomheter: oppdaterteVirksomheter,
       });
 
+      console.log("Kjør reset");
       form.resetForm();
     }
   }
