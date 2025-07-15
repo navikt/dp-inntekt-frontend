@@ -49,6 +49,15 @@ export default function InntektsKildeModal({
   );
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
 
+  // Dette er en workaround for å fikse en feil vi ikke forstår helt
+  // Hvordan gjenskaper man denne feilen?
+  // Legg inn en ny inntektskilder som privat person
+  // Label på identifikator endres til "Fødselsnummer"
+  // Fyll ut inntekstype og inntekter og trykk "Sett inn"
+  // Legg til en ny inntektskilde som privat person en gang til
+  // Label på identifikator blir fortsatt "Organisasjonsnummer"
+  const [showForms, setShowForms] = useState(false);
+
   const form = useForm({
     submitSource: "state",
     validationBehaviorConfig: {
@@ -183,6 +192,7 @@ export default function InntektsKildeModal({
       });
 
       form.resetForm();
+      setShowForms(false);
     }
   }
 
@@ -202,7 +212,6 @@ export default function InntektsKildeModal({
     if (!harFeil && minstEnInntektFyltUt) {
       setInntektEndret(true);
       setManglerInntekt(false);
-      ref?.current?.close();
 
       const beskrivelse = form.value("beskrivelse");
       const inntektskilde = form.value("inntektskilde");
@@ -225,8 +234,9 @@ export default function InntektsKildeModal({
         virksomheter: oppdaterteVirksomheter,
       });
 
-      console.log("Kjør reset");
+      ref?.current?.close();
       form.resetForm();
+      setShowForms(false);
     }
   }
 
@@ -239,7 +249,10 @@ export default function InntektsKildeModal({
         variant="primary"
         size={erNyVirksomhet ? "medium" : "small"}
         icon={<PlusCircleIcon aria-hidden />}
-        onClick={() => ref.current?.showModal()}
+        onClick={() => {
+          ref.current?.showModal();
+          setShowForms(true);
+        }}
       >
         {erNyVirksomhet ? "Legg til inntektskilde" : "Legg til inntekt"}
       </Button>
@@ -250,92 +263,94 @@ export default function InntektsKildeModal({
         width={"1150px"}
         size="small"
       >
-        <form {...form.getFormProps()}>
-          <Modal.Body>
-            <VStack gap="4">
-              <VStack gap="4" className={styles.inntektInputContainer}>
-                <RadioGroup
-                  {...form.getInputProps("inntektskilde")}
-                  size="small"
-                  error={form.error("inntektskilde")}
-                  legend="Type inntektskilde"
-                  disabled={!erNyVirksomhet}
-                >
-                  <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
-                  <Radio value="NATURLIG_IDENT">Privatperson</Radio>
-                </RadioGroup>
-                <TextField
-                  {...form.getInputProps("identifikator")}
-                  label={identifikatorLabel}
-                  size="small"
-                  disabled={!erNyVirksomhet}
-                  error={
-                    form.error("identifikator")
-                      ? `${identifikatorLabel} ${form.error("identifikator")}`
-                      : undefined
-                  }
-                />
-                {inntektskilde === "ORGANISASJON" && virksomhetsnavn && (
-                  <div>
-                    <p className="bold">Virksomhet</p>
-                    <p>{virksomhetsnavn}</p>
-                  </div>
-                )}
-                <Select
-                  {...form.getInputProps("beskrivelse")}
-                  label="Inntektstype"
-                  size="small"
-                  error={form.error("beskrivelse")}
-                >
-                  <option value="">Velg inntekstype</option>
-                  {INNTEKTSBESKRIVELSER.map((beskrivelse) => (
-                    <option
-                      value={beskrivelse.key}
-                      key={beskrivelse.key}
-                      disabled={
-                        !!eksistertInntektsbeskrivelser?.length &&
-                        eksistertInntektsbeskrivelser.includes(beskrivelse.key)
-                      }
-                    >
-                      {beskrivelse.text}
-                    </option>
-                  ))}
-                </Select>
-              </VStack>
-              <VStack gap="2">
-                <Label size="small">Utbetalingsperiode</Label>
-                <InntektPerioder perioder={genertePerioder} form={form} />
-                <div className={styles.errorSummary}>
-                  {aktiveInntektsManeder.map(
-                    (felt) =>
-                      form.error(felt) && (
-                        <div className="mt-2" key={felt}>
-                          Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
-                        </div>
-                      )
+        {showForms && (
+          <form {...form.getFormProps()}>
+            <Modal.Body>
+              <VStack gap="4">
+                <VStack gap="4" className={styles.inntektInputContainer}>
+                  <RadioGroup
+                    {...form.getInputProps("inntektskilde")}
+                    size="small"
+                    error={form.error("inntektskilde")}
+                    legend="Type inntektskilde"
+                    disabled={!erNyVirksomhet}
+                  >
+                    <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
+                    <Radio value="NATURLIG_IDENT">Privatperson</Radio>
+                  </RadioGroup>
+                  <TextField
+                    {...form.getInputProps("identifikator")}
+                    label={identifikatorLabel}
+                    size="small"
+                    disabled={!erNyVirksomhet}
+                    error={
+                      form.error("identifikator")
+                        ? `${identifikatorLabel} ${form.error("identifikator")}`
+                        : undefined
+                    }
+                  />
+                  {inntektskilde === "ORGANISASJON" && virksomhetsnavn && (
+                    <div>
+                      <p className="bold">Virksomhet</p>
+                      <p>{virksomhetsnavn}</p>
+                    </div>
                   )}
-                </div>
-                {manglerInntekt && !minstEnInntektFyltUt && (
+                  <Select
+                    {...form.getInputProps("beskrivelse")}
+                    label="Inntektstype"
+                    size="small"
+                    error={form.error("beskrivelse")}
+                  >
+                    <option value="">Velg inntekstype</option>
+                    {INNTEKTSBESKRIVELSER.map((beskrivelse) => (
+                      <option
+                        value={beskrivelse.key}
+                        key={beskrivelse.key}
+                        disabled={
+                          !!eksistertInntektsbeskrivelser?.length &&
+                          eksistertInntektsbeskrivelser.includes(beskrivelse.key)
+                        }
+                      >
+                        {beskrivelse.text}
+                      </option>
+                    ))}
+                  </Select>
+                </VStack>
+                <VStack gap="2">
+                  <Label size="small">Utbetalingsperiode</Label>
+                  <InntektPerioder perioder={genertePerioder} form={form} />
                   <div className={styles.errorSummary}>
-                    Du må legge til inntekt for minst én måned
+                    {aktiveInntektsManeder.map(
+                      (felt) =>
+                        form.error(felt) && (
+                          <div className="mt-2" key={felt}>
+                            Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
+                          </div>
+                        )
+                    )}
                   </div>
-                )}
+                  {manglerInntekt && !minstEnInntektFyltUt && (
+                    <div className={styles.errorSummary}>
+                      Du må legge til inntekt for minst én måned
+                    </div>
+                  )}
+                </VStack>
               </VStack>
-            </VStack>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              type="button"
-              size="small"
-              onClick={() => (erNyVirksomhet ? settInn() : settInnNyInntekt())}
-            >
-              Sett inn
-            </Button>
-            <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
-              Avbryt
-            </Button>
-          </Modal.Footer>
-        </form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                type="button"
+                size="small"
+                onClick={() => (erNyVirksomhet ? settInn() : settInnNyInntekt())}
+              >
+                Sett inn
+              </Button>
+              <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
+                Avbryt
+              </Button>
+            </Modal.Footer>
+          </form>
+        )}
       </Modal>
     </div>
   );
