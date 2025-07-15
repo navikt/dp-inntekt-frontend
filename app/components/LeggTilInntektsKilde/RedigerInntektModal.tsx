@@ -173,6 +173,9 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
   const identifikatorLabel =
     inntektsKilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Organisasjonsnummer";
 
+  const inntekstTypeTekst =
+    INNTEKTSBESKRIVELSER.find((type) => type.key === form.value("beskrivelse"))?.text || "";
+
   return (
     <div className="mt-6">
       <Modal
@@ -189,7 +192,6 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                 <RadioGroup
                   {...form.getInputProps("inntektskilde")}
                   size="small"
-                  error={form.error("inntektskilde")}
                   legend="Type inntektskilde"
                   readOnly
                 >
@@ -201,11 +203,6 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                   label={identifikatorLabel}
                   size="small"
                   readOnly
-                  error={
-                    form.error("identifikator")
-                      ? `${identifikatorLabel} ${form.error("identifikator")}`
-                      : undefined
-                  }
                 />
                 {inntektsKilde === "ORGANISASJON" && virksomhetsnavn && (
                   <div>
@@ -213,20 +210,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                     <p>{virksomhetsnavn}</p>
                   </div>
                 )}
-                <Select
-                  {...form.getInputProps("beskrivelse")}
-                  label="Inntektstype"
-                  size="small"
-                  error={form.error("beskrivelse")}
-                  readOnly
-                >
-                  <option value="">Velg inntekstype</option>
-                  {INNTEKTSBESKRIVELSER.map((inntektType) => (
-                    <option value={inntektType.key} key={inntektType.key}>
-                      {inntektType.text}
-                    </option>
-                  ))}
-                </Select>
+                <TextField label="Inntektstype" value={inntekstTypeTekst} size="small" readOnly />
               </VStack>
               <VStack gap="2">
                 <Label size="small">Utbetalingsperiode</Label>
