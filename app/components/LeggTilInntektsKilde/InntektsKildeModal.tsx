@@ -44,7 +44,6 @@ export default function InntektsKildeModal({
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
-  const [eksisterendeVirksomhetVarsel, setEksisterendeVirksomhetVarsel] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(
     erNyVirksomhet ? undefined : virksomhetsnummer
   );
