@@ -17,11 +17,12 @@ import { erEnKvinne } from "~/utils/generell.util";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
+import {HentInntektPaNyttModal} from "~/components/HentInntektPaNyttModal";
 
 export function Personalia() {
   const params = useParams();
   const { state } = useNavigation();
-  const { inntektEndret, globalModalRef, uklassifisertInntekt, setInntektEndret } = useInntekt();
+  const { inntektEndret, globalModalRef, uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
   const ref = useRef<HTMLDialogElement>(null);
 
   if (!params.inntektId) {
@@ -71,6 +72,7 @@ export function Personalia() {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
+          <HentInntektPaNyttModal inntektId={params.inntektId} state={state}/>
           {inntektEndret && (
             <Button
               size="small"

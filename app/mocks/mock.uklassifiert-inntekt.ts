@@ -35,6 +35,12 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
   periode: inntektsperiode,
 };
 
+export const mockUncachedUklassifisertInntekt: IUklassifisertInntekt = {
+  virksomheter: [kiwiVirksomhet],
+  mottaker: mottaker,
+  periode: inntektsperiode,
+}
+
 updateTotalBelop(mockUklassifisertInntekt.virksomheter);
 
 function generateMockInntektDataFromPeriode(periode: IPeriode, inntektstype: string): IInntekt[] {

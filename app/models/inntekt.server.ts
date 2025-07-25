@@ -43,3 +43,18 @@ export async function hentVirksomhetsNavn(virksomhetsnummer: string) {
     },
   });
 }
+
+export async function hentUncachedInntekt(request: Request, inntektId: string) {
+  const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/uncached/${inntektId}`;
+  const onBehalfOfToken = await getDPInntektOboToken(request);
+
+  return await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${onBehalfOfToken}`,
+      connection: "keep-alive",
+    },
+  });
+}
