@@ -19,6 +19,8 @@ interface IInntektContextValue {
   uklassifisertInntekt: IUklassifisertInntekt;
   setUklassifisertInntekt: (value: IUklassifisertInntekt) => void;
   globalModalRef: RefObject<HTMLDialogElement | null> | undefined;
+  hentetOppdatertOpplysninger: boolean;
+  setHentetOppdatertOpplysninger: (value: boolean) => void;
 }
 
 export const InntektContext = createContext<IInntektContextValue | undefined>(undefined);
@@ -28,6 +30,7 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
     props.uklassifisertInntekt
   );
   const [inntektEndret, setInntektEndret] = useState(false);
+  const [hentetOppdatertOpplysninger, setHentetOppdatertOpplysninger] = useState(false);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
   useEffect(() => {
@@ -53,6 +56,8 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
         setInntektEndret,
         uklassifisertInntekt,
         setUklassifisertInntekt,
+        hentetOppdatertOpplysninger,
+        setHentetOppdatertOpplysninger
       }}
     >
       {props.children}

@@ -22,7 +22,7 @@ import {HentInntektPaNyttModal} from "~/components/HentInntektPaNyttModal";
 export function Personalia() {
   const params = useParams();
   const { state } = useNavigation();
-  const { inntektEndret, globalModalRef, uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const { inntektEndret, globalModalRef, uklassifisertInntekt, setHentetOppdatertOpplysninger, setInntektEndret } = useInntekt();
   const ref = useRef<HTMLDialogElement>(null);
 
   if (!params.inntektId) {
@@ -42,6 +42,7 @@ export function Personalia() {
       form.resetForm();
       ref.current?.close();
       setInntektEndret(false);
+      setHentetOppdatertOpplysninger(false);
     },
   });
 
@@ -72,7 +73,7 @@ export function Personalia() {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
-          <HentInntektPaNyttModal inntektId={params.inntektId} state={state}/>
+          <HentInntektPaNyttModal inntektId={params.inntektId}/>
           {inntektEndret && (
             <Button
               size="small"

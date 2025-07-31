@@ -1,35 +1,31 @@
 import {BodyLong, Button, Modal} from "@navikt/ds-react";
 import {useInntekt} from "~/context/inntekt-context";
 import {ArrowCirclepathIcon} from "@navikt/aksel-icons";
-import {useRef} from "react";
+import {useRef, useState} from "react";
 
 interface HentInntektPaNyttModalProps {
     inntektId: string,
-    state?: "idle" | "loading" | "submitting"
 }
 
-export function HentInntektPaNyttModal({inntektId, state}: HentInntektPaNyttModalProps) {
-    const {setUklassifisertInntekt, setInntektEndret} = useInntekt();
+export function HentInntektPaNyttModal({inntektId}: HentInntektPaNyttModalProps) {
+    const {setUklassifisertInntekt, setInntektEndret, setHentetOppdatertOpplysninger} = useInntekt();
     const ref = useRef<HTMLDialogElement>(null);
-    var oppdateringStatus = "klar"
     const heading = "Du er i ferd med å hente inntekt på nytt fra A-Inntekt"
-
+    const [laster, setLaster] = useState(false);
 
     async function hentUncachedInntekt() {
-
-        oppdateringStatus = "laster"
-        const response = await fetch(`/api/uncached/${inntektId}`, {
+        setLaster(true);
+        await fetch(`/api/uncached/${inntektId}`, {
             method: "GET",
-        });
-
-        if (!response.ok) {
-            throw new Error("Feil ved henting av oppdatert inntekt");
-        }
-        oppdateringStatus = "klar"
-
-        const data = await response.json();
-        setUklassifisertInntekt(data)
-        setInntektEndret(true);
+        })
+            .then(response => response.json())
+            .then(data => setUklassifisertInntekt(data))
+            .finally(() => {
+                setLaster(false)
+                setInntektEndret(true);
+                setHentetOppdatertOpplysninger(true);
+                ref?.current?.close();
+            })
     }
 
     const description = "Er du sikker på at du vil overskrive endringene?"
@@ -38,8 +34,8 @@ export function HentInntektPaNyttModal({inntektId, state}: HentInntektPaNyttModa
             <Button type="button"
                     size="small"
                     icon={<ArrowCirclepathIcon/>}
-                    loading={oppdateringStatus === "laster"}
-                    onClick={() => ref.current?.showModal()}>
+                    onClick={() => ref.current?.showModal()}
+                    >
                 Hent inntekt på nytt
             </Button>
 
@@ -59,10 +55,10 @@ export function HentInntektPaNyttModal({inntektId, state}: HentInntektPaNyttModa
                         type="button"
                         onClick={() => {
                             hentUncachedInntekt();
-                            ref?.current?.close();
                         }}
                         variant="primary"
                         size="small"
+                        loading={laster}
                     >
                         Bekreft
                     </Button>
