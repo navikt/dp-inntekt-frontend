@@ -6,24 +6,16 @@ export function GlobalModal() {
   const loaderData = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const { globalModalRef, inntektEndret, setUklassifisertInntekt, setInntektEndret } = useInntekt();
 
-  const heading = inntektEndret
-    ? "Du er i ferd med å nullstille endringene"
-    : "Du har ingen endring å lagre";
-
-  const description = inntektEndret
-    ? "Er du sikker på at du vil nullstille endringene?"
-    : "Du har ikke gjort noen endringer som kan lagres.";
-
   return (
     <Modal
       ref={globalModalRef}
       header={{
-        heading: heading,
+        heading: "Du har ingen endring å lagre",
       }}
       width="medium"
     >
       <Modal.Body>
-        <BodyLong>{description}</BodyLong>
+        <BodyLong>Du har ikke gjort noen endringer som kan lagres.</BodyLong>
       </Modal.Body>
 
       {inntektEndret && (

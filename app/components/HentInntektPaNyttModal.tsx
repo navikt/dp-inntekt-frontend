@@ -8,7 +8,7 @@ interface HentInntektPaNyttModalProps {
 }
 
 export function HentInntektPaNyttModal({inntektId}: HentInntektPaNyttModalProps) {
-    const {setUklassifisertInntekt, setInntektEndret, setHentetOppdatertOpplysninger} = useInntekt();
+    const {setUklassifisertInntekt, setInntektEndret} = useInntekt();
     const ref = useRef<HTMLDialogElement>(null);
     const heading = "Du er i ferd med å hente inntekt på nytt fra A-Inntekt"
     const [laster, setLaster] = useState(false);
@@ -23,12 +23,10 @@ export function HentInntektPaNyttModal({inntektId}: HentInntektPaNyttModalProps)
             .finally(() => {
                 setLaster(false)
                 setInntektEndret(true);
-                setHentetOppdatertOpplysninger(true);
                 ref?.current?.close();
             })
     }
 
-    const description = "Er du sikker på at du vil overskrive endringene?"
     return (
         <div>
             <Button type="button"
@@ -48,7 +46,7 @@ export function HentInntektPaNyttModal({inntektId}: HentInntektPaNyttModalProps)
                 width="medium"
             >
                 <Modal.Body>
-                    <BodyLong>{description}</BodyLong>
+                    <BodyLong>Å hente inntekt på nytt fra A-inntekt vil føre til at alle manuelle endringer blir slettet. Er du sikker på at du vil overskrive endringene?</BodyLong>
                 </Modal.Body>
 
                 <Modal.Footer>

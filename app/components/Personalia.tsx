@@ -23,7 +23,7 @@ import {HentInntektPaNyttModal} from "~/components/HentInntektPaNyttModal";
 export function Personalia() {
   const params = useParams();
   const { state } = useNavigation();
-  const { inntektEndret, globalModalRef, uklassifisertInntekt, setHentetOppdatertOpplysninger, setInntektEndret } = useInntekt();
+  const { inntektEndret, globalModalRef, uklassifisertInntekt, setInntektEndret } = useInntekt();
   const ref = useRef<HTMLDialogElement>(null);
 
   if (!params.inntektId) {
@@ -43,7 +43,6 @@ export function Personalia() {
       form.resetForm();
       ref.current?.close();
       setInntektEndret(false);
-      setHentetOppdatertOpplysninger(false);
     },
   });
 
@@ -89,19 +88,7 @@ export function Personalia() {
             <Detail><strong> Sist hentet fra A-Inntekt:</strong> {timestamp}</Detail>
           </div>
           <HentInntektPaNyttModal inntektId={params.inntektId}/>
-          {inntektEndret && (
-            <Button
-              size="small"
-              variant="secondary"
-              icon={<ArrowCirclepathIcon title="a11y-title" fontSize="1.2rem" />}
-              type="submit"
-              onClick={() => {
-                globalModalRef?.current?.showModal();
-              }}
-            >
-              Nullstill endringer
-            </Button>
-          )}
+
           <Button
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
