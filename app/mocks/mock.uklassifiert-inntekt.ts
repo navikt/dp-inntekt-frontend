@@ -33,12 +33,14 @@ export const mockUklassifisertInntekt: IUklassifisertInntekt = {
   virksomheter: [kiwiVirksomhet, privatPerson],
   mottaker: mottaker,
   periode: inntektsperiode,
+  timestamp: "2023-10-01T12:00:00Z",
 };
 
 export const mockUncachedUklassifisertInntekt: IUklassifisertInntekt = {
   virksomheter: [kiwiVirksomhet],
   mottaker: mottaker,
   periode: inntektsperiode,
+  timestamp: "2023-10-01T12:00:00Z",
 }
 
 updateTotalBelop(mockUklassifisertInntekt.virksomheter);

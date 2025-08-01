@@ -1,6 +1,6 @@
 import {BodyLong, Button, Modal} from "@navikt/ds-react";
 import {useInntekt} from "~/context/inntekt-context";
-import {ArrowCirclepathIcon} from "@navikt/aksel-icons";
+import {ArrowsCirclepathIcon} from "@navikt/aksel-icons";
 import {useRef, useState} from "react";
 
 interface HentInntektPaNyttModalProps {
@@ -33,7 +33,8 @@ export function HentInntektPaNyttModal({inntektId}: HentInntektPaNyttModalProps)
         <div>
             <Button type="button"
                     size="small"
-                    icon={<ArrowCirclepathIcon/>}
+                    variant="secondary"
+                    icon={<ArrowsCirclepathIcon />}
                     onClick={() => ref.current?.showModal()}
                     >
                 Hent inntekt på nytt

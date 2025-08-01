@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   CopyButton,
+  Detail,
   HStack,
   Modal,
   Spacer,
@@ -59,6 +60,17 @@ export function Personalia() {
     }
   }, [uklassifisertInntekt, begrunnelse]);
 
+
+  const timestamp = new Date(uklassifisertInntekt.timestamp!!)
+    .toLocaleString("no-NO", {
+      timeZone: "Europe/Oslo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
       <HStack gap="4" wrap={false} align="center">
@@ -73,6 +85,9 @@ export function Personalia() {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
+          <div>
+            <Detail><strong> Sist hentet fra A-Inntekt:</strong> {timestamp}</Detail>
+          </div>
           <HentInntektPaNyttModal inntektId={params.inntektId}/>
           {inntektEndret && (
             <Button
