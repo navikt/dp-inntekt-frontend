@@ -2,6 +2,7 @@ export interface IUklassifisertInntekt {
   virksomheter: IVirksomhet[];
   mottaker: IMottaker;
   periode: IPeriode;
+  timestamp: string | null;
 }
 
 export interface IVirksomhet {
