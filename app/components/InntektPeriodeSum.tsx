@@ -1,6 +1,6 @@
 import { BodyShort, Box, Table, VStack } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
-import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
+import {formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 import {
   beregnTotalInntektForEnPeriode,
   delOppPeriodeTilTrePerioder,
