@@ -1,30 +1,33 @@
-import {BodyLong, Button, Modal} from "@navikt/ds-react";
-import {useInntekt} from "~/context/inntekt-context";
-import {ArrowsCirclepathIcon} from "@navikt/aksel-icons";
-import {useRef, useState} from "react";
+import { BodyLong, Button, Modal } from "@navikt/ds-react";
+import { useInntekt } from "~/context/inntekt-context";
+import { ArrowsCirclepathIcon } from "@navikt/aksel-icons";
+import { useRef, useState } from "react";
 
 interface HentInntektPaNyttModalProps {
     inntektId: string,
 }
 
 export function HentInntektPaNyttModal({inntektId}: HentInntektPaNyttModalProps) {
-    const {setUklassifisertInntekt, setInntektEndret} = useInntekt();
+    const { setUklassifisertInntekt, setInntektEndret } = useInntekt();
     const ref = useRef<HTMLDialogElement>(null);
     const heading = "Du er i ferd med å hente inntekt på nytt fra A-Inntekt"
     const [laster, setLaster] = useState(false);
 
     async function hentUncachedInntekt() {
         setLaster(true);
-        await fetch(`/api/uncached/${inntektId}`, {
-            method: "GET",
-        })
-            .then(response => response.json())
-            .then(data => setUklassifisertInntekt(data))
-            .finally(() => {
-                setLaster(false)
-                setInntektEndret(true);
-                ref?.current?.close();
-            })
+        const response = await fetch(`/api/uncached/${inntektId}`)
+
+        if(!response.ok) {
+            console.error("Kunne ikke hente inntekt fra A-Inntekt på nytt: ", response);
+        } else {
+            const data = await response.json()
+            setUklassifisertInntekt(data)
+
+            setLaster(false)
+            setInntektEndret(true);
+            ref?.current?.close();
+        }
+
     }
 
     return (

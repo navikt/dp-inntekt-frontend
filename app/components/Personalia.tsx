@@ -18,7 +18,7 @@ import { erEnKvinne } from "~/utils/generell.util";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-import {HentInntektPaNyttModal} from "~/components/HentInntektPaNyttModal";
+import { HentInntektPaNyttModal } from "~/components/HentInntektPaNyttModal";
 
 export function Personalia() {
   const params = useParams();
@@ -84,9 +84,7 @@ export function Personalia() {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
-          <div>
-            <Detail><strong> Sist hentet fra A-Inntekt:</strong> {timestamp}</Detail>
-          </div>
+          <Detail><strong> Sist hentet fra A-Inntekt:</strong> {timestamp}</Detail>
           <HentInntektPaNyttModal inntektId={params.inntektId}/>
 
           <Button
