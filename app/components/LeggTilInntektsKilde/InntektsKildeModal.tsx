@@ -28,6 +28,7 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
+import {idnr} from "@navikt/fnrvalidator";
 
 interface IProps {
   erNyVirksomhet: boolean;
@@ -49,6 +50,7 @@ export default function InntektsKildeModal({
   );
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
   const [duplikatIdentifikator, setDuplikatIdentifikator] = useState(false);
+  const [invalidIdentificator, setInvalidIdentificator] = useState(false);
 
   // Dette er en workaround for å fikse en feil vi ikke forstår helt
   // Hvordan gjenskaper man denne feilen?
@@ -95,8 +97,15 @@ export default function InntektsKildeModal({
   const identifikator = form.value("identifikator") as string;
 
   useEffect(() => {
-    if (erPersonnummer(identifikator)) {
-      setVirksomhetsnavn(undefined);
+    if (identifikator?.length === 11 && inntektskilde === "NATURLIG_IDENT") {
+      const validerIdNr = idnr(identifikator);
+      if(validerIdNr.status !== "valid") {
+        setVirksomhetsnavn(undefined);
+        setInvalidIdentificator(true);
+        form.error("identifikator");
+      } else {
+        setInvalidIdentificator(false)
+      }
     }
 
     if (identifikator?.length === 9 && inntektskilde === "ORGANISASJON") {
@@ -216,7 +225,7 @@ export default function InntektsKildeModal({
       return;
     }
 
-    if (!harFeil && minstEnInntektFyltUt  && !duplikatIdentifikator) {
+    if (!harFeil && minstEnInntektFyltUt  && !duplikatIdentifikator && !invalidIdentificator) {
       setInntektEndret(true);
       setManglerInntekt(false);
 
@@ -256,8 +265,11 @@ export default function InntektsKildeModal({
     }
 
     if (duplikatIdentifikator) {
-      form.error("identifikator")
       return `${identifikatorLabel} er allerede lagt til`;
+    }
+
+    if( invalidIdentificator) {
+      return `Ugyldig fødselsnummer`;
     }
 
     return undefined;
