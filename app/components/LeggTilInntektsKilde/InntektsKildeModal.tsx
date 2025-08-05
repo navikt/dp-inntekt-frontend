@@ -203,7 +203,7 @@ export default function InntektsKildeModal({
     }
   }
 
-  async function settInn() {
+  async function settInnNyInntektKilde() {
     const validering = await form.validate();
     const harFeil = Object.keys(validering).length > 0;
 
@@ -216,7 +216,7 @@ export default function InntektsKildeModal({
       return;
     }
 
-    if (!harFeil && minstEnInntektFyltUt) {
+    if (!harFeil && minstEnInntektFyltUt  && !duplikatIdentifikator) {
       setInntektEndret(true);
       setManglerInntekt(false);
 
@@ -256,6 +256,7 @@ export default function InntektsKildeModal({
     }
 
     if (duplikatIdentifikator) {
+      form.error("identifikator")
       return `${identifikatorLabel} er allerede lagt til`;
     }
 
@@ -356,7 +357,7 @@ export default function InntektsKildeModal({
               <Button
                 type="button"
                 size="small"
-                onClick={() => (erNyVirksomhet ? settInn() : settInnNyInntekt())}
+                onClick={() => (erNyVirksomhet ? settInnNyInntektKilde() : settInnNyInntekt())}
               >
                 Sett inn
               </Button>
