@@ -79,7 +79,6 @@ export default function InntektsKildeModal({
     };
   }
 
-  // Genererer inntektsperiode i inntekts modalen
   useEffect(() => {
     const generertePerioder = generereFirePerioder(inntekt.periode);
     setGenerertePerioder(generertePerioder);
@@ -88,7 +87,6 @@ export default function InntektsKildeModal({
   const inntektskilde = form.value("inntektskilde") as string;
   const identifikator = form.value("identifikator") as string;
 
-  // client validering
   useEffect(() => {
     if (form.error("identifikator")) {
       const identifikatorType =
