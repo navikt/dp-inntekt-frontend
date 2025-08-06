@@ -9,6 +9,7 @@ import {
   TextField,
   VStack,
 } from "@navikt/ds-react";
+import { idnr } from "@navikt/fnrvalidator";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
@@ -28,7 +29,7 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
-import {idnr} from "@navikt/fnrvalidator";
+import { set } from "date-fns";
 
 interface IProps {
   erNyVirksomhet: boolean;
@@ -45,21 +46,12 @@ export default function InntektsKildeModal({
   const inntekt = useTypedRouteLoaderData("routes/inntektId.$inntektId");
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
+  const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
+  const [identifikatorError, setIdentifikatorError] = useState<string | undefined>(undefined);
+  const [showForms, setShowForms] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(
     erNyVirksomhet ? undefined : virksomhetsnummer
   );
-  const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
-  const [duplikatIdentifikator, setDuplikatIdentifikator] = useState(false);
-  const [invalidIdentificator, setInvalidIdentificator] = useState(false);
-
-  // Dette er en workaround for å fikse en feil vi ikke forstår helt
-  // Hvordan gjenskaper man denne feilen?
-  // Legg inn en ny inntektskilder som privat person
-  // Label på identifikator endres til "Fødselsnummer"
-  // Fyll ut inntekstype og inntekter og trykk "Sett inn"
-  // Legg til en ny inntektskilde som privat person en gang til
-  // Label på identifikator blir fortsatt "Organisasjonsnummer"
-  const [showForms, setShowForms] = useState(false);
 
   const form = useForm({
     submitSource: "state",
@@ -88,6 +80,7 @@ export default function InntektsKildeModal({
     };
   }
 
+  // Genererer inntektsperiode i inntekts modalen
   useEffect(() => {
     const generertePerioder = generereFirePerioder(inntekt.periode);
     setGenerertePerioder(generertePerioder);
@@ -96,28 +89,52 @@ export default function InntektsKildeModal({
   const inntektskilde = form.value("inntektskilde") as string;
   const identifikator = form.value("identifikator") as string;
 
+  // client validering
   useEffect(() => {
-    if (identifikator?.length === 11 && inntektskilde === "NATURLIG_IDENT") {
-      const validerIdNr = idnr(identifikator);
-      if(validerIdNr.status !== "valid") {
-        setVirksomhetsnavn(undefined);
-        setInvalidIdentificator(true);
-        form.error("identifikator");
+    if (form.error("identifikator")) {
+      const identifikatorType =
+        inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Organisasjonsnummer";
+
+      setIdentifikatorError(`${identifikatorType} ${form.error("identifikator")}`);
+      return;
+    }
+
+    if ((identifikator && identifikator?.length !== 11) || identifikator?.length !== 9) {
+      setIdentifikatorError(undefined);
+    }
+
+    if (inntektskilde === "ORGANISASJON") {
+      if (form.touched("identifikator") && identifikator?.length !== 9) {
+        setIdentifikatorError("Organisasjonsnummeret må være 9 siffer");
       } else {
-        setInvalidIdentificator(false)
+        hentVirksomhetsNavn();
       }
     }
 
-    if (identifikator?.length === 9 && inntektskilde === "ORGANISASJON") {
-      hentVirksomhetsNavn();
+    if (inntektskilde === "NATURLIG_IDENT") {
+      setVirksomhetsnavn(undefined);
+
+      if (form.touched("identifikator") && identifikator?.length !== 11) {
+        setIdentifikatorError("Fødselsnummeret må være 11 siffer");
+      } else {
+        if (idnr(identifikator).status === "invalid") {
+          setIdentifikatorError("Fødselsnummeret er ikke gyldig");
+        } else {
+          setIdentifikatorError(undefined);
+        }
+      }
     }
 
-    const identifikatorListe = uklassifisertInntekt.virksomheter.map(
+    const eksisterendeVirksomhetsnummer = uklassifisertInntekt.virksomheter.map(
       (virksomhet) => virksomhet.virksomhetsnummer
     );
 
-    setDuplikatIdentifikator(identifikatorListe.includes(identifikator));
-  }, [identifikator]);
+    const harDuplikatIdentifikator = eksisterendeVirksomhetsnummer.includes(identifikator);
+
+    if (harDuplikatIdentifikator) {
+      setIdentifikatorError(`${identifikator} er allerede lagt til`);
+    }
+  }, [form]);
 
   async function hentVirksomhetsNavn() {
     const response = await fetch(`/api/enhetsregister/${identifikator}`, {
@@ -127,6 +144,9 @@ export default function InntektsKildeModal({
     if (response.ok) {
       const organisasjon = await response.json();
       setVirksomhetsnavn(organisasjon.navn);
+      setIdentifikatorError(undefined);
+    } else {
+      setIdentifikatorError("Organisasjonsnummeret er ikke gyldig");
     }
   }
 
@@ -225,7 +245,7 @@ export default function InntektsKildeModal({
       return;
     }
 
-    if (!harFeil && minstEnInntektFyltUt  && !duplikatIdentifikator && !invalidIdentificator) {
+    if (!harFeil && minstEnInntektFyltUt && !identifikatorError) {
       setInntektEndret(true);
       setManglerInntekt(false);
 
@@ -254,25 +274,6 @@ export default function InntektsKildeModal({
       form.resetForm();
       setShowForms(false);
     }
-  }
-
-  const identifikatorLabel =
-    inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Organisasjonsnummer";
-
-  function hentIdentifikatorFeilmelding() {
-    if (form.error("identifikator")) {
-      return `${identifikatorLabel} ${form.error("identifikator")}`;
-    }
-
-    if (duplikatIdentifikator) {
-      return `${identifikatorLabel} er allerede lagt til`;
-    }
-
-    if( invalidIdentificator) {
-      return `Ugyldig fødselsnummer`;
-    }
-
-    return undefined;
   }
 
   return (
@@ -312,10 +313,12 @@ export default function InntektsKildeModal({
                   </RadioGroup>
                   <TextField
                     {...form.getInputProps("identifikator")}
-                    label={identifikatorLabel}
+                    label={
+                      inntektskilde === "NATURLIG_IDENT" ? "Fødselsnummer" : "Organisasjonsnummer"
+                    }
                     size="small"
                     disabled={!erNyVirksomhet}
-                    error={hentIdentifikatorFeilmelding()}
+                    error={identifikatorError}
                   />
                   {inntektskilde === "ORGANISASJON" && virksomhetsnavn && (
                     <div>
