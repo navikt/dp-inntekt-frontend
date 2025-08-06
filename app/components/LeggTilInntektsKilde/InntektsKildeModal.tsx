@@ -103,7 +103,10 @@ export default function InntektsKildeModal({
     if (inntektskilde === "ORGANISASJON") {
       if (form.touched("identifikator") && identifikator?.length !== 9) {
         setIdentifikatorError("Organisasjonsnummeret må være 9 siffer");
-      } else {
+        setVirksomhetsnavn(undefined);
+        return;
+      }
+      if (identifikator && identifikator?.length === 9) {
         hentVirksomhetsNavn();
       }
     }
@@ -114,10 +117,12 @@ export default function InntektsKildeModal({
       if (form.touched("identifikator") && identifikator?.length !== 11) {
         setIdentifikatorError("Fødselsnummeret må være 11 siffer");
       } else {
-        if (idnr(identifikator).status === "invalid") {
-          setIdentifikatorError("Fødselsnummeret er ikke gyldig");
-        } else {
-          setIdentifikatorError(undefined);
+        if (identifikator && identifikator?.length === 11) {
+          if (idnr(identifikator).status === "invalid") {
+            setIdentifikatorError("Fødselsnummeret er ikke gyldig");
+          } else {
+            setIdentifikatorError(undefined);
+          }
         }
       }
     }
