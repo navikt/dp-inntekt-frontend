@@ -29,7 +29,6 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
-import { set } from "date-fns";
 
 interface IProps {
   erNyVirksomhet: boolean;
