@@ -1,13 +1,13 @@
 dp_inntekt_api_url: "http://dp-inntekt-api"
 
 ingresses:
-  - https://inntekt-frontend.ansatt.nav.no
+  - https://dagpenger-inntekt-frontend.ansatt.nav.no
 replicas:
   min: 2
   max: 2
 
 azure:
-  tenant: trygdeetaten.no
+  tenant: nav.no
   enabled: true
   grupper:
     saksbehandler: "2e9c63d8-322e-4c1f-b500-a0abb812761c" # 0000-GA-Dagpenger-Saksbehandler
