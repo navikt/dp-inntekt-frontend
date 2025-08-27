@@ -1,0 +1,14 @@
+dp_inntekt_api_url: "http://dp-inntekt-api"
+
+ingresses:
+  - https://inntekt-frontend.ansatt.nav.no
+replicas:
+  min: 2
+  max: 2
+
+azure:
+  tenant: trygdeetaten.no
+  enabled: true
+  grupper:
+    saksbehandler: "2e9c63d8-322e-4c1f-b500-a0abb812761c" # 0000-GA-Dagpenger-Saksbehandler
+    beslutter: "70d54cad-53a3-4788-bbe3-565096f01da7" # 0000-GA-Dagpenger-Beslutter
