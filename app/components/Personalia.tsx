@@ -1,5 +1,6 @@
-import { ArrowCirclepathIcon, FloppydiskIcon } from "@navikt/aksel-icons";
+import { FloppydiskIcon } from "@navikt/aksel-icons";
 import {
+  BodyLong,
   BodyShort,
   Box,
   Button,
@@ -13,18 +14,19 @@ import {
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef } from "react";
 import { useNavigation, useParams } from "react-router";
+import { HentInntektPaNyttModal } from "~/components/HentInntektPaNyttModal";
 import { useInntekt } from "~/context/inntekt-context";
 import { erEnKvinne } from "~/utils/generell.util";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-import { HentInntektPaNyttModal } from "~/components/HentInntektPaNyttModal";
 
 export function Personalia() {
   const params = useParams();
   const { state } = useNavigation();
-  const { inntektEndret, globalModalRef, uklassifisertInntekt, setInntektEndret } = useInntekt();
-  const ref = useRef<HTMLDialogElement>(null);
+  const { inntektEndret, uklassifisertInntekt, setInntektEndret } = useInntekt();
+  const lagreInntektModalRef = useRef<HTMLDialogElement>(null);
+  const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
 
   if (!params.inntektId) {
     throw new Error("inntektId mangler i URL");
@@ -41,7 +43,7 @@ export function Personalia() {
     action: "/inntektId/$inntektId/action",
     onSubmitSuccess: () => {
       form.resetForm();
-      ref.current?.close();
+      lagreInntektModalRef.current?.close();
       setInntektEndret(false);
     },
   });
@@ -59,16 +61,14 @@ export function Personalia() {
     }
   }, [uklassifisertInntekt, begrunnelse]);
 
-
-  const timestamp = new Date(uklassifisertInntekt.timestamp!!)
-    .toLocaleString("no-NO", {
-      timeZone: "Europe/Oslo",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const timestamp = new Date(uklassifisertInntekt.timestamp!!).toLocaleString("no-NO", {
+    timeZone: "Europe/Oslo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
@@ -84,8 +84,10 @@ export function Personalia() {
         </HStack>
         <Spacer />
         <HStack gap="4" align="center">
-          <Detail><strong> Sist hentet fra A-Inntekt:</strong> {timestamp}</Detail>
-          <HentInntektPaNyttModal inntektId={params.inntektId}/>
+          <Detail>
+            <strong> Sist hentet fra A-Inntekt:</strong> {timestamp}
+          </Detail>
+          <HentInntektPaNyttModal inntektId={params.inntektId} />
 
           <Button
             size="small"
@@ -93,16 +95,20 @@ export function Personalia() {
             type="submit"
             onClick={() => {
               if (!inntektEndret) {
-                globalModalRef?.current?.showModal();
+                ingenEndringerModalRef?.current?.showModal();
                 return;
               }
 
-              ref.current?.showModal();
+              lagreInntektModalRef.current?.showModal();
             }}
           >
             Lagre endringer
           </Button>
-          <Modal ref={ref} header={{ heading: "Begrunn og lagre endringer" }} width="medium">
+          <Modal
+            ref={lagreInntektModalRef}
+            header={{ heading: "Begrunn og lagre endringer" }}
+            width="medium"
+          >
             <form {...form.getFormProps()}>
               <Modal.Body>
                 <input type="hidden" name="payload" />
@@ -117,11 +123,26 @@ export function Personalia() {
                 <Button type="submit" loading={state !== "idle"}>
                   Bekreft
                 </Button>
-                <Button type="button" variant="secondary" onClick={() => ref.current?.close()}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => lagreInntektModalRef.current?.close()}
+                >
                   Avbryt
                 </Button>
               </Modal.Footer>
             </form>
+          </Modal>
+          <Modal
+            ref={ingenEndringerModalRef}
+            header={{
+              heading: "Du har ingen endring å lagre",
+            }}
+            width="medium"
+          >
+            <Modal.Body>
+              <BodyLong>Du har ikke gjort noen endringer som kan lagres.</BodyLong>
+            </Modal.Body>
           </Modal>
         </HStack>
       </HStack>

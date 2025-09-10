@@ -12,6 +12,7 @@ import {
 import { RedigerVirksomhetInntekt } from "./RedigerVirksomhetInntekt";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
 import { erPersonnummer } from "~/utils/generell.util";
+import { useEffect, useState } from "react";
 
 interface IProps {
   virksomhet: IVirksomhet;
@@ -25,13 +26,49 @@ export interface IRedigeringsData {
 }
 
 export default function VirsomhetInntekter({ virksomhet }: IProps) {
-  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const {
+    uklassifisertInntekt,
+    setUklassifisertInntekt,
+    setInntektEndret,
+    slettModalRef,
+    slettBekreftet,
+    setSlettBekreftet,
+    setSlettType,
+    slettType,
+  } = useInntekt();
   const gruppertinntektsbeskrivelser = grupperEtterInntektsbeskrivelse(virksomhet.inntekter);
 
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
   const periode1 = oppdeltPerioder[0];
   const periode2 = oppdeltPerioder[1];
   const periode3 = oppdeltPerioder[2];
+
+  const [virksomhetnummer, setvirksomhetnummer] = useState<string | undefined>(undefined);
+  const [virksomhetBeskrivelse, setvirksomhetBeskrivelse] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (
+      slettBekreftet &&
+      slettType === "INNTEKTSKILDE" &&
+      virksomhetnummer &&
+      virksomhetBeskrivelse
+    ) {
+      if (gruppertinntektsbeskrivelser.length === 1) {
+        fjernHeleVirksomhet(virksomhetnummer);
+      } else {
+        fjernEnInntektBeskrivelfraFraVirksomhet(virksomhetBeskrivelse, virksomhetnummer);
+      }
+
+      nullstill();
+    }
+  }, [slettBekreftet]);
+
+  function nullstill() {
+    setSlettBekreftet(false);
+    setvirksomhetnummer(undefined);
+    setvirksomhetBeskrivelse(undefined);
+    slettModalRef?.current?.close();
+  }
 
   function fjernEnInntektBeskrivelfraFraVirksomhet(
     inntektsbeskrivelse: string,
@@ -48,14 +85,10 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
       inntekter: oppdaterteVirksomhetInntekter,
     };
 
-    // Filtrer ut den spesifikke virksomheten fra context
-    // og oppdater den med den oppdaterte virksomheten
-    const oppdaterteVirksomheter = [
-      ...uklassifisertInntekt.virksomheter.filter(
-        (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer
-      ),
-      oppdaterteVirksomhet,
-    ];
+    // Fjerner én inntektstype fra virksomheten og oppdaterer virksomheten i context med nye
+    const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
+      virksomhet.virksomhetsnummer === virksomhetsnummer ? oppdaterteVirksomhet : virksomhet
+    );
 
     // Oppdater hele uklassifisertInntekt med de oppdaterte virksomhetene
     const oppdatertUklassifisertInntekt: IUklassifisertInntekt = {
@@ -108,11 +141,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
               {INNTEKTSBESKRIVELSER.find((type) => type.key === virksomhetInntekt.beskrivelse)
                 ?.text || virksomhetInntekt.beskrivelse}
             </Table.DataCell>
-            <Table.DataCell>
-              {virksomhetInntekt.inntektskilde === "dp-inntekt-frontend"
-                ? "Saksbehandler"
-                : virksomhetInntekt.inntektskilde}
-            </Table.DataCell>
+            <Table.DataCell>{virksomhetInntekt.inntektskilde}</Table.DataCell>
             <Table.DataCell align="right">
               {formatterNorskTall(
                 beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode1)
@@ -144,14 +173,12 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   variant="tertiary"
                   size="small"
                   icon={<TrashIcon />}
-                  onClick={() =>
-                    gruppertinntektsbeskrivelser.length === 1
-                      ? fjernHeleVirksomhet(virksomhet.virksomhetsnummer)
-                      : fjernEnInntektBeskrivelfraFraVirksomhet(
-                          virksomhetInntekt.beskrivelse,
-                          virksomhet.virksomhetsnummer
-                        )
-                  }
+                  onClick={() => {
+                    setvirksomhetnummer(virksomhet.virksomhetsnummer);
+                    setvirksomhetBeskrivelse(virksomhetInntekt.beskrivelse);
+                    setSlettType("INNTEKTSKILDE");
+                    slettModalRef?.current?.showModal();
+                  }}
                 />
               </HStack>
             </Table.DataCell>

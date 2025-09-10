@@ -41,7 +41,7 @@ export const mockUncachedUklassifisertInntekt: IUklassifisertInntekt = {
   mottaker: mottaker,
   periode: inntektsperiode,
   timestamp: "2023-10-01T12:00:00Z",
-}
+};
 
 updateTotalBelop(mockUklassifisertInntekt.virksomheter);
 
@@ -62,7 +62,7 @@ function generateMockInntektDataFromPeriode(periode: IPeriode, inntektstype: str
       belop: "10000.0", // this could be any mock value
       fordel: "kontantytelse",
       beskrivelse: inntektstype,
-      inntektskilde: "dp-inntekt-frontend",
+      inntektskilde: "Saksbehandler",
       inntektsstatus: "LoependeInnrapportert",
       utbetaltIMaaned: formattedMonth,
       virksomhet: { aktoerType: "ORGANISASJON", identifikator: "896929119" },

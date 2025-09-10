@@ -1,11 +1,11 @@
 import { Box, VStack } from "@navikt/ds-react";
 import { useRef } from "react";
 import { data, redirect, useLoaderData } from "react-router";
-import { GlobalModal } from "~/components/GlobalModal";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import InntektsKildeModal from "~/components/LeggTilInntektsKilde/InntektsKildeModal";
 import { Personalia } from "~/components/Personalia";
+import { SlettModal } from "~/components/SlettModal";
 import { Virksomheter } from "~/components/Virksomheter";
 import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntekt } from "~/models/inntekt.server";
@@ -33,10 +33,10 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function Inntekt() {
   const loaderData = useLoaderData<typeof loader>();
-  const globalModalRef = useRef<HTMLDialogElement>(null);
+  const slettModalRef = useRef<HTMLDialogElement>(null);
 
   return (
-    <InntektProvider uklassifisertInntekt={loaderData} globalModalRef={globalModalRef}>
+    <InntektProvider uklassifisertInntekt={loaderData} slettModalRef={slettModalRef}>
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />
@@ -52,7 +52,7 @@ export default function Inntekt() {
         </VStack>
 
         <InntektsKildeModal erNyVirksomhet={true} virksomhetsnummer={undefined} />
-        <GlobalModal />
+        <SlettModal />
       </main>
     </InntektProvider>
   );

@@ -1,5 +1,6 @@
 import { TrashIcon } from "@navikt/aksel-icons";
 import { Button, ExpansionCard, HStack, VStack } from "@navikt/ds-react";
+import { useEffect, useState } from "react";
 import VirksomhetInntekter from "~/components/VirksomhetInntekter";
 import { useInntekt } from "~/context/inntekt-context";
 import type { IVirksomhet } from "~/types/inntekt.types";
@@ -27,21 +28,45 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 
 export default function Virksomhet({ virksomhet }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
-  const { uklassifisertInntekt, setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const {
+    uklassifisertInntekt,
+    setUklassifisertInntekt,
+    setInntektEndret,
+    slettModalRef,
+    setSlettType,
+    slettType,
+    slettBekreftet,
+    setSlettBekreftet,
+  } = useInntekt();
 
   const erPrivatPerson = erPersonnummer(virksomhetsnummer);
+  const [virksomhetsnummerSomSkalSlettes, setVirksomhetsnummerSomSkalSlettes] = useState<
+    string | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (slettBekreftet && slettType === "VIRKSOMHET" && virksomhetsnummerSomSkalSlettes) {
+      slettVirksomhet();
+    }
+  }, [slettBekreftet]);
 
   function slettVirksomhet() {
-    var oppdatertKontekstVirksomheter = uklassifisertInntekt.virksomheter.filter(
-      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer
+    const oppdatertVirksomheter = uklassifisertInntekt.virksomheter.filter(
+      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummerSomSkalSlettes
     );
 
-    setUklassifisertInntekt({
+    const oppdatertetInntekter = {
       ...uklassifisertInntekt,
-      virksomheter: oppdatertKontekstVirksomheter,
-    });
+      virksomheter: oppdatertVirksomheter,
+    };
+
+    setUklassifisertInntekt(oppdatertetInntekter);
 
     setInntektEndret(true);
+    setSlettBekreftet(false);
+    setSlettType(undefined);
+    setVirksomhetsnummerSomSkalSlettes(undefined);
+    slettModalRef?.current?.close();
   }
 
   const eksistertInntektsbeskrivelser = Array.from(
@@ -85,7 +110,11 @@ export default function Virksomhet({ virksomhet }: IProps) {
             icon={<TrashIcon />}
             variant="tertiary"
             size="small"
-            onClick={() => slettVirksomhet()}
+            onClick={() => {
+              setSlettType("VIRKSOMHET");
+              setVirksomhetsnummerSomSkalSlettes(virksomhetsnummer);
+              slettModalRef?.current?.showModal();
+            }}
           >
             Slett inntekt
           </Button>

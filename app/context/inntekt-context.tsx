@@ -10,15 +10,21 @@ import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 
 interface IInntektContextProps {
   uklassifisertInntekt: IUklassifisertInntekt;
-  globalModalRef?: RefObject<HTMLDialogElement | null>;
+  slettModalRef?: RefObject<HTMLDialogElement | null>;
 }
+
+export type slettType = "VIRKSOMHET" | "INNTEKTSKILDE" | undefined;
 
 interface IInntektContextValue {
   inntektEndret: boolean;
   setInntektEndret: (value: boolean) => void;
   uklassifisertInntekt: IUklassifisertInntekt;
   setUklassifisertInntekt: (value: IUklassifisertInntekt) => void;
-  globalModalRef: RefObject<HTMLDialogElement | null> | undefined;
+  slettModalRef: RefObject<HTMLDialogElement | null> | undefined;
+  slettBekreftet: boolean;
+  setSlettBekreftet: (value: boolean) => void;
+  slettType: slettType;
+  setSlettType: (value: slettType) => void;
 }
 
 export const InntektContext = createContext<IInntektContextValue | undefined>(undefined);
@@ -28,6 +34,8 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
     props.uklassifisertInntekt
   );
   const [inntektEndret, setInntektEndret] = useState(false);
+  const [slettBekreftet, setSlettBekreftet] = useState(false);
+  const [slettType, setSlettType] = useState<slettType>(undefined);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
   useEffect(() => {
@@ -48,11 +56,15 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
   return (
     <InntektContext.Provider
       value={{
-        globalModalRef: props.globalModalRef,
+        slettModalRef: props.slettModalRef,
         inntektEndret,
         setInntektEndret,
         uklassifisertInntekt,
         setUklassifisertInntekt,
+        slettBekreftet,
+        setSlettBekreftet,
+        slettType,
+        setSlettType,
       }}
     >
       {props.children}
