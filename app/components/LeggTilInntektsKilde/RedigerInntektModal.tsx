@@ -65,10 +65,13 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
       identifikator: virksomhet.virksomhetsnummer,
       // Sette default verdi for inntekt basert på formDefaultValues?.inntekter
       // med dette format 2021-11 : 10000
-      ...formDefaultValues.inntekter?.reduce((acc, inntekt) => {
-        acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
-        return acc;
-      }, {} as Record<string, string>),
+      ...formDefaultValues.inntekter?.reduce(
+        (acc, inntekt) => {
+          acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
+          return acc;
+        },
+        {} as Record<string, string>
+      ),
     };
   }
 
@@ -180,7 +183,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
     <div className="mt-6">
       <Modal
         ref={ref}
-        header={{ heading: "Inntektskilde og inntekt" }}
+        header={{ heading: "Rediger inntekt" }}
         width={"1150px"}
         size="small"
         className={styles.redigeringsModal}

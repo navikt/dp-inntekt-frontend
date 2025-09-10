@@ -108,7 +108,11 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
               {INNTEKTSBESKRIVELSER.find((type) => type.key === virksomhetInntekt.beskrivelse)
                 ?.text || virksomhetInntekt.beskrivelse}
             </Table.DataCell>
-            <Table.DataCell>{virksomhetInntekt.inntektskilde}</Table.DataCell>
+            <Table.DataCell>
+              {virksomhetInntekt.inntektskilde === "dp-inntekt-frontend"
+                ? "Saksbehandler"
+                : virksomhetInntekt.inntektskilde}
+            </Table.DataCell>
             <Table.DataCell align="right">
               {formatterNorskTall(
                 beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode1)

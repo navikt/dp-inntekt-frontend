@@ -289,12 +289,16 @@ export default function InntektsKildeModal({
           setShowForms(true);
         }}
       >
-        {erNyVirksomhet ? "Legg til inntektskilde" : "Legg til inntekt"}
+        {erNyVirksomhet ? "Legg til inntektskilde" : "Legg til inntektstype"}
       </Button>
 
       <Modal
         ref={ref}
-        header={{ heading: "Inntektskilde og inntekt" }}
+        header={{
+          heading: erNyVirksomhet
+            ? "Legg til inntektskilde og inntekt"
+            : "Legg til inntektstype og inntekt",
+        }}
         width={"1150px"}
         size="small"
       >
