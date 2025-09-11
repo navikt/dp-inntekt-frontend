@@ -17,12 +17,9 @@ p {
   margin-top: var(--a-spacing-2);
 }
 
-.mt-4 {
-  margin-top: var(--a-spacing-4);
-}
-
-/* Specificity to override ds-react button class */
-button .mt-4 {
+/* button.mt-4 for å øke specificity for søk inntektId knappen */
+.mt-4,
+button.mt-4 {
   margin-top: var(--a-spacing-4);
 }
 
