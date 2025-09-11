@@ -21,6 +21,11 @@ p {
   margin-top: var(--a-spacing-4);
 }
 
+/* Specificity to override ds-react button class */
+button .mt-4 {
+  margin-top: var(--a-spacing-4);
+}
+
 .mt-6 {
   margin-top: var(--a-spacing-6);
 }
