@@ -42,8 +42,9 @@ export function InntektPerioderOppsummering() {
           {formaterNorskDato(uklassifisertInntekt.periode.tilOgMed)}
         </BodyShort>
         <BodyShort weight="semibold" size="large">
-          {formatterNorskTall(inntektPerioderTotaltBelop)}
+          Totalbeløp
         </BodyShort>
+        <BodyShort size="large">{formatterNorskTall(inntektPerioderTotaltBelop)}</BodyShort>
       </VStack>
 
       <div>
