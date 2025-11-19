@@ -1,7 +1,7 @@
-import { BodyLong, Button, Modal } from "@navikt/ds-react";
-import { useInntekt } from "~/context/inntekt-context";
-import { ArrowsCirclepathIcon } from "@navikt/aksel-icons";
-import { useRef, useState } from "react";
+import {BodyLong, Button, Modal} from "@navikt/ds-react";
+import {useInntekt} from "~/context/inntekt-context";
+import {ArrowsCirclepathIcon} from "@navikt/aksel-icons";
+import {useRef, useState} from "react";
 
 interface HentInntektPaNyttModalProps {
   inntektId: string;
@@ -50,8 +50,9 @@ export function HentInntektPaNyttModal({ inntektId }: HentInntektPaNyttModalProp
       >
         <Modal.Body>
           <BodyLong>
-            Å hente inntekt på nytt fra A-inntekt vil føre til at alle manuelle endringer blir
-            slettet. Er du sikker på at du vil overskrive endringene?
+            Henter du inntekt på nytt fra A-inntekt, og deretter velger "Lagre endringer", vil det
+            føre til at alle manuelle endringer blir slettet. Er du sikker på at du vil hente nye
+            inntekter?
           </BodyLong>
         </Modal.Body>
 
