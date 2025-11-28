@@ -48,10 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev-gcp
     permissions:
-      contents: 'read'
       id-token: 'write'
-      packages: write
-      actions: read
     steps:
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v2
@@ -68,10 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod-gcp
     permissions:
-      contents: read
       id-token: write
-      packages: write
-      actions: read
     steps:
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v2
