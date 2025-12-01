@@ -51,13 +51,11 @@ jobs:
       contents: 'read'
       id-token: 'write'
       packages: write
-
     steps:
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v2
         env:
           VAR: image=${{ needs.build.outputs.image }},githubSha=${{ github.sha }}
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: .nais/nais.yaml
           VARS: .nais/vars-dev.yaml
@@ -77,7 +75,6 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           VAR: image=${{ needs.build.outputs.image }},githubSha=${{ github.sha }}
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
           RESOURCE: .nais/nais.yaml
           VARS: .nais/vars-prod.yaml
