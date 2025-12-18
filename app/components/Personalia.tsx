@@ -13,7 +13,7 @@ import {
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef } from "react";
-import { useNavigation, useParams } from "react-router";
+import { useNavigation, useParams, useSearchParams } from "react-router";
 import { HentInntektPaNyttModal } from "~/components/HentInntektPaNyttModal";
 import { useInntekt } from "~/context/inntekt-context";
 import { erEnKvinne } from "~/utils/generell.util";
@@ -23,13 +23,16 @@ import { MennIkon } from "./Ikoner/MennIkon";
 
 export function Personalia() {
   const params = useParams();
+  let [searchParams] = useSearchParams();
   const { state } = useNavigation();
   const { inntektEndret, uklassifisertInntekt, setInntektEndret } = useInntekt();
   const lagreInntektModalRef = useRef<HTMLDialogElement>(null);
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
+  const opplysningId = searchParams.get("opplysningId");
+  const behandlingId = searchParams.get("behandlingId");
 
-  if (!params.inntektId) {
-    throw new Error("inntektId mangler i URL");
+  if (!params.inntektId || !behandlingId || !opplysningId) {
+    throw new Error("inntektId, behandlingId eller opplysningId mangler i URL");
   }
 
   const form = useForm({
@@ -37,6 +40,8 @@ export function Personalia() {
     schema: lagreEndringerSchema,
     defaultValues: {
       inntektId: params.inntektId,
+      behandlingId: behandlingId,
+      opplysningId: opplysningId,
       begrunnelse: "",
     },
     method: "post",
