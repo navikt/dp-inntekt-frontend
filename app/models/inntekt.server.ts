@@ -1,8 +1,14 @@
 import { getDPInntektOboToken } from "~/utils/auth.util.server";
 import { getEnv } from "~/utils/env.utils";
 
-export async function lagreInntekt(request: Request, inntektId: string, payload: string) {
-  const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}`;
+export async function lagreInntekt(
+  request: Request,
+  inntektId: string,
+  behandlingId: string,
+  opplysningId: string,
+  payload: string
+) {
+  const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}?behandlingId=${behandlingId}&opplysningId=${opplysningId}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
 
   return await fetch(url, {

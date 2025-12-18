@@ -13,7 +13,10 @@ import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
-  if (!params.inntektId) {
+  const url = new URL(request.url);
+  const opplysningId = url.searchParams.get("opplysningId");
+  const behandlingId = url.searchParams.get("behandlingId");
+  if (!params.inntektId || !opplysningId || !behandlingId) {
     return redirect("/sok");
   }
 
