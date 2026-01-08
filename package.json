@@ -11,7 +11,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@navikt/aksel-icons": "^7.19.0",
+    "@navikt/aksel-icons": "^7.35.0",
     "@navikt/ds-css": "^7.18.0",
     "@navikt/ds-react": "^7.18.0",
     "@navikt/fnrvalidator": "^2.1.5",
