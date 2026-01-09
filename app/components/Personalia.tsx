@@ -32,8 +32,12 @@ export function Personalia() {
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
   const opplysningId = searchParams.get("opplysningId");
   const behandlingId = searchParams.get("behandlingId");
+  const erArena = searchParams.get("erArena") || "false";
 
-  if (!params.inntektId || !behandlingId || !opplysningId) {
+  const erArenaBoolean = erArena === "true";
+  const manglerDpSakIder = !opplysningId || !behandlingId;
+
+  if (!params.inntektId || (!erArenaBoolean && manglerDpSakIder)) {
     throw new Error("inntektId, behandlingId eller opplysningId mangler i URL");
   }
 
@@ -42,9 +46,10 @@ export function Personalia() {
     schema: lagreEndringerSchema,
     defaultValues: {
       inntektId: params.inntektId,
-      behandlingId: behandlingId,
-      opplysningId: opplysningId,
+      behandlingId: behandlingId || undefined,
+      opplysningId: opplysningId || undefined,
       begrunnelse: "",
+      erArena: erArena,
     },
     method: "post",
     action: "/inntektId/$inntektId/action",
