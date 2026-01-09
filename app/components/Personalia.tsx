@@ -30,6 +30,7 @@ export function Personalia() {
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
   const opplysningId = searchParams.get("opplysningId");
   const behandlingId = searchParams.get("behandlingId");
+  const erArena = searchParams.get("erArena");
 
   if (!params.inntektId || !behandlingId || !opplysningId) {
     throw new Error("inntektId, behandlingId eller opplysningId mangler i URL");

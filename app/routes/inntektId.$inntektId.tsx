@@ -16,7 +16,18 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const opplysningId = url.searchParams.get("opplysningId");
   const behandlingId = url.searchParams.get("behandlingId");
-  if (!params.inntektId || !opplysningId || !behandlingId) {
+  const erArena = url.searchParams.get("erArena");
+
+  if (!params.inntektId) {
+    Error("Mangler inntektId i params");
+  }
+
+  if (!erArena && (!opplysningId || !behandlingId)) {
+    Error("Mangler nye id-greier i params");
+  }
+
+
+  if (!params.inntektId || (!erArena && (!opplysningId || !behandlingId))) {
     return redirect("/sok");
   }
 
