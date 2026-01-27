@@ -12,15 +12,31 @@ const schema = z.object({
       required_error: "Inntekt-ID er påkrevd",
     })
     .ulid({ message: "Ugyldig inntekt-ID format" }),
+  opplysningId: z
+    .string({
+      required_error: "Opplysning-ID er påkrevd",
+    })
+    .ulid({ message: "Ugyldig opplysning-ID format" }),
+  behandlingId: z
+    .string({
+      required_error: "Behandling-ID er påkrevd",
+    })
+    .ulid({ message: "Ugyldig behandling-ID format" }),
 });
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const inntektId = formData.get("inntektId");
+  const opplysningId = formData.get("opplysningId");
+  const behandlingId = formData.get("behandlingId");
 
   invariant(inntektId, "Mangler inntekt-ID");
+  invariant(opplysningId, "Mangler opplysning-ID");
+  invariant(behandlingId, "Mangler behandling-ID");
 
-  return redirect(`/inntektId/${inntektId}`);
+  return redirect(
+    `/inntektId/${inntektId}?opplysningId=${opplysningId}&behandlingId=${behandlingId}`
+  );
 }
 
 export default function Sok() {
@@ -35,6 +51,11 @@ export default function Sok() {
     },
     method: "put",
     schema,
+    defaultValues: {
+      inntektId: "",
+      opplysningId: "",
+      behandlingId: "",
+    },
   });
 
   return (
@@ -43,11 +64,23 @@ export default function Sok() {
         <Header tittel="Dagpenger inntekt" />
         <Box background="surface-default" padding="6" borderRadius="xlarge">
           <form {...form.getFormProps()}>
-            <TextField
-              name="inntektId"
-              label="Søk etter inntekt. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
-              error={form.error("inntektId")}
-            />
+            <VStack gap="4">
+              <TextField
+                name="inntektId"
+                label="Søk etter inntekt. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                error={form.error("inntektId")}
+              />
+              <TextField
+                name="opplysningId"
+                label="Søk etter opplysning. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                error={form.error("opplysningId")}
+              />
+              <TextField
+                name="behandlingId"
+                label="Søk etter behandling. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                error={form.error("behandlingId")}
+              />
+            </VStack>
             <Button type="submit" variant="primary" className="mt-4" loading={state !== "idle"}>
               Søk inntekt
             </Button>
