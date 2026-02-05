@@ -19,6 +19,7 @@ export function Header({ tittel }: IProps) {
           checked={skjulSensitiveOpplysninger}
           size="small"
           onClick={() => setSkjulSensitiveOpplysninger(!skjulSensitiveOpplysninger)}
+          position="right"
         >
           Skjul sensitive opplysninger
         </Switch>
