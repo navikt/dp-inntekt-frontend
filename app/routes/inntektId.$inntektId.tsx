@@ -16,6 +16,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const opplysningId = url.searchParams.get("opplysningId");
   const behandlingId = url.searchParams.get("behandlingId");
+
   if (!params.inntektId || !opplysningId || !behandlingId) {
     return redirect("/sok");
   }

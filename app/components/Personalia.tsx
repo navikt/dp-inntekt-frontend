@@ -12,7 +12,7 @@ import {
   Textarea,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigation, useParams, useSearchParams } from "react-router";
 import { HentInntektPaNyttModal } from "~/components/HentInntektPaNyttModal";
 import { useInntekt } from "~/context/inntekt-context";
@@ -20,12 +20,14 @@ import { erEnKvinne } from "~/utils/generell.util";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
+import { maskerVerdi } from "~/utils/skjul-sensitiv-opplysning";
 
 export function Personalia() {
-  const params = useParams();
   let [searchParams] = useSearchParams();
+  const params = useParams();
   const { state } = useNavigation();
-  const { inntektEndret, uklassifisertInntekt, setInntektEndret } = useInntekt();
+  const { inntektEndret, uklassifisertInntekt, setInntektEndret, skjulSensitiveOpplysninger } =
+    useInntekt();
   const lagreInntektModalRef = useRef<HTMLDialogElement>(null);
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
   const opplysningId = searchParams.get("opplysningId");
@@ -80,10 +82,19 @@ export function Personalia() {
       <HStack gap="4" wrap={false} align="center">
         {erEnKvinne(uklassifisertInntekt.mottaker.pnr) ? <KvinneIkon /> : <MennIkon />}
         <HStack gap="4" align="center">
-          <BodyShort weight="semibold">{uklassifisertInntekt.mottaker.navn}</BodyShort>
+          <BodyShort weight="semibold">
+            {skjulSensitiveOpplysninger
+              ? maskerVerdi(uklassifisertInntekt.mottaker.navn)
+              : uklassifisertInntekt.mottaker.navn}
+          </BodyShort>
           <BodyShort>/</BodyShort>
           <HStack align="center" gap="2">
-            <BodyShort>F.nr: {uklassifisertInntekt.mottaker.pnr}</BodyShort>
+            <BodyShort>
+              F.nr:{" "}
+              {skjulSensitiveOpplysninger
+                ? maskerVerdi(uklassifisertInntekt.mottaker.pnr)
+                : uklassifisertInntekt.mottaker.pnr}
+            </BodyShort>
             <CopyButton copyText={uklassifisertInntekt.mottaker.pnr} />
           </HStack>
         </HStack>
