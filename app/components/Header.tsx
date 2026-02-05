@@ -1,7 +1,6 @@
-import { BodyShort, Box, Button, HStack } from "@navikt/ds-react";
-import { NavLogoIkon } from "./Ikoner/NavLogoIkon";
-import { EyeSlashIcon, EyeWithPupilIcon } from "@navikt/aksel-icons";
+import { BodyShort, Box, HStack, Switch } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
+import { NavLogoIkon } from "./Ikoner/NavLogoIkon";
 
 interface IProps {
   tittel: string;
@@ -16,16 +15,13 @@ export function Header({ tittel }: IProps) {
         <HStack gap="4">
           <NavLogoIkon /> <BodyShort weight="semibold">{tittel}</BodyShort>
         </HStack>
-        <Button
+        <Switch
+          checked={skjulSensitiveOpplysninger}
           size="small"
-          variant="secondary"
-          icon={skjulSensitiveOpplysninger ? <EyeSlashIcon /> : <EyeWithPupilIcon />}
           onClick={() => setSkjulSensitiveOpplysninger(!skjulSensitiveOpplysninger)}
         >
-          {skjulSensitiveOpplysninger
-            ? "Vis sensitive opplysninger"
-            : "Skjul sensitive opplysninger"}
-        </Button>
+          Skjul sensitive opplysninger
+        </Switch>
       </HStack>
     </Box>
   );
