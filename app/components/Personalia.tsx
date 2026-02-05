@@ -80,7 +80,6 @@ export function Personalia() {
   return (
     <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
       <HStack gap="4" wrap={false} align="center">
-        {" "}
         {erEnKvinne(uklassifisertInntekt.mottaker.pnr) ? <KvinneIkon /> : <MennIkon />}
         <HStack gap="4" align="center">
           <BodyShort weight="semibold">
