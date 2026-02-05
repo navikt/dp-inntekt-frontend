@@ -25,6 +25,8 @@ interface IInntektContextValue {
   setSlettBekreftet: (value: boolean) => void;
   slettType: slettType;
   setSlettType: (value: slettType) => void;
+  skjulSensitiveOpplysninger: boolean;
+  setSkjulSensitiveOpplysninger: (value: boolean) => void;
 }
 
 export const InntektContext = createContext<IInntektContextValue | undefined>(undefined);
@@ -36,6 +38,7 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
   const [inntektEndret, setInntektEndret] = useState(false);
   const [slettBekreftet, setSlettBekreftet] = useState(false);
   const [slettType, setSlettType] = useState<slettType>(undefined);
+  const [skjulSensitiveOpplysninger, setSkjulSensitiveOpplysninger] = useState(true);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
   useEffect(() => {
@@ -65,6 +68,8 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
         setSlettBekreftet,
         slettType,
         setSlettType,
+        skjulSensitiveOpplysninger,
+        setSkjulSensitiveOpplysninger,
       }}
     >
       {props.children}
