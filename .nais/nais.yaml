@@ -32,8 +32,14 @@ spec:
     {{#each ingresses as |url|}}
        - {{url}}
       {{/each}}
-  secureLogs:
-    enabled: true
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: nodejs
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
   env:
     - name: SELF_URL
       value: "{{ingress}}"

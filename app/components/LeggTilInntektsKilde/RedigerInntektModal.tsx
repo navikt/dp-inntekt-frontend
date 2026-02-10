@@ -1,13 +1,4 @@
-import {
-  Button,
-  Label,
-  Modal,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField,
-  VStack,
-} from "@navikt/ds-react";
+import { Button, Label, Modal, Radio, RadioGroup, TextField, VStack } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
