@@ -1,13 +1,4 @@
-import {
-  Button,
-  Label,
-  Modal,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField,
-  VStack,
-} from "@navikt/ds-react";
+import { Button, Label, Modal, Radio, RadioGroup, TextField, VStack } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useState } from "react";
 import { useInntekt } from "~/context/inntekt-context";
@@ -57,36 +48,6 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
     action: "/inntektId/$inntektId/action",
     defaultValues: hentDefaultValues(),
   });
-
-  // Debugging av formverdier ved åpning av modal
-  // Skal ikke vise virksomhet og inntektsmottaker i loggen
-  useEffect(() => {
-    const modal = ref.current;
-    if (!modal) return;
-
-    const handleOpen = () => {
-      console.log(
-        formDefaultValues.inntekter.map(({ virksomhet, inntektsmottaker, ...rest }) => rest)
-      );
-    };
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) return;
-      handleOpen();
-    });
-
-    const observer = new MutationObserver(() => {
-      if (modal.open) {
-        handleOpen();
-      }
-    });
-
-    observer.observe(modal, { attributes: true, attributeFilter: ["open"] });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [ref, formDefaultValues.inntekter]);
 
   function hentDefaultValues() {
     return {
