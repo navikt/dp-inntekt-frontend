@@ -5,6 +5,8 @@ import invariant from "tiny-invariant";
 import { z } from "zod";
 import { Header } from "~/components/Header";
 import type { Route } from "./+types/sok";
+import { InntektProvider } from "~/context/inntekt-context";
+import { mockUklassifisertInntekt } from "~/mocks/mock.uklassifiert-inntekt";
 
 const schema = z.object({
   inntektId: z
@@ -59,34 +61,36 @@ export default function Sok() {
   });
 
   return (
-    <main>
-      <VStack gap="6">
-        <Header tittel="Dagpenger inntekt" />
-        <Box background="surface-default" padding="6" borderRadius="xlarge">
-          <form {...form.getFormProps()}>
-            <VStack gap="4">
-              <TextField
-                name="inntektId"
-                label="Søk etter inntekt. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
-                error={form.error("inntektId")}
-              />
-              <TextField
-                name="opplysningId"
-                label="Søk etter opplysning. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
-                error={form.error("opplysningId")}
-              />
-              <TextField
-                name="behandlingId"
-                label="Søk etter behandling. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
-                error={form.error("behandlingId")}
-              />
-            </VStack>
-            <Button type="submit" variant="primary" className="mt-4" loading={state !== "idle"}>
-              Søk inntekt
-            </Button>
-          </form>
-        </Box>
-      </VStack>
-    </main>
+    <InntektProvider uklassifisertInntekt={mockUklassifisertInntekt} slettModalRef={undefined}>
+      <main>
+        <VStack gap="6">
+          <Header tittel="Dagpenger inntekt" />
+          <Box background="surface-default" padding="6" borderRadius="xlarge">
+            <form {...form.getFormProps()}>
+              <VStack gap="4">
+                <TextField
+                  name="inntektId"
+                  label="Søk etter inntekt. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                  error={form.error("inntektId")}
+                />
+                <TextField
+                  name="opplysningId"
+                  label="Søk etter opplysning. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                  error={form.error("opplysningId")}
+                />
+                <TextField
+                  name="behandlingId"
+                  label="Søk etter behandling. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                  error={form.error("behandlingId")}
+                />
+              </VStack>
+              <Button type="submit" variant="primary" className="mt-4" loading={state !== "idle"}>
+                Søk inntekt
+              </Button>
+            </form>
+          </Box>
+        </VStack>
+      </main>
+    </InntektProvider>
   );
 }
