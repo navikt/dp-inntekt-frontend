@@ -56,9 +56,11 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
     if (!modal) return;
 
     const handleOpen = () => {
-      console.log(
-        formDefaultValues.inntekter.map(({ virksomhet, inntektsmottaker, ...rest }) => rest)
+      const inntekterForLogging = formDefaultValues.inntekter.map(
+        ({ virksomhet, inntektsmottaker, ...rest }) => rest
       );
+
+      console.log(JSON.stringify(inntekterForLogging));
     };
 
     modal.addEventListener("click", (e) => {
