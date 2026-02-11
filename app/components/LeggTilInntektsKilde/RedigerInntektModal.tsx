@@ -49,38 +49,6 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
     defaultValues: hentDefaultValues(),
   });
 
-  // Debugging av formverdier ved åpning av modal
-  // Skal ikke vise virksomhet og inntektsmottaker i loggen
-  useEffect(() => {
-    const modal = ref.current;
-    if (!modal) return;
-
-    const handleOpen = () => {
-      const inntekterForLogging = formDefaultValues.inntekter.map(
-        ({ virksomhet, inntektsmottaker, ...rest }) => rest
-      );
-
-      console.log(JSON.stringify(inntekterForLogging));
-    };
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) return;
-      handleOpen();
-    });
-
-    const observer = new MutationObserver(() => {
-      if (modal.open) {
-        handleOpen();
-      }
-    });
-
-    observer.observe(modal, { attributes: true, attributeFilter: ["open"] });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [ref, formDefaultValues.inntekter]);
-
   function hentDefaultValues() {
     return {
       inntektskilde: formDefaultValues.inntektskilde,
