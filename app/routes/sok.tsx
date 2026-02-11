@@ -18,12 +18,12 @@ const schema = z.object({
     .string({
       required_error: "Opplysning-ID er påkrevd",
     })
-    .ulid({ message: "Ugyldig opplysning-ID format" }),
+    .uuid({ message: "Ugyldig opplysning-ID format" }),
   behandlingId: z
     .string({
       required_error: "Behandling-ID er påkrevd",
     })
-    .ulid({ message: "Ugyldig behandling-ID format" }),
+    .uuid({ message: "Ugyldig behandling-ID format" }),
 });
 
 export async function action({ request }: Route.ActionArgs) {
@@ -70,17 +70,17 @@ export default function Sok() {
               <VStack gap="4">
                 <TextField
                   name="inntektId"
-                  label="Søk etter inntekt. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                  label="Søk etter inntektId. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
                   error={form.error("inntektId")}
                 />
                 <TextField
                   name="opplysningId"
-                  label="Søk etter opplysning. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                  label="Søk etter opplysningId. Eks: 123e4567-e89b-12d3-a456-426614174000"
                   error={form.error("opplysningId")}
                 />
                 <TextField
                   name="behandlingId"
-                  label="Søk etter behandling. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                  label="Søk etter behandlingId. Eks: 123e4567-e89b-12d3-a456-426614174000"
                   error={form.error("behandlingId")}
                 />
               </VStack>
