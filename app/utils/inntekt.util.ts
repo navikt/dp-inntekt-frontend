@@ -144,3 +144,16 @@ export function generereFirePerioder(periode: IPeriode): IGenerertePeriode[] {
 
   return perioder;
 }
+
+// Summerer inntekter per aarMaaned
+export function summerInntekterPerManed(inntekter: IInntekt[]): Record<string, string> {
+  return inntekter.reduce(
+    (acc, inntekt) => {
+      const beløp = parseInt(inntekt.belop, 10);
+      const eksisterendeBeløp = acc[inntekt.aarMaaned] ? parseInt(acc[inntekt.aarMaaned], 10) : 0;
+      acc[inntekt.aarMaaned] = (eksisterendeBeløp + beløp).toString();
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+}
