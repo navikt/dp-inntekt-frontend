@@ -7,7 +7,11 @@ import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
 import { INNTEKTSBESKRIVELSER } from "~/utils/constants";
 import { formaterNorskDato } from "~/utils/formattering.util";
 import { erPersonnummer } from "~/utils/generell.util";
-import { generereFirePerioder, type IGenerertePeriode } from "~/utils/inntekt.util";
+import {
+  generereFirePerioder,
+  summerInntekterPerManed,
+  type IGenerertePeriode,
+} from "~/utils/inntekt.util";
 import {
   finnTidligsteOgSenesteDato,
   finnTotalBelop,
@@ -49,52 +53,12 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
     defaultValues: hentDefaultValues(),
   });
 
-  // Debugging av formverdier ved åpning av modal
-  // Skal ikke vise virksomhet og inntektsmottaker i loggen
-  useEffect(() => {
-    const modal = ref.current;
-    if (!modal) return;
-
-    const handleOpen = () => {
-      const inntekterForLogging = formDefaultValues.inntekter.map(
-        ({ virksomhet, inntektsmottaker, ...rest }) => rest
-      );
-
-      console.log(JSON.stringify(inntekterForLogging));
-    };
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) return;
-      handleOpen();
-    });
-
-    const observer = new MutationObserver(() => {
-      if (modal.open) {
-        handleOpen();
-      }
-    });
-
-    observer.observe(modal, { attributes: true, attributeFilter: ["open"] });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [ref, formDefaultValues.inntekter]);
-
   function hentDefaultValues() {
     return {
       inntektskilde: formDefaultValues.inntektskilde,
       beskrivelse: formDefaultValues.beskrivelse,
       identifikator: virksomhet.virksomhetsnummer,
-      // Sette default verdi for inntekt basert på formDefaultValues?.inntekter
-      // med dette format 2021-11 : 10000
-      ...formDefaultValues.inntekter?.reduce(
-        (acc, inntekt) => {
-          acc[inntekt.aarMaaned] = parseInt(inntekt.belop, 10).toString();
-          return acc;
-        },
-        {} as Record<string, string>
-      ),
+      ...summerInntekterPerManed(formDefaultValues.inntekter),
     };
   }
 
