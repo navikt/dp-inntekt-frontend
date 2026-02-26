@@ -16,4 +16,7 @@ export const handlers = [
   http.get(`${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/uncached/:inntektId`, () => {
     return HttpResponse.json(mockUncachedUklassifisertInntekt);
   }),
+  http.get(`${getEnv("DP_INNTEKT_API_URL")}/v3/inntekt/inntektId/:aktorId/:kontekstType/:kontekstId/:beregningsDato`, () => {
+    return HttpResponse.text("1234");
+  }),
 ];
