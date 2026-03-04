@@ -8,6 +8,7 @@ export async function action({ request }: Route.ActionArgs) {
   const inntektId = entries["inntektId"] as string;
   const behandlingId = entries["behandlingId"] as string;
   const opplysningId = entries["opplysningId"] as string;
+  const erArena = entries["erArena"] as string || "false";
   const payload = entries["payload"] as string;
 
   const lagreInntektResponse = await lagreInntekt(
@@ -15,6 +16,7 @@ export async function action({ request }: Route.ActionArgs) {
     inntektId,
     behandlingId,
     opplysningId,
+    erArena,
     payload
   );
 
@@ -27,7 +29,13 @@ export async function action({ request }: Route.ActionArgs) {
 
   const nyInntektId = await lagreInntektResponse.text();
 
-  return redirect(
-    `/inntektId/${nyInntektId}?behandlingId=${behandlingId}&opplysningId=${opplysningId}`
-  );
+const queryParams = [
+  behandlingId && behandlingId !== "undefined" && `behandlingId=${behandlingId}`,
+  opplysningId && opplysningId !== "undefined" && `opplysningId=${opplysningId}`,
+  erArena && erArena !== "undefined" && `erArena=${erArena}`,
+].filter(Boolean).join("&");
+
+const redirectUrl = `/inntektId/${nyInntektId}${queryParams ? `?${queryParams}` : ""}`;
+
+return redirect(redirectUrl);
 }
