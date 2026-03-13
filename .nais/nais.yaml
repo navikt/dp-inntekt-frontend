@@ -58,14 +58,9 @@ spec:
 
   azure:
     application:
-      tenant: "{{azure.tenant}}"
-      enabled: {{azure.enabled}}
-      claims:
-        groups:
-          - id: "{{azure.grupper.saksbehandler}}"
-          - id: "{{azure.grupper.beslutter}}"
-        extra:
-          - NAVident
+      application:
+        allowAllUsers: true
+        enabled: true
     sidecar:
       enabled: {{azure.enabled}}
       autoLogin: true
