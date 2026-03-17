@@ -45,4 +45,38 @@ describe("finnTotalBelop", () => {
 
     expect(finnTotalBelop(inntekter)).toBe("3300");
   });
+
+  it("summerer beløp med desimaler (punktum)", () => {
+    const formInntekter: IFormInntekt[] = [
+      { dato: "2023-01", belop: "1000.50" },
+      { dato: "2023-02", belop: "500.25" },
+    ];
+
+    const inntekter = lagInntektListe("Lønn", "ORGANISASJON", "123456789", formInntekter);
+
+    expect(finnTotalBelop(inntekter)).toBe("1500.75");
+  });
+
+  it("summerer beløp med desimaler (komma)", () => {
+    const formInntekter: IFormInntekt[] = [
+      { dato: "2023-01", belop: "1000,50" },
+      { dato: "2023-02", belop: "500,25" },
+    ];
+
+    const inntekter = lagInntektListe("Lønn", "ORGANISASJON", "123456789", formInntekter);
+
+    expect(finnTotalBelop(inntekter)).toBe("1500.75");
+  });
+
+  it("summerer blanding av heltall og desimaler", () => {
+    const formInntekter: IFormInntekt[] = [
+      { dato: "2023-01", belop: "1000" },
+      { dato: "2023-02", belop: "200,50" },
+      { dato: "2023-03", belop: "99.50" },
+    ];
+
+    const inntekter = lagInntektListe("Lønn", "ORGANISASJON", "123456789", formInntekter);
+
+    expect(finnTotalBelop(inntekter)).toBe("1300");
+  });
 });
