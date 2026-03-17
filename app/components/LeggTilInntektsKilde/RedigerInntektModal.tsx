@@ -175,63 +175,60 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
         size="small"
         className={styles.redigeringsModal}
       >
-        <form {...form.getFormProps()}>
-          <Modal.Body>
-            <VStack gap="4">
-              <VStack gap="4" className={styles.inntektInputContainer}>
-                <RadioGroup
-                  {...form.getInputProps("inntektskilde")}
-                  size="small"
-                  legend="Type inntektskilde"
-                  readOnly
-                >
-                  <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
-                  <Radio value="NATURLIG_IDENT">Privatperson</Radio>
-                </RadioGroup>
-                <TextField
-                  {...form.getInputProps("identifikator")}
-                  label={identifikatorLabel}
-                  size="small"
-                  readOnly
-                />
-                {inntektsKilde === "ORGANISASJON" && virksomhetsnavn && (
-                  <div>
-                    <p className="bold">Virksomhet</p>
-                    <p>{virksomhetsnavn}</p>
-                  </div>
-                )}
-                <TextField label="Inntektstype" value={inntekstTypeTekst} size="small" readOnly />
-              </VStack>
-              <VStack gap="2">
-                <Label size="small">Utbetalingsperiode</Label>
-                <InntektPerioder perioder={genertePerioder} form={form} />
-                <div className={styles.errorSummary}>
-                  {aktiveInntektsManeder.map(
-                    (felt) =>
-                      form.error(felt) && (
-                        <div className="mt-2" key={felt}>
-                          Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
-                        </div>
-                      )
-                  )}
+        <Modal.Body>
+          <form {...form.getFormProps()}>
+            <VStack gap="4" className={styles.inntektInputContainer}>
+              <RadioGroup
+                {...form.getInputProps("inntektskilde")}
+                size="small"
+                legend="Type inntektskilde"
+                readOnly
+              >
+                <Radio value="ORGANISASJON">Norsk virksomhet</Radio>
+                <Radio value="NATURLIG_IDENT">Privatperson</Radio>
+              </RadioGroup>
+              <TextField
+                {...form.getInputProps("identifikator")}
+                label={identifikatorLabel}
+                size="small"
+                readOnly
+              />
+              {inntektsKilde === "ORGANISASJON" && virksomhetsnavn && (
+                <div>
+                  <p className="bold">Virksomhet</p>
+                  <p>{virksomhetsnavn}</p>
                 </div>
-                {manglerInntekt && !minstEnInntektFyltUt && (
-                  <div className={styles.errorSummary}>
-                    Du må legge til inntekt for minst én måned
-                  </div>
-                )}
-              </VStack>
+              )}
+              <TextField label="Inntektstype" value={inntekstTypeTekst} size="small" readOnly />
             </VStack>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button type="button" size="small" onClick={() => settInn()}>
-              Sett inn
-            </Button>
-            <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
-              Avbryt
-            </Button>
-          </Modal.Footer>
-        </form>
+          </form>
+
+          <VStack gap="2" className="mt-6">
+            <Label size="small">Utbetalingsperiode</Label>
+            <InntektPerioder perioder={genertePerioder} form={form} />
+            <div className={styles.errorSummary}>
+              {aktiveInntektsManeder.map(
+                (felt) =>
+                  form.error(felt) && (
+                    <div className="mt-2" key={felt}>
+                      Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
+                    </div>
+                  )
+              )}
+            </div>
+            {manglerInntekt && !minstEnInntektFyltUt && (
+              <div className={styles.errorSummary}>Du må legge til inntekt for minst én måned</div>
+            )}
+          </VStack>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button type="button" size="small" onClick={() => settInn()}>
+            Sett inn
+          </Button>
+          <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
+            Avbryt
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );
