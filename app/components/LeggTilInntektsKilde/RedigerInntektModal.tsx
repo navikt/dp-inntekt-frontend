@@ -203,7 +203,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
             </VStack>
           </form>
 
-          <VStack gap="2" className="mt-6">
+          <VStack gap="2" className="mt-4">
             <Label size="small">Utbetalingsperiode</Label>
             <InntektPerioder perioder={genertePerioder} form={form} />
             <div className={styles.errorSummary}>
