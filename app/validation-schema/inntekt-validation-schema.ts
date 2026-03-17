@@ -23,10 +23,10 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
           .string()
           .trim()
           .optional()
-          .refine((val) => val === undefined || val === "" || !isNaN(Number(val)), {
+          .refine((val) => val === undefined || val === "" || /^\d+([.,]\d{1,2})?$/.test(val), {
             message: `ikke et gyldig tall`,
           })
-          .refine((val) => val === undefined || val === "" || Number(val) > 0, {
+          .refine((val) => val === undefined || val === "" || Number(val.replace(",", ".")) > 0, {
             message: `må være større enn 0`,
           });
       }
