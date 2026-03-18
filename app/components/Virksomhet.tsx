@@ -7,6 +7,7 @@ import type { IVirksomhet } from "~/types/inntekt.types";
 import { formaterNorskDato, formatterNorskTall } from "~/utils/formattering.util";
 import { erPersonnummer, maskerePersonnummer } from "~/utils/generell.util";
 import InntektsKildeModal from "./LeggTilInntektsKilde/InntektsKildeModal";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 interface IProps {
   virksomhet: IVirksomhet;
@@ -28,6 +29,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 
 export default function Virksomhet({ virksomhet }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
+  const { readOnly } = useInntektSeachParams();
   const {
     uklassifisertInntekt,
     setUklassifisertInntekt,
@@ -110,6 +112,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
             icon={<TrashIcon />}
             variant="tertiary"
             size="small"
+            disabled={readOnly}
             onClick={() => {
               setSlettType("VIRKSOMHET");
               setVirksomhetsnummerSomSkalSlettes(virksomhetsnummer);

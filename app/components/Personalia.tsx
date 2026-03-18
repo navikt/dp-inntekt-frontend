@@ -12,32 +12,30 @@ import {
   Textarea,
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigation, useParams, useSearchParams } from "react-router";
 import { HentInntektPaNyttModal } from "~/components/HentInntektPaNyttModal";
 import { useInntekt } from "~/context/inntekt-context";
 import { erEnKvinne } from "~/utils/generell.util";
+import { maskerVerdi } from "~/utils/skjul-sensitiv-opplysning";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-import { maskerVerdi } from "~/utils/skjul-sensitiv-opplysning";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 export function Personalia() {
-  let [searchParams] = useSearchParams();
   const params = useParams();
   const { state } = useNavigation();
+  const { readOnly, opplysningId, behandlingId, erArena } = useInntektSeachParams();
   const { inntektEndret, uklassifisertInntekt, setInntektEndret, skjulSensitiveOpplysninger } =
     useInntekt();
+
   const lagreInntektModalRef = useRef<HTMLDialogElement>(null);
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
-  const opplysningId = searchParams.get("opplysningId");
-  const behandlingId = searchParams.get("behandlingId");
-  const erArena = searchParams.get("erArena") || "false";
 
-  const erArenaBoolean = erArena === "true";
   const manglerDpSakIder = !opplysningId || !behandlingId;
 
-  if (!params.inntektId || (!erArenaBoolean && manglerDpSakIder)) {
+  if (!params.inntektId || (!erArena && manglerDpSakIder)) {
     throw new Error("inntektId, behandlingId eller opplysningId mangler i URL");
   }
 
@@ -49,7 +47,7 @@ export function Personalia() {
       behandlingId: behandlingId || undefined,
       opplysningId: opplysningId || undefined,
       begrunnelse: "",
-      erArena: erArena,
+      erArena: erArena.toString(),
     },
     method: "post",
     action: "/inntektId/$inntektId/action",
@@ -114,6 +112,7 @@ export function Personalia() {
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
+            disabled={readOnly}
             onClick={() => {
               if (!inntektEndret) {
                 ingenEndringerModalRef?.current?.showModal();

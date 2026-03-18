@@ -13,6 +13,7 @@ import { RedigerVirksomhetInntekt } from "./RedigerVirksomhetInntekt";
 import { VirksomhetPeriodeHeader } from "./VirksomhetPeriodeHeader";
 import { erPersonnummer } from "~/utils/generell.util";
 import { useEffect, useState } from "react";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 interface IProps {
   virksomhet: IVirksomhet;
@@ -36,6 +37,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
     setSlettType,
     slettType,
   } = useInntekt();
+  const { readOnly } = useInntektSeachParams();
   const gruppertinntektsbeskrivelser = grupperEtterInntektsbeskrivelse(virksomhet.inntekter);
 
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
@@ -173,6 +175,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   variant="tertiary"
                   size="small"
                   icon={<TrashIcon />}
+                  disabled={readOnly}
                   onClick={() => {
                     setvirksomhetnummer(virksomhet.virksomhetsnummer);
                     setvirksomhetBeskrivelse(virksomhetInntekt.beskrivelse);

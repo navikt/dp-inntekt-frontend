@@ -1,4 +1,4 @@
-import { BodyShort, Box, HStack, Switch } from "@navikt/ds-react";
+import { BodyShort, Box, HStack, Switch, Tag } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
 import { NavLogoIkon } from "./Ikoner/NavLogoIkon";
 
@@ -14,15 +14,21 @@ export function Header({ tittel }: IProps) {
       <HStack gap="4" justify="space-between" align="center">
         <HStack gap="4">
           <NavLogoIkon /> <BodyShort weight="semibold">{tittel}</BodyShort>
+          <Tag variant="info" data-color="info" size="small">
+            Lesevisning
+          </Tag>
         </HStack>
-        <Switch
-          checked={skjulSensitiveOpplysninger}
-          size="small"
-          onClick={() => setSkjulSensitiveOpplysninger(!skjulSensitiveOpplysninger)}
-          position="right"
-        >
-          Skjul sensitive opplysninger
-        </Switch>
+
+        <HStack gap="4">
+          <Switch
+            checked={skjulSensitiveOpplysninger}
+            size="small"
+            onClick={() => setSkjulSensitiveOpplysninger(!skjulSensitiveOpplysninger)}
+            position="right"
+          >
+            Skjul sensitive opplysninger
+          </Switch>
+        </HStack>
       </HStack>
     </Box>
   );
