@@ -12,3 +12,4 @@ azure:
   grupper:
     saksbehandler: "2e9c63d8-322e-4c1f-b500-a0abb812761c" # 0000-GA-Dagpenger-Saksbehandler
     beslutter: "70d54cad-53a3-4788-bbe3-565096f01da7" # 0000-GA-Dagpenger-Beslutter
+    inntektsregistrering: "62366534-1ec3-4962-8869-9b5535279d0b" # 0000-GA-ARENA-DAGPENGER-INNTEKTSREGISTERING
