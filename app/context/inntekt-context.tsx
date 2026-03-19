@@ -38,7 +38,7 @@ function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
   const [inntektEndret, setInntektEndret] = useState(false);
   const [slettBekreftet, setSlettBekreftet] = useState(false);
   const [slettType, setSlettType] = useState<slettType>(undefined);
-  const [skjulSensitiveOpplysninger, setSkjulSensitiveOpplysninger] = useState(true);
+  const [skjulSensitiveOpplysninger, setSkjulSensitiveOpplysninger] = useState(false);
 
   // For å forhindre at brukeren kan navigere bort fra siden uten å lagre endringer
   useEffect(() => {
