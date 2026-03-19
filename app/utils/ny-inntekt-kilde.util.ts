@@ -1,4 +1,5 @@
 import type { IInntekt, IPeriode } from "~/types/inntekt.types";
+import { parseNorskBeløpTilNumber } from "./inntekt.util";
 
 export interface IFormInntekt {
   dato: string;
@@ -15,11 +16,12 @@ export function finnTidligsteOgSenesteDato(inntekter: IInntekt[]): IPeriode {
 }
 
 export function finnTotalBelop(inntekter: IInntekt[]): string {
-  const totaltbelop = inntekter
-    .reduce((sum, inntekt) => sum + Number(inntekt.belop.replace(",", ".")), 0)
-    .toString();
+  const totaltbelop = inntekter.reduce(
+    (sum, inntekt) => sum + parseNorskBeløpTilNumber(inntekt.belop),
+    0
+  );
 
-  return totaltbelop;
+  return totaltbelop.toString();
 }
 
 export function lagInntektListe(
@@ -39,7 +41,7 @@ export function lagInntektListe(
   };
 
   return inntekter.map((inntekt) => ({
-    belop: inntekt.belop,
+    belop: parseNorskBeløpTilNumber(inntekt.belop).toString(),
     fordel: "",
     beskrivelse: beskrivelse,
     inntektskilde: "Saksbehandler",
