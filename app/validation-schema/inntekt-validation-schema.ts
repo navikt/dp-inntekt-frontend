@@ -1,6 +1,10 @@
 import { z } from "zod";
 import type { IGenerertePeriode } from "~/utils/inntekt.util";
 
+// Godtar heltall og desimaler med punktum eller komma,
+// maks 2 desimalsiffer (f.eks. "1000", "12.50", "12,5")
+const gyldigBelopFormat = /^\d+([.,]\d{1,2})?$/;
+
 export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode[]) {
   const baseSchema = z.object({
     inntektskilde: z.string({
@@ -23,10 +27,10 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
           .string()
           .trim()
           .optional()
-          .refine((val) => val === undefined || val === "" || !isNaN(Number(val)), {
+          .refine((val) => val === undefined || val === "" || gyldigBelopFormat.test(val), {
             message: `ikke et gyldig tall`,
           })
-          .refine((val) => val === undefined || val === "" || Number(val) > 0, {
+          .refine((val) => val === undefined || val === "" || Number(val.replace(",", ".")) > 0, {
             message: `må være større enn 0`,
           });
       }
