@@ -6,7 +6,10 @@ export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhet[
   return virksomheter.reduce(
     (total, virksomhet) =>
       total +
-      virksomhet.inntekter.reduce((sum, inntekt) => sum + parseInt(inntekt.belop.toString()), 0),
+      virksomhet.inntekter.reduce(
+        (sum, inntekt) => sum + parseFloat(inntekt.belop.toString().replace(",", ".")),
+        0
+      ),
     0
   );
 }
@@ -98,7 +101,7 @@ export function beregnTotalInntektForEnPeriode(inntekter: IInntekt[], periode: I
 
   // Summerer beløpene for de filtrerte inntektene
   const total = filtrerte.reduce((sum, inntekt) => {
-    return sum + parseInt(inntekt.belop.toString(), 10);
+    return sum + parseFloat(inntekt.belop.toString().replace(",", "."));
   }, 0);
 
   return total;
@@ -143,4 +146,17 @@ export function generereFirePerioder(periode: IPeriode): IGenerertePeriode[] {
   }
 
   return perioder;
+}
+
+// Summerer inntekter per aarMaaned
+export function summerInntekterPerManed(inntekter: IInntekt[]): Record<string, string> {
+  return inntekter.reduce(
+    (acc, inntekt) => {
+      const beløp = parseFloat(inntekt.belop.replace(",", "."));
+      const eksisterendeBeløp = acc[inntekt.aarMaaned] ? parseFloat(acc[inntekt.aarMaaned]) : 0;
+      acc[inntekt.aarMaaned] = (eksisterendeBeløp + beløp).toString();
+      return acc;
+    },
+    {} as Record<string, string>
+  );
 }
