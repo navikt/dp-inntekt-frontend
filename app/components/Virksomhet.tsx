@@ -21,7 +21,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
   return (
     <VStack gap="0">
       <strong>{overskrift}</strong>
-      <p>{verdi}</p>
+      {verdi}
     </VStack>
   );
 }

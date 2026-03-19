@@ -1,6 +1,6 @@
-import { Box, VStack } from "@navikt/ds-react";
+import { Alert, Box, VStack } from "@navikt/ds-react";
 import { useRef } from "react";
-import { data, redirect, useLoaderData } from "react-router";
+import { data, redirect, useLoaderData, useSearchParams } from "react-router";
 import { Header } from "~/components/Header";
 import { InntektPerioderOppsummering } from "~/components/InntektPeriodeSum";
 import InntektsKildeModal from "~/components/LeggTilInntektsKilde/InntektsKildeModal";
@@ -13,7 +13,23 @@ import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const opplysningId = url.searchParams.get("opplysningId");
+  const behandlingId = url.searchParams.get("behandlingId");
+  const erArena = url.searchParams.get("erArena");
+
   if (!params.inntektId) {
+    Error("Mangler inntektId i params");
+  }
+
+  const erArenaBoolean = erArena === "true";
+  const manglerDpSakIder = !opplysningId || !behandlingId;
+
+  if (!erArenaBoolean && manglerDpSakIder) {
+    Error("Bruker kommer fra dp-sak, men mangler opplysningId eller behandlingId");
+  }
+
+  if (!params.inntektId || (!erArenaBoolean && manglerDpSakIder)) {
     return redirect("/sok");
   }
 
@@ -34,12 +50,21 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function Inntekt() {
   const loaderData = useLoaderData<typeof loader>();
   const slettModalRef = useRef<HTMLDialogElement>(null);
+  const [searchParams] = useSearchParams();
+  const inntektLagret = searchParams.get("inntektLagret") === "true";
 
   return (
     <InntektProvider uklassifisertInntekt={loaderData} slettModalRef={slettModalRef}>
       <main>
         <VStack gap="6">
           <Header tittel="Dagpenger inntekt" />
+          {inntektLagret && (
+            <Alert variant="warning">
+              Inntekten er lagret, men opplysnings-ID-en kan ha endret seg. Vil du redigere
+              inntekten på nytt, må du gå tilbake til dp-sak, oppdatere siden og
+              klikke deg inn til inntektsredigeringen på nytt for å få korrekt opplysnings-ID.
+            </Alert>
+          )}
           <Personalia />
           <Box background="surface-default" padding="6" borderRadius="xlarge">
             <InntektPerioderOppsummering />
