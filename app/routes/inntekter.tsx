@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
-import type { Route } from "./+types/inntektId.$inntektId";
 import { hentInntektId } from "~/models/inntekt.server";
+import type { Route } from "./+types/inntektId.$inntektId";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
@@ -10,7 +10,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const beregningsdato = url.searchParams.get("beregningsdato");
 
   // kontekstType kan være både "vedtak" og "saksbehandling" i backend,
-  //  men "vedtak" er det som brukes av Arena, så vi kan hardkode det her
+  // men "vedtak" er det som brukes av Arena, så vi kan hardkode det her
   const inntektIdResponse = await hentInntektId(
     request,
     aktørId!,
@@ -27,6 +27,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const inntektId = await inntektIdResponse.text();
+  const redirectUrl = `/inntektId/${inntektId}?erArena=true`;
 
-  return redirect(`/inntektId/${inntektId}?erArena=true`);
+  return redirect(redirectUrl);
 }

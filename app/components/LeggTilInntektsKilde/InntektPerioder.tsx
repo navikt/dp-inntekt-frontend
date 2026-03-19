@@ -5,6 +5,7 @@ import { capitalize } from "~/utils/generell.util";
 import { type IGenerertePeriode } from "~/utils/inntekt.util";
 import styles from "./InntektPerioder.module.css";
 import type { FormApi } from "@rvf/react-router";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 interface IProps {
   perioder: IGenerertePeriode[];
@@ -14,6 +15,7 @@ interface IProps {
 }
 
 export function InntektPerioder({ perioder, form }: IProps) {
+  const { readOnly } = useInntektSeachParams();
   return (
     <div className={styles.periodeContainer}>
       {perioder?.map((periode) => (
@@ -27,7 +29,7 @@ export function InntektPerioder({ perioder, form }: IProps) {
                 key={month.dato}
                 label={capitalize(format(month.dato, "MMMM", { locale: nb }))}
                 size="small"
-                readOnly={month.readOnly}
+                readOnly={month.readOnly || readOnly}
                 error={form.error(month.dato)}
               />
             ))}
