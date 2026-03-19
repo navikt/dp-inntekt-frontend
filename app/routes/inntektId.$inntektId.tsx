@@ -11,6 +11,7 @@ import { InntektProvider } from "~/context/inntekt-context";
 import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const url = new URL(request.url);
@@ -50,8 +51,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function Inntekt() {
   const loaderData = useLoaderData<typeof loader>();
   const slettModalRef = useRef<HTMLDialogElement>(null);
-  const [searchParams] = useSearchParams();
-  const inntektLagret = searchParams.get("inntektLagret") === "true";
+  const { inntektLagret } = useInntektSeachParams();
 
   return (
     <InntektProvider uklassifisertInntekt={loaderData} slettModalRef={slettModalRef}>
@@ -61,8 +61,8 @@ export default function Inntekt() {
           {inntektLagret && (
             <Alert variant="warning">
               Inntekten er lagret, men opplysnings-ID-en kan ha endret seg. Vil du redigere
-              inntekten på nytt, må du gå tilbake til dp-sak, oppdatere siden og
-              klikke deg inn til inntektsredigeringen på nytt for å få korrekt opplysnings-ID.
+              inntekten på nytt, må du gå tilbake til dp-sak, oppdatere siden og klikke deg inn til
+              inntektsredigeringen på nytt for å få korrekt opplysnings-ID.
             </Alert>
           )}
           <Personalia />
