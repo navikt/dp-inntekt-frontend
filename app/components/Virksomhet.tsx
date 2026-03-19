@@ -29,7 +29,7 @@ export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
 
 export default function Virksomhet({ virksomhet }: IProps) {
   const { virksomhetsnummer, virksomhetsnavn, periode, totalBelop } = virksomhet;
-  const { readOnly } = useInntektSeachParams();
+  const { readOnly, inntektLagret } = useInntektSeachParams();
   const {
     uklassifisertInntekt,
     setUklassifisertInntekt,
@@ -112,7 +112,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
             icon={<TrashIcon />}
             variant="tertiary"
             size="small"
-            disabled={readOnly}
+            disabled={readOnly || inntektLagret}
             onClick={() => {
               setSlettType("VIRKSOMHET");
               setVirksomhetsnummerSomSkalSlettes(virksomhetsnummer);

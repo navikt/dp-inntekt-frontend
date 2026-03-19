@@ -37,7 +37,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
     setSlettType,
     slettType,
   } = useInntekt();
-  const { readOnly } = useInntektSeachParams();
+  const { readOnly, inntektLagret } = useInntektSeachParams();
   const gruppertinntektsbeskrivelser = grupperEtterInntektsbeskrivelse(virksomhet.inntekter);
 
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
@@ -175,7 +175,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
                   variant="tertiary"
                   size="small"
                   icon={<TrashIcon />}
-                  disabled={readOnly}
+                  disabled={readOnly || inntektLagret}
                   onClick={() => {
                     setvirksomhetnummer(virksomhet.virksomhetsnummer);
                     setvirksomhetBeskrivelse(virksomhetInntekt.beskrivelse);
