@@ -2,6 +2,7 @@ dp_inntekt_api_url: "http://dp-inntekt-api"
 
 ingresses:
   - https://dagpenger-inntekt.ansatt.dev.nav.no
+  - https://dagpenger-inntekt.intern.dev.nav.no
 replicas:
   min: 2
   max: 2
@@ -12,3 +13,4 @@ azure:
   grupper:
     saksbehandler: "3e28466f-c53d-46da-8b44-a4abc2ad4593" # 0000-GA-Dagpenger-Saksbehandler
     beslutter: "11b8475a-fb12-41aa-b1f6-8497c1b5385b" # 0000-GA-Dagpenger-Beslutter
+    inntektsregistrering: "de7f2f98-723c-408d-b4a9-54189eb90ebf" # 0000-GA-ARENA-DAGPENGER-INNTEKTSREGISTERING

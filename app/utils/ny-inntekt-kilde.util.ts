@@ -15,7 +15,11 @@ export function finnTidligsteOgSenesteDato(inntekter: IInntekt[]): IPeriode {
 }
 
 export function finnTotalBelop(inntekter: IInntekt[]): string {
-  return inntekter.reduce((sum, inntekt) => sum + Number(inntekt.belop), 0).toString();
+  const totaltbelop = inntekter
+    .reduce((sum, inntekt) => sum + Number(inntekt.belop.replace(",", ".")), 0)
+    .toString();
+
+  return totaltbelop;
 }
 
 export function lagInntektListe(
