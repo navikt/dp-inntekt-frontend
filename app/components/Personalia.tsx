@@ -32,6 +32,13 @@ export function Personalia() {
 
   const lagreInntektModalRef = useRef<HTMLDialogElement>(null);
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
+<<<<<<< HEAD
+=======
+  const opplysningId = searchParams.get("opplysningId");
+  const behandlingId = searchParams.get("behandlingId");
+  const erArena = searchParams.get("erArena") || "false";
+  const inntektLagret = searchParams.get("inntektLagret") === "true";
+>>>>>>> main
 
   const manglerDpSakIder = !opplysningId || !behandlingId;
 
@@ -112,7 +119,11 @@ export function Personalia() {
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
+<<<<<<< HEAD
             disabled={readOnly}
+=======
+            disabled={inntektLagret}
+>>>>>>> main
             onClick={() => {
               if (!inntektEndret) {
                 ingenEndringerModalRef?.current?.showModal();
