@@ -33,6 +33,7 @@ const queryParams = [
   behandlingId && behandlingId !== "undefined" && `behandlingId=${behandlingId}`,
   opplysningId && opplysningId !== "undefined" && `opplysningId=${opplysningId}`,
   erArena && erArena !== "undefined" && `erArena=${erArena}`,
+  "inntektLagret=true",
 ].filter(Boolean).join("&");
 
 const redirectUrl = `/inntektId/${nyInntektId}${queryParams ? `?${queryParams}` : ""}`;

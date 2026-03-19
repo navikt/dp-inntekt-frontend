@@ -33,6 +33,7 @@ export function Personalia() {
   const opplysningId = searchParams.get("opplysningId");
   const behandlingId = searchParams.get("behandlingId");
   const erArena = searchParams.get("erArena") || "false";
+  const inntektLagret = searchParams.get("inntektLagret") === "true";
 
   const erArenaBoolean = erArena === "true";
   const manglerDpSakIder = !opplysningId || !behandlingId;
@@ -114,6 +115,7 @@ export function Personalia() {
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
+            disabled={inntektLagret}
             onClick={() => {
               if (!inntektEndret) {
                 ingenEndringerModalRef?.current?.showModal();
