@@ -22,6 +22,7 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 interface IProps {
   ref: React.RefObject<HTMLDialogElement | null>;
@@ -39,6 +40,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
+  const { readOnly } = useInntektSeachParams();
 
   const form = useForm({
     submitSource: "state",
@@ -222,7 +224,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
           </VStack>
         </Modal.Body>
         <Modal.Footer>
-          <Button type="button" size="small" onClick={() => settInn()}>
+          <Button type="button" size="small" onClick={() => settInn()} disabled={readOnly}>
             Sett inn
           </Button>
           <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
