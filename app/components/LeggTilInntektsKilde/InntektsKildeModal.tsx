@@ -29,6 +29,7 @@ import { hentInntektValidationSchema } from "~/validation-schema/inntekt-validat
 import { InntektPerioder } from "./InntektPerioder";
 
 import styles from "./InntektsKildeModal.module.css";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 interface IProps {
   erNyVirksomhet: boolean;
@@ -46,6 +47,7 @@ export default function InntektsKildeModal({
   const [genertePerioder, setGenerertePerioder] = useState<IGenerertePeriode[]>([]);
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
+  const { readOnly, inntektLagret } = useInntektSeachParams();
   const [identifikatorError, setIdentifikatorError] = useState<string | undefined>(undefined);
   const [showForms, setShowForms] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(
@@ -284,6 +286,7 @@ export default function InntektsKildeModal({
         variant="primary"
         size={erNyVirksomhet ? "medium" : "small"}
         icon={<PlusCircleIcon aria-hidden />}
+        disabled={readOnly || inntektLagret}
         onClick={() => {
           ref.current?.showModal();
           setShowForms(true);
