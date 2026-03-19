@@ -9,6 +9,12 @@ export const lagreEndringerSchema = z.object({
   inntektId: z.string({
     required_error: "InntektId er påkrevd",
   }),
+  behandlingId: z.string({
+    required_error: "BehandlingId er påkrevd",
+  }).optional(),
+  opplysningId: z.string({
+    required_error: "OpplysningId er påkrevd",
+  }).optional(),
   begrunnelse: z
     .string({
       required_error: "Begrunnelse er påkrevd",
@@ -16,4 +22,5 @@ export const lagreEndringerSchema = z.object({
     .refine((val) => /[a-zA-ZæøåÆØÅ]/.test(val ?? ""), {
       message: "Begrunnelse må inneholde minst én bokstav",
     }),
+  erArena: z.string().optional(),
 });
