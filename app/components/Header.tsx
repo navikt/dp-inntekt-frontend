@@ -1,7 +1,7 @@
 import { BodyShort, Box, HStack, Switch, Tag } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
-import { NavLogoIkon } from "./Ikoner/NavLogoIkon";
 import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
+import { NavLogoIkon } from "./Ikoner/NavLogoIkon";
 
 interface IProps {
   tittel: string;
@@ -23,16 +23,14 @@ export function Header({ tittel }: IProps) {
           )}
         </HStack>
 
-        <HStack gap="4">
-          <Switch
-            checked={skjulSensitiveOpplysninger}
-            size="small"
-            onClick={() => setSkjulSensitiveOpplysninger(!skjulSensitiveOpplysninger)}
-            position="right"
-          >
-            Skjul sensitive opplysninger
-          </Switch>
-        </HStack>
+        <Switch
+          checked={skjulSensitiveOpplysninger}
+          size="small"
+          onClick={() => setSkjulSensitiveOpplysninger(!skjulSensitiveOpplysninger)}
+          position="right"
+        >
+          Skjul sensitive opplysninger
+        </Switch>
       </HStack>
     </Box>
   );
