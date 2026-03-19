@@ -1,5 +1,6 @@
-import { BodyShort, Box, HStack, Switch } from "@navikt/ds-react";
+import { BodyShort, Box, HStack, Switch, Tag } from "@navikt/ds-react";
 import { useInntekt } from "~/context/inntekt-context";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 import { NavLogoIkon } from "./Ikoner/NavLogoIkon";
 
 interface IProps {
@@ -8,13 +9,20 @@ interface IProps {
 
 export function Header({ tittel }: IProps) {
   const { setSkjulSensitiveOpplysninger, skjulSensitiveOpplysninger } = useInntekt();
+  const { readOnly } = useInntektSeachParams();
 
   return (
     <Box background="surface-default" padding="6" borderRadius="xlarge" borderColor="border-subtle">
       <HStack gap="4" justify="space-between" align="center">
         <HStack gap="4">
           <NavLogoIkon /> <BodyShort weight="semibold">{tittel}</BodyShort>
+          {readOnly && (
+            <Tag variant="info" data-color="info" size="small">
+              Lesevisning
+            </Tag>
+          )}
         </HStack>
+
         <Switch
           checked={skjulSensitiveOpplysninger}
           size="small"

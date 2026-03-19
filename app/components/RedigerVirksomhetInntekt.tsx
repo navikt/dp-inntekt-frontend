@@ -3,6 +3,8 @@ import { Button } from "@navikt/ds-react";
 import { useRef } from "react";
 import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
 import RedigerModal from "./LeggTilInntektsKilde/RedigerInntektModal";
+import { useInntekt } from "~/context/inntekt-context";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 interface IProps {
   virksomhet: IVirksomhet;

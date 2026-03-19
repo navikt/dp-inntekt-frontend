@@ -1,7 +1,8 @@
-import {BodyLong, Button, Modal} from "@navikt/ds-react";
-import {useInntekt} from "~/context/inntekt-context";
-import {ArrowsCirclepathIcon} from "@navikt/aksel-icons";
-import {useRef, useState} from "react";
+import { ArrowsCirclepathIcon } from "@navikt/aksel-icons";
+import { BodyLong, Button, Modal } from "@navikt/ds-react";
+import { useRef, useState } from "react";
+import { useInntekt } from "~/context/inntekt-context";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 interface HentInntektPaNyttModalProps {
   inntektId: string;
@@ -9,6 +10,7 @@ interface HentInntektPaNyttModalProps {
 
 export function HentInntektPaNyttModal({ inntektId }: HentInntektPaNyttModalProps) {
   const { setUklassifisertInntekt, setInntektEndret } = useInntekt();
+  const { readOnly, inntektLagret } = useInntektSeachParams();
   const ref = useRef<HTMLDialogElement>(null);
   const heading = "Du er i ferd med å hente inntekt på nytt fra A-Inntekt";
   const [laster, setLaster] = useState(false);
@@ -37,6 +39,7 @@ export function HentInntektPaNyttModal({ inntektId }: HentInntektPaNyttModalProp
         variant="secondary"
         icon={<ArrowsCirclepathIcon />}
         onClick={() => ref.current?.showModal()}
+        disabled={readOnly || inntektLagret}
       >
         Hent inntekt på nytt
       </Button>
