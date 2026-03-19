@@ -13,13 +13,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   // men "vedtak" er det som brukes av Arena, så vi kan hardkode det her
   const inntektIdResponse = await hentInntektId(
     request,
-
     aktørId!,
-
     "vedtak",
-
     vedtakId!,
-
     beregningsdato!
   );
 
@@ -31,7 +27,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const inntektId = await inntektIdResponse.text();
+  const redirectUrl = `/inntektId/${inntektId}?erArena=true`;
 
-  // Todo:
-  return redirect(`/inntektId/${inntektId}?erArena=true&readOnly=true`);
+  return redirect(redirectUrl);
 }
