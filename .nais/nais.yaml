@@ -64,6 +64,7 @@ spec:
         groups:
           - id: "{{azure.grupper.saksbehandler}}"
           - id: "{{azure.grupper.beslutter}}"
+          - id: "{{azure.grupper.inntektsregistrering}}"
         extra:
           - NAVident
     sidecar:
