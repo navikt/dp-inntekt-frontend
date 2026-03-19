@@ -13,32 +13,25 @@ import {
 } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { useEffect, useRef } from "react";
-import { useNavigation, useParams, useSearchParams } from "react-router";
+import { useNavigation, useParams } from "react-router";
 import { HentInntektPaNyttModal } from "~/components/HentInntektPaNyttModal";
 import { useInntekt } from "~/context/inntekt-context";
+import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 import { erEnKvinne } from "~/utils/generell.util";
 import { maskerVerdi } from "~/utils/skjul-sensitiv-opplysning";
 import { lagreEndringerSchema } from "~/validation-schema/lagre-endringer-schema";
 import { KvinneIkon } from "./Ikoner/KvinneIkon";
 import { MennIkon } from "./Ikoner/MennIkon";
-import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 export function Personalia() {
   const params = useParams();
   const { state } = useNavigation();
-  const { readOnly, opplysningId, behandlingId, erArena } = useInntektSeachParams();
+  const { readOnly, opplysningId, behandlingId, erArena, inntektLagret } = useInntektSeachParams();
   const { inntektEndret, uklassifisertInntekt, setInntektEndret, skjulSensitiveOpplysninger } =
     useInntekt();
 
   const lagreInntektModalRef = useRef<HTMLDialogElement>(null);
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
-<<<<<<< HEAD
-=======
-  const opplysningId = searchParams.get("opplysningId");
-  const behandlingId = searchParams.get("behandlingId");
-  const erArena = searchParams.get("erArena") || "false";
-  const inntektLagret = searchParams.get("inntektLagret") === "true";
->>>>>>> main
 
   const manglerDpSakIder = !opplysningId || !behandlingId;
 
@@ -119,11 +112,7 @@ export function Personalia() {
             size="small"
             icon={<FloppydiskIcon title="a11y-title" fontSize="1.2rem" />}
             type="submit"
-<<<<<<< HEAD
-            disabled={readOnly}
-=======
-            disabled={inntektLagret}
->>>>>>> main
+            disabled={readOnly || inntektLagret}
             onClick={() => {
               if (!inntektEndret) {
                 ingenEndringerModalRef?.current?.showModal();

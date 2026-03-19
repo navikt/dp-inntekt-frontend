@@ -5,6 +5,7 @@ type InntektSearchParams = {
   behandlingId: string | null;
   erArena: boolean;
   readOnly: boolean;
+  inntektLagret: boolean;
 };
 
 export function useInntektSeachParams(): InntektSearchParams {
@@ -14,11 +15,13 @@ export function useInntektSeachParams(): InntektSearchParams {
   const behandlingId = searchParams.get("behandlingId");
   const erArena = searchParams.get("erArena") === "true";
   const readOnly = searchParams.get("readOnly") === "true";
+  const inntektLagret = searchParams.get("inntektLagret") === "true";
 
   return {
     opplysningId,
     behandlingId,
     erArena,
     readOnly,
+    inntektLagret,
   };
 }
