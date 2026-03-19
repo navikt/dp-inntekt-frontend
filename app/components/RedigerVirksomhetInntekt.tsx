@@ -17,7 +17,6 @@ interface IProps {
 
 export function RedigerVirksomhetInntekt({ virksomhet, formDefaultValues }: IProps) {
   const ref = useRef<HTMLDialogElement>(null);
-  const { readOnly, inntektLagret } = useInntektSeachParams();
 
   return (
     <>
@@ -26,7 +25,6 @@ export function RedigerVirksomhetInntekt({ virksomhet, formDefaultValues }: IPro
         size="small"
         icon={<NotePencilIcon />}
         onClick={() => ref.current?.showModal()}
-        disabled={readOnly || inntektLagret}
       />
       <RedigerModal ref={ref} virksomhet={virksomhet} formDefaultValues={formDefaultValues} />
     </>
