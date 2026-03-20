@@ -1,9 +1,9 @@
 import { z } from "zod";
-import type { IGenerertePeriode } from "~/utils/inntekt.util";
+import { parseNorskBeløpTilNumber, type IGenerertePeriode } from "~/utils/inntekt.util";
 
-// Godtar heltall og desimaler med punktum eller komma,
-// maks 2 desimalsiffer (f.eks. "1000", "12.50", "12,5")
-const gyldigBelopFormat = /^\d+([.,]\d{1,2})?$/;
+// Godtar heltall og desimaler med koma, og maks 2 desimalsiffer
+// (f.eks. "1000", "12,5", "1000,50")
+const gyldigBelopFormat = /^\d+(,\d{1,2})?$/;
 
 export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode[]) {
   const baseSchema = z.object({
@@ -30,7 +30,7 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
           .refine((val) => val === undefined || val === "" || gyldigBelopFormat.test(val), {
             message: `ikke et gyldig tall`,
           })
-          .refine((val) => val === undefined || val === "" || Number(val.replace(",", ".")) > 0, {
+          .refine((val) => val === undefined || val === "" || parseNorskBeløpTilNumber(val) > 0, {
             message: `må være større enn 0`,
           });
       }
