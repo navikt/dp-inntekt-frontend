@@ -3,9 +3,43 @@ import type { IInntekt, IVirksomhet } from "~/types/inntekt.types";
 import {
   beregnTotalInntektForEnPeriode,
   inntektsPeriodeEr36Maneder,
+  parseNorskBeløpTilNumber,
+  parseNumberTilNorskBeløp,
   sumTotaltInntekterForAlleVirksomheter,
   summerInntekterPerManed,
 } from "./inntekt.util";
+
+describe("parseNorskBeløpTilNumber", () => {
+  it("konverterer heltall uten desimaler", () => {
+    expect(parseNorskBeløpTilNumber("1000")).toBe(1000);
+  });
+
+  it("konverterer tall med komma til desimaltall", () => {
+    expect(parseNorskBeløpTilNumber("1000,5")).toBe(1000.5);
+  });
+
+  it("konverterer tall med to desimaler", () => {
+    expect(parseNorskBeløpTilNumber("1000,50")).toBe(1000.5);
+  });
+
+  it("konverterer 0", () => {
+    expect(parseNorskBeløpTilNumber("0")).toBe(0);
+  });
+});
+
+describe("parseNumberTilNorskBeløp", () => {
+  it("konverterer heltall uten endring", () => {
+    expect(parseNumberTilNorskBeløp(1000)).toBe("1000");
+  });
+
+  it("konverterer desimaltall til kommaformat", () => {
+    expect(parseNumberTilNorskBeløp(1000.5)).toBe("1000,5");
+  });
+
+  it("konverterer 0", () => {
+    expect(parseNumberTilNorskBeløp(0)).toBe("0");
+  });
+});
 
 describe("sumTotaltInntekterForAlleVirksomheter", () => {
   const lagVirksomhet = (inntekter: Partial<IInntekt>[]): Partial<IVirksomhet> => ({

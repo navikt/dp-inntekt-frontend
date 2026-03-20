@@ -59,7 +59,7 @@ function generateMockInntektDataFromPeriode(periode: IPeriode, inntektstype: str
     const formattedMonth = `${year}-${String(month).padStart(2, "0")}`;
 
     data.push({
-      belop: "10000.0", // this could be any mock value
+      belop: "10000.10", // this could be any mock value
       fordel: "kontantytelse",
       beskrivelse: inntektstype,
       inntektskilde: "Saksbehandler",
@@ -89,7 +89,7 @@ function generateMockInntektDataFromPeriode(periode: IPeriode, inntektstype: str
 function updateTotalBelop(virksomheter: IVirksomhet[]) {
   virksomheter.forEach((virksomhet) => {
     const totalInntekt = virksomhet.inntekter.reduce((sum, inntekt) => {
-      return sum + parseInt(inntekt.belop, 10);
+      return sum + Number(inntekt.belop);
     }, 0);
 
     virksomhet.totalBelop = totalInntekt.toString(); // Update totalBelop with the calculated sum
