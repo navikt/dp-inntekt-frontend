@@ -1,7 +1,9 @@
 dp_inntekt_api_url: "http://dp-inntekt-api"
 
 ingresses:
-  - https://dagpenger-inntekt.nav.no
+  - https://dagpenger-inntekt.intern.nav.no
+  - https://dagpenger-inntekt.ansatt.nav.no
+
 replicas:
   min: 2
   max: 2
