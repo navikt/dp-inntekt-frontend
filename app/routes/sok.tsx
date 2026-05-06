@@ -103,7 +103,7 @@ export default function Sok() {
                     window.location.href = `/inntektId/${testInntektId}?opplysningId=${testOpplysningId}&behandlingId=${testBehandlingId}`;
                   }}
                 >
-                  Hopp til testinntekt
+                  Hopp til DP-SAK inntekt
                 </Button>
 
                 <Button
@@ -115,7 +115,7 @@ export default function Sok() {
                     window.location.href = `/inntektId/${testInntektId}?erArena=true`;
                   }}
                 >
-                  Hopp til testinntekt som kommer fra Arena
+                  Hopp til ARENA inntekt
                 </Button>
               </VStack>
             </form>
