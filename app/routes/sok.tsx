@@ -1,4 +1,4 @@
-import { Box, Button, TextField, VStack } from "@navikt/ds-react";
+import { Box, Button, HStack, TextField, VStack } from "@navikt/ds-react";
 import { useForm } from "@rvf/react-router";
 import { redirect, useNavigation } from "react-router";
 import invariant from "tiny-invariant";
@@ -44,6 +44,10 @@ export async function action({ request }: Route.ActionArgs) {
 export default function Sok() {
   const { state } = useNavigation();
 
+  const testInntektId = "01JWQT42FY3J0ZTXNZP2PFCAQ0";
+  const testOpplysningId = "123e4567-e89b-12d3-a456-426614174000";
+  const testBehandlingId = "123e4567-e89b-12d3-a456-426614174000";
+
   const form = useForm({
     submitSource: "state",
     validationBehaviorConfig: {
@@ -54,9 +58,9 @@ export default function Sok() {
     method: "put",
     schema,
     defaultValues: {
-      inntektId: "",
-      opplysningId: "",
-      behandlingId: "",
+      inntektId: testInntektId,
+      opplysningId: testOpplysningId,
+      behandlingId: testBehandlingId,
     },
   });
 
@@ -69,24 +73,51 @@ export default function Sok() {
             <form {...form.getFormProps()}>
               <VStack gap="4">
                 <TextField
-                  name="inntektId"
-                  label="Søk etter inntektId. Eks: 01JWQT42FY3J0ZTXNZP2PFCAQ0"
+                  {...form.getInputProps("inntektId")}
                   error={form.error("inntektId")}
+                  label="InntektId: ULID-format, 26 tegn"
                 />
                 <TextField
-                  name="opplysningId"
-                  label="Søk etter opplysningId. Eks: 123e4567-e89b-12d3-a456-426614174000"
+                  {...form.getInputProps("opplysningId")}
                   error={form.error("opplysningId")}
+                  label="OpplysningId: UUID-format, 36 tegn"
                 />
                 <TextField
-                  name="behandlingId"
-                  label="Søk etter behandlingId. Eks: 123e4567-e89b-12d3-a456-426614174000"
+                  {...form.getInputProps("behandlingId")}
                   error={form.error("behandlingId")}
+                  label="BehandlingId: UUID-format, 36 tegn"
                 />
               </VStack>
+
               <Button type="submit" variant="primary" className="mt-4" loading={state !== "idle"}>
                 Søk inntekt
               </Button>
+
+              <VStack align="start" className="mt-8">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="mt-4"
+                  loading={state !== "idle"}
+                  onClick={() => {
+                    window.location.href = `/inntektId/${testInntektId}?opplysningId=${testOpplysningId}&behandlingId=${testBehandlingId}`;
+                  }}
+                >
+                  Hopp til DP-SAK inntekt
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="mt-4"
+                  loading={state !== "idle"}
+                  onClick={() => {
+                    window.location.href = `/inntektId/${testInntektId}?erArena=true`;
+                  }}
+                >
+                  Hopp til ARENA inntekt
+                </Button>
+              </VStack>
             </form>
           </Box>
         </VStack>

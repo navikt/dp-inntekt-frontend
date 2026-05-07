@@ -30,10 +30,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     Error("Bruker kommer fra dp-sak, men mangler opplysningId eller behandlingId");
   }
 
-  if (!params.inntektId || (!erArenaBoolean && manglerDpSakIder)) {
-    return redirect("/sok");
-  }
-
   const inntektResponse = await hentInntekt(request, params.inntektId);
 
   if (!inntektResponse.ok) {
