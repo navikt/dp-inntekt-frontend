@@ -5,7 +5,7 @@ async function timedFetch(label: string, url: string, options: RequestInit): Pro
   const start = performance.now();
   const response = await fetch(url, options);
   const duration = (performance.now() - start).toFixed(2);
-  const maskedUrl = url.slice(0, url.lastIndexOf("/") + 1) + "***";
+  const maskedUrl = url.slice(0, -4) + "****";
   console.log(`[timer] ${label} – ${duration}ms (${maskedUrl})`);
   return response;
 }
