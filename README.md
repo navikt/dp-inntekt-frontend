@@ -1,6 +1,6 @@
 # dp-inntekt-frontend
 
-Inntektsredigeringsverktøy for saksbehandlere som jobber med dagpenger.
+Inntektsredigeringsverktøy for saksbehandlere som jobber med dagpenger. Applikasjonen gjør det mulig å hente, vise, redigere og validere inntektsopplysninger knyttet til søkere av dagpenger.
 
 ## Kom i gang
 
