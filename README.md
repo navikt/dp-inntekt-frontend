@@ -14,7 +14,7 @@ Ta kopi av `.env.example` og kall filen `.env`
 Installer avhengigheter
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Kjør applikasjonen lokalt
@@ -22,7 +22,7 @@ npm install
 Start utviklingsserveren med hot module reloading (HMR):
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ## ⭐️ Godt å vite
@@ -48,13 +48,13 @@ DP_INNTEKT_API_TOKEN: access_token
 ### Kjør tester
 
 ```bash
-npm run test
+pnpm run test
 ```
 
 ### Kjør test coverage
 
 ```bash
-npm run coverage
+pnpm run coverage
 ```
 
 ## ✉️ Henvendelser

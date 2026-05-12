@@ -1,41 +1,44 @@
-FROM node:22-alpine AS node
-
-RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
-    npm config set //npm.pkg.github.com/:_authToken=$(cat /run/secrets/NODE_AUTH_TOKEN)
-RUN npm config set @navikt:registry=https://npm.pkg.github.com
-
+FROM node:24-alpine AS node
+RUN corepack enable
+RUN corepack prepare pnpm@10.30.1 --activate
+RUN pnpm config set @navikt:registry=https://npm.pkg.github.com
 
 # build app
 FROM node AS app-build
 WORKDIR /app
 
 COPY ./app ./app
-COPY ./public ./public
+COPY ./public ./public/
 COPY ./vite.config.ts ./
 COPY ./package.json ./
-COPY ./package-lock.json  ./
+COPY ./pnpm-lock.yaml ./
+COPY ./react-router.config.ts ./
 
-RUN npm ci --ignore-scripts
-RUN npm run build
 
+RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
+    pnpm config set //npm.pkg.github.com/:_authToken=$(cat /run/secrets/NODE_AUTH_TOKEN) && \
+    pnpm install --ignore-scripts && \
+    pnpm config delete //npm.pkg.github.com/:_authToken
+RUN pnpm run build
 
 # install dependencies
 FROM node AS app-dependencies
 WORKDIR /app
 
 COPY ./package.json ./
-COPY ./package-lock.json  ./
+COPY ./pnpm-lock.yaml ./
 
-RUN npm ci --ignore-scripts --omit dev
-
+RUN --mount=type=secret,id=NODE_AUTH_TOKEN \
+    pnpm config set //npm.pkg.github.com/:_authToken=$(cat /run/secrets/NODE_AUTH_TOKEN) && \
+    pnpm install --ignore-scripts --prod && \
+    pnpm config delete //npm.pkg.github.com/:_authToken
 
 # export build to filesystem (GitHub)
-FROM scratch AS export
-COPY --from=app-build /app/build /
-
+FROM scratch AS build-export
+COPY --from=app-build /app/build ./
 
 # runtime
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:22@sha256:7ce2525b1f1c781dfce11d8404d58ae95cf851bae55f09a9da452e3f704b6070 AS runtime
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:24@sha256:fffe0ad955bc6961b10c4cba6ad03064d2017882587c8a8535f06d147ed15ff1 AS runtime
 WORKDIR /app
 
 ARG NODE_ENV=production
@@ -43,6 +46,7 @@ ENV NODE_ENV=${NODE_ENV}
 ENV TZ="Europe/Oslo"
 EXPOSE 3000
 
+COPY ./public ./public/
 COPY ./package.json ./package.json
 COPY --from=app-build /app/build/ ./build/
 COPY --from=app-dependencies /app/node_modules ./node_modules
