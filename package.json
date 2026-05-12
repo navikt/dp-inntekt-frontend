@@ -9,7 +9,8 @@
     "start": "react-router-serve ./build/server/index.js",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "token": "node ./token-generator.cjs"
   },
   "dependencies": {
     "@navikt/aksel-icons": "^7.40.0",
@@ -45,6 +46,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "msw": "^2.14.6",
+    "playwright-chromium": "^1.60.0",
     "prettier": "^3.8.3",
     "react-router-devtools": "^6.2.0",
     "typescript": "^5.9.3",
