@@ -40,7 +40,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
   const [manglerInntekt, setManglerInntekt] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(undefined);
   const { setInntektEndret, uklassifisertInntekt, setUklassifisertInntekt } = useInntekt();
-  const { readOnly } = useInntektSeachParams();
+  const { readOnly, inntektLagret } = useInntektSeachParams();
 
   const form = useForm({
     submitSource: "state",
@@ -224,7 +224,12 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
           </VStack>
         </Modal.Body>
         <Modal.Footer>
-          <Button type="button" size="small" onClick={() => settInn()} disabled={readOnly}>
+          <Button
+            type="button"
+            size="small"
+            onClick={() => settInn()}
+            disabled={readOnly || inntektLagret}
+          >
             Sett inn
           </Button>
           <Button type="button" size="small" variant="secondary" onClick={() => avbryt()}>
