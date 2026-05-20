@@ -41,8 +41,8 @@ Hente backend access_token fra:
 https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp.teamdagpenger.dp-inntekt-api
 
 ```bash
-USE_MSW: false
-DP_INNTEKT_API_TOKEN: access_token
+USE_MSW=false
+DP_INNTEKT_API_TOKEN=access_token
 ```
 
 ### Kjør tester
