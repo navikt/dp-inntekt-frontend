@@ -3,7 +3,7 @@
 Inntektsredigeringsverktøy for saksbehandlere som jobber med dagpenger.  
 Applikasjonen gjør det mulig å hente, vise, redigere og validere inntektsopplysninger knyttet til søkere av dagpenger.
 
-## 🚀 Kom i gang
+## Kom i gang
 
 ### Sette opp miljøvariabel fil
 
@@ -25,7 +25,7 @@ Start utviklingsserveren med hot module reloading (HMR):
 npm run dev
 ```
 
-## ⭐️ Godt å vite
+## Godt å vite
 
 ### Kjør applikasjonen lokalt mot DEV-backend
 
@@ -57,7 +57,7 @@ npm run test
 npm run coverage
 ```
 
-## ✉️ Henvendelser
+## Henvendelser
 
 Spørsmål knyttet til koden eller prosjektet kan rettes mot:
 
