@@ -1,3 +1,6 @@
 allowBuilds:
   playwright-chromium: false
   puppeteer: false
+minimumReleaseAge: 4320
+overrides:
+  uuid@<11.1.1: '>=11.1.1'
