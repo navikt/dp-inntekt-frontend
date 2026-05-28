@@ -1,87 +1,101 @@
-name: Build and deploy
+name: Bygg og deploy
 
 on:
-  push:
   workflow_dispatch:
+  push:
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+  LATEST_IMAGE: ghcr.io/${{ github.repository }}:latest
 
 jobs:
-  install:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node_modules
-        with:
-          path: ./node_modules
-          key: modules-${{ hashFiles('package-lock.json') }}
-
-      - uses: actions/setup-node@v6
-        if: steps.node_modules.outputs.cache-hit != 'true'
-        with:
-          node-version: "20.x"
-          cache: "npm"
-          registry-url: "https://npm.pkg.github.com"
-
-      - run: npm ci --ignore-scripts
-        if: steps.node_modules.outputs.cache-hit != 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-
   test:
-    needs: [install]
+    name: Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
     steps:
-      - uses: actions/checkout@v6
-      - name: Cache node_modules
-        uses: actions/cache@v5
-        id: node_modules
-        with:
-          path: ./node_modules
-          key: modules-${{ hashFiles('package-lock.json') }}
-      - uses: actions/setup-node@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.0.5
+
+      - name: Setup node
+        uses: actions/setup-node@v6.4.0
         with:
           node-version: "24.x"
-          cache: "npm"
+          cache: "pnpm"
           registry-url: "https://npm.pkg.github.com"
-      - run: npm ci --ignore-scripts
+
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        id: node_modules
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install dependencies
         if: steps.node_modules.outputs.cache-hit != 'true'
+        run: pnpm install --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-      - run: npm run test
+
+      - name: Run tests
+        run: pnpm test
 
   build:
+    name: Bygg
     needs: [test]
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
       id-token: "write"
-      packages: write
+      packages: "write"
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
+
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.0.5
+
+      - name: Setup node
+        uses: actions/setup-node@v6.4.0
         with:
-          node-version: "22.x"
-      - name: docker-build-push
+          node-version: "24.x"
+          cache: "pnpm"
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        id: node_modules
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Bygg og push Docker image
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
           team: teamdagpenger
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          tag: ${{ env.VERSION_TAG }}
+          build_secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
           push_image: true
           dockerfile: Dockerfile
           docker_context: .
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          build_secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
+
       - name: Build static files
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
-          target: export
+          target: build-export
           outputs: type=local,dest=build
           secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
+
       - name: Upload static files
         uses: nais/deploy/actions/cdn-upload/v2@master
         with:
@@ -92,14 +106,12 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
   deploy-dev:
-    needs: [build]
-    if: github.actor != 'dependabot[bot]' || github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment: dev-gcp
+    name: Deploy til dev-gcp
     permissions:
-      contents: "read"
       id-token: "write"
-      packages: write
+    if: github.actor != 'dependabot[bot]' || github.ref == 'refs/heads/main'
+    needs: [build]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
@@ -111,14 +123,12 @@ jobs:
           PRINT_PAYLOAD: true
 
   deploy-prod:
-    needs: [build]
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment: prod-gcp
+    name: Deploy til prod-gcp
     permissions:
-      contents: "read"
       id-token: "write"
-      packages: write
+    if: github.ref == 'refs/heads/main'
+    needs: [build, deploy-dev]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: nais/deploy/actions/deploy@v2
