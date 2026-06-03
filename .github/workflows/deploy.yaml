@@ -16,7 +16,7 @@ jobs:
       contents: "read"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6.0.5
@@ -57,7 +57,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6.0.5
@@ -113,7 +113,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.2
       - uses: nais/deploy/actions/deploy@v2
         env:
           VAR: image=${{ needs.build.outputs.image }},githubSha=${{ github.sha }}
@@ -130,7 +130,7 @@ jobs:
     needs: [build, deploy-dev]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.2
       - uses: nais/deploy/actions/deploy@v2
         env:
           VAR: image=${{ needs.build.outputs.image }},githubSha=${{ github.sha }}
