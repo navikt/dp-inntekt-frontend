@@ -29,15 +29,15 @@ const schema = z.object({
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const inntektId = formData.get("inntektId");
-  const opplysningId = formData.get("opplysningId");
+  const opplysningTypeId = formData.get("opplysningId");
   const behandlingId = formData.get("behandlingId");
 
   invariant(inntektId, "Mangler inntekt-ID");
-  invariant(opplysningId, "Mangler opplysning-ID");
+  invariant(opplysningTypeId, "Mangler opplysning-ID");
   invariant(behandlingId, "Mangler behandling-ID");
 
   return redirect(
-    `/inntektId/${inntektId}?opplysningId=${opplysningId}&behandlingId=${behandlingId}`
+    `/inntektId/${inntektId}?opplysningId=${opplysningTypeId}&behandlingId=${behandlingId}`
   );
 }
 

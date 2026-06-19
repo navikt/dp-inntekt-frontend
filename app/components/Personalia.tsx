@@ -26,14 +26,15 @@ import { MennIkon } from "./Ikoner/MennIkon";
 export function Personalia() {
   const params = useParams();
   const { state } = useNavigation();
-  const { readOnly, opplysningId, behandlingId, erArena, inntektLagret } = useInntektSeachParams();
+  const { readOnly, opplysningTypeId, behandlingId, erArena, inntektLagret } =
+    useInntektSeachParams();
   const { inntektEndret, uklassifisertInntekt, setInntektEndret, skjulSensitiveOpplysninger } =
     useInntekt();
 
   const lagreInntektModalRef = useRef<HTMLDialogElement>(null);
   const ingenEndringerModalRef = useRef<HTMLDialogElement>(null);
 
-  const manglerDpSakIder = !opplysningId || !behandlingId;
+  const manglerDpSakIder = !opplysningTypeId || !behandlingId;
 
   if (!params.inntektId || (!erArena && manglerDpSakIder)) {
     throw new Error("inntektId, behandlingId eller opplysningId mangler i URL");
@@ -45,7 +46,7 @@ export function Personalia() {
     defaultValues: {
       inntektId: params.inntektId,
       behandlingId: behandlingId || undefined,
-      opplysningId: opplysningId || undefined,
+      opplysningId: opplysningTypeId || undefined,
       begrunnelse: "",
       erArena: erArena.toString(),
     },

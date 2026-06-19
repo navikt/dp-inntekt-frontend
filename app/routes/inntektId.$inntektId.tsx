@@ -15,7 +15,7 @@ import { useInntektSeachParams } from "~/hooks/useInntektSeachParams";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const url = new URL(request.url);
-  const opplysningId = url.searchParams.get("opplysningId");
+  const opplysningTypeId = url.searchParams.get("opplysningId");
   const behandlingId = url.searchParams.get("behandlingId");
   const erArena = url.searchParams.get("erArena");
 
@@ -24,7 +24,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   }
 
   const erArenaBoolean = erArena === "true";
-  const manglerDpSakIder = !opplysningId || !behandlingId;
+  const manglerDpSakIder = !opplysningTypeId || !behandlingId;
 
   if (!erArenaBoolean && manglerDpSakIder) {
     Error("Bruker kommer fra dp-sak, men mangler opplysningId eller behandlingId");
