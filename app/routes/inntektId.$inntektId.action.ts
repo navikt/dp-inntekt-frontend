@@ -7,7 +7,7 @@ export async function action({ request }: Route.ActionArgs) {
   const entries = Object.fromEntries(formData.entries());
   const inntektId = entries["inntektId"] as string;
   const behandlingId = entries["behandlingId"] as string;
-  const opplysningId = entries["opplysningId"] as string;
+  const opplysningTypeId = entries["opplysningId"] as string;
   const erArena = (entries["erArena"] as string) || "false";
   const payload = entries["payload"] as string;
 
@@ -15,7 +15,7 @@ export async function action({ request }: Route.ActionArgs) {
     request,
     inntektId,
     behandlingId,
-    opplysningId,
+    opplysningTypeId,
     erArena,
     payload
   );
@@ -31,7 +31,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   const queryParams = [
     behandlingId && behandlingId !== "undefined" && `behandlingId=${behandlingId}`,
-    opplysningId && opplysningId !== "undefined" && `opplysningId=${opplysningId}`,
+    opplysningTypeId && opplysningTypeId !== "undefined" && `opplysningId=${opplysningTypeId}`,
     erArena && erArena !== "undefined" && `erArena=${erArena}`,
     "inntektLagret=true",
   ]
