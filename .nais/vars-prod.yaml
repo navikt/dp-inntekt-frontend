@@ -1,3 +1,4 @@
+app: dp-inntekt-frontend
 dp_inntekt_api_url: "http://dp-inntekt-api"
 
 ingresses:
