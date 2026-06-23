@@ -5,11 +5,11 @@ export async function lagreInntekt(
   request: Request,
   inntektId: string,
   behandlingId: string,
-  opplysningId: string,
+  opplysningTypeId: string,
   erArena: string,
   payload: string
 ) {
-  const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}?behandlingId=${behandlingId}&opplysningId=${opplysningId}&erArena=${erArena}`;
+  const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}?behandlingId=${behandlingId}&opplysningId=${opplysningTypeId}&erArena=${erArena}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
 
   return await fetch(url, {
