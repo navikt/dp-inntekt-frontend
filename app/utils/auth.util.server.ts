@@ -6,7 +6,7 @@ export async function getDPInntektOboToken(request: Request) {
     return process.env.DP_INNTEKT_API_TOKEN || "";
   }
 
-  const audience = `api://${getEnv("NAIS_CLUSTER_NAME")}.teamdagpenger.dp-inntekt-api/.default`;
+  const audience = `${getEnv("DP_INNTEKT_API_AUDIENCE")}`;
   return await getOnBehalfOfToken(request, audience);
 }
 
