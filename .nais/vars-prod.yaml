@@ -1,5 +1,6 @@
 app: dp-inntekt-frontend
 dp_inntekt_api_url: "http://dp-inntekt-api"
+dp_inntekt_api_audience: "api://prod-fss.teamdagpenger.dp-inntekt-api/.default"
 
 ingresses:
   - https://dagpenger-inntekt.intern.nav.no
@@ -8,6 +9,8 @@ ingresses:
 replicas:
   min: 2
   max: 2
+
+q1_miljo: false
 
 azure:
   tenant: nav.no

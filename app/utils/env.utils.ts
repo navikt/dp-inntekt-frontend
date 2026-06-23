@@ -12,6 +12,7 @@ interface IEnv {
   IS_LOCALHOST: string;
   DP_INNTEKT_API_URL: string;
   DP_INNTEKT_API_TOKEN: string;
+  DP_INNTEKT_API_AUDIENCE: string;
 }
 
 export function getEnv(value: keyof IEnv) {
