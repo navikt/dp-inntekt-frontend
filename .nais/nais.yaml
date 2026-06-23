@@ -57,23 +57,22 @@ spec:
         - host: login.microsoftonline.com
       rules:
         {{#if q1_miljo}}
-           - application: dp-inntekt-api-q1
-               {{else}}
-        - application: dp-inntekt-api
+          - application: dp-inntekt-api-q1
+        {{else}}
+          - application: dp-inntekt-api
         {{/if}}
 
-
-azure:
-  application:
-    tenant: "{{azure.tenant}}"
-    enabled: {{azure.enabled}}
-    claims:
-      groups:
-        - id: "{{azure.grupper.saksbehandler}}"
-        - id: "{{azure.grupper.beslutter}}"
-        - id: "{{azure.grupper.inntektsregistrering}}"
-      extra:
-        - NAVident
-  sidecar:
-    enabled: {{azure.enabled}}
-    autoLogin: true
+  azure:
+    application:
+      tenant: "{{azure.tenant}}"
+      enabled: {{azure.enabled}}
+      claims:
+        groups:
+          - id: "{{azure.grupper.saksbehandler}}"
+          - id: "{{azure.grupper.beslutter}}"
+          - id: "{{azure.grupper.inntektsregistrering}}"
+        extra:
+          - NAVident
+    sidecar:
+      enabled: {{azure.enabled}}
+      autoLogin: true
