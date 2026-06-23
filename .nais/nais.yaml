@@ -29,8 +29,8 @@ spec:
       cpu: 50m
       memory: 256Mi
   ingresses:
-    { { #each ingresses as |url|}}
-        - {{url } }
+    {{#each ingresses as |url|}}
+       - {{url}}
       {{/each}}
   observability:
     autoInstrumentation:

@@ -1,5 +1,5 @@
-dp_inntekt_api_url: "http://dp-inntekt-api"
 app: dp-inntekt-frontend
+dp_inntekt_api_url: "http://dp-inntekt-api"
 
 ingresses:
   - https://dagpenger-inntekt.intern.nav.no
