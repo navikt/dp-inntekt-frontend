@@ -1,6 +1,6 @@
 app: dp-inntekt-frontend
 dp_inntekt_api_url: "http://dp-inntekt-api"
-dp_inntekt_api_audience: "api://prod-fss.teamdagpenger.dp-inntekt-api/.default"
+dp_inntekt_api_audience: "api://prod-gcp.teamdagpenger.dp-inntekt-api/.default"
 
 ingresses:
   - https://dagpenger-inntekt.intern.nav.no
