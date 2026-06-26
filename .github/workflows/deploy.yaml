@@ -46,7 +46,7 @@ jobs:
 
   build:
     name: Bygg
-    needs: [ test ]
+    needs: [test]
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
@@ -110,7 +110,7 @@ jobs:
     permissions:
       id-token: "write"
     if: github.ref == 'refs/heads/main'
-    needs: [ build ]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -127,7 +127,7 @@ jobs:
     permissions:
       id-token: "write"
     if: github.ref == 'refs/heads/main'
-    needs: [ build ]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -144,7 +144,7 @@ jobs:
     permissions:
       id-token: "write"
     if: github.ref == 'refs/heads/main'
-    needs: [ build, deploy-dev ]
+    needs: [build, deploy-dev]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

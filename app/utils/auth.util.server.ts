@@ -1,12 +1,12 @@
-import { getToken, requestOboToken, validateToken } from "@navikt/oasis";
-import { getEnv } from "~/utils/env.utils";
+import {getToken, requestOboToken, validateToken} from "@navikt/oasis";
+import {getEnv} from "~/utils/env.utils";
 
 export async function getDPInntektOboToken(request: Request) {
   if (getEnv("IS_LOCALHOST") === "true") {
     return process.env.DP_INNTEKT_API_TOKEN || "";
   }
 
-  const audience = `${getEnv("DP_INNTEKT_API_AUDIENCE")}`;
+  const audience = getEnv("DP_INNTEKT_API_AUDIENCE");
   return await getOnBehalfOfToken(request, audience);
 }
 
@@ -28,7 +28,7 @@ export async function getOnBehalfOfToken(request: Request, audience: string): Pr
   const onBehalfOfToken = await requestOboToken(token, audience);
   if (!onBehalfOfToken.ok) {
     console.error("onBehalfOfToken not found");
-    throw Error("onBehalfOfToken not found");
+    throw new Error("onBehalfOfToken not found");
   }
 
   return onBehalfOfToken.token;
