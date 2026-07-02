@@ -13,9 +13,11 @@ export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode
     identifikator: z.string({
       required_error: "er påkrevd",
     }),
-    beskrivelse: z.string({
-      required_error: "Inntektstype er påkrevd",
-    }),
+    beskrivelse: z
+      .string({
+        required_error: "Inntektstype er påkrevd",
+      })
+      .min(1, "Inntektstype er påkrevd"),
   });
 
   const inntekterSchema: Record<string, z.ZodTypeAny> = {};

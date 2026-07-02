@@ -72,12 +72,14 @@ export default function InntektsKildeModal({
       return {
         inntektskilde: undefined,
         identifikator: undefined,
+        beskrivelse: "",
       };
     }
 
     return {
       inntektskilde: erPersonnummer(virksomhetsnummer) ? "NATURLIG_IDENT" : "ORGANISASJON",
       identifikator: virksomhetsnummer,
+      beskrivelse: "",
     };
   }
 
