@@ -2,7 +2,11 @@ import { differenceInMonths, format } from "date-fns";
 import { parse } from "date-fns/parse";
 import type { IInntekt, IPeriode, IVirksomhet } from "~/types/inntekt.types";
 
-export function parseNorskBeløpTilNumber(beløp: string): number {
+export function parseNorskBeløpTilNumber(beløp: string | number): number {
+  if (typeof beløp === "number") {
+    return beløp;
+  }
+
   return Number(beløp.replace(",", "."));
 }
 
