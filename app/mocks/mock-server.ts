@@ -1,9 +1,12 @@
-import { setupServer, SetupServerApi } from "msw/node";
+import { setupServer } from "msw/node";
+
 import { handlers } from "./handlers";
 
 export const server = setupServer(...handlers);
 
-export function startMockServer(server: SetupServerApi) {
+type MockServer = ReturnType<typeof setupServer>;
+
+export function startMockServer(server: MockServer) {
   server.listen({
     onUnhandledRequest(request, print) {
       print.warning();
