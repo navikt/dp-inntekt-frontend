@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  uuid@<11.1.1: '>=11.1.1'
+
 importers:
 
   .:
@@ -3230,11 +3233,6 @@ packages:
     resolution: {integrity: sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==}
     hasBin: true
 
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
-    hasBin: true
-
   valibot@1.5.0:
     resolution: {integrity: sha512-nil6AkP2TChWL43Z5uJ6GTxX01CUA+g8LWUM+N/rB9NBbkUMaUsi9PUNzlUPgoKASgmx9f7eGOYpJ04/fSa6FQ==}
     peerDependencies:
@@ -6142,7 +6140,7 @@ snapshots:
       dequal: 2.0.3
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
-      uuid: 8.3.2
+      uuid: 14.0.2
 
   react-day-picker@9.7.0(react@19.3.0):
     dependencies:
@@ -6708,8 +6706,6 @@ snapshots:
       scheduler: 0.28.0
 
   uuid@14.0.2: {}
-
-  uuid@8.3.2: {}
 
   valibot@1.5.0(typescript@7.0.2):
     optionalDependencies:
