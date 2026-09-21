@@ -5,22 +5,26 @@ import { parseNorskBeløpTilNumber, type IGenerertePeriode } from "~/utils/innte
 // (f.eks. "1000", "12,5", "1000,50")
 const gyldigBelopFormat = /^\d+(,\d{1,2})?$/;
 
+interface InntekterSchema {
+  [dato: string]: z.ZodType<string | undefined, string | undefined>;
+}
+
 export function hentInntektValidationSchema(generertePerioder: IGenerertePeriode[]) {
   const baseSchema = z.object({
     inntektskilde: z.string({
-      required_error: "Inntektskilde er påkrevd",
+      error: "Inntektskilde er påkrevd",
     }),
     identifikator: z.string({
-      required_error: "er påkrevd",
+      error: "er påkrevd",
     }),
     beskrivelse: z
       .string({
-        required_error: "Inntektstype er påkrevd",
+        error: "Inntektstype er påkrevd",
       })
       .min(1, "Inntektstype er påkrevd"),
   });
 
-  const inntekterSchema: Record<string, z.ZodTypeAny> = {};
+  const inntekterSchema: InntekterSchema = {};
 
   generertePerioder.forEach((year) => {
     year.maneder.forEach((maaned) => {

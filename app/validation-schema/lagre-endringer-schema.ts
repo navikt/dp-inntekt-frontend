@@ -3,21 +3,21 @@ import { z } from "zod";
 export const lagreEndringerSchema = z.object({
   payload: z
     .string({
-      required_error: "Payload er påkrevd",
+      error: "Payload er påkrevd",
     })
     .optional(),
   inntektId: z.string({
-    required_error: "InntektId er påkrevd",
+    error: "InntektId er påkrevd",
   }),
   behandlingId: z.string({
-    required_error: "BehandlingId er påkrevd",
+    error: "BehandlingId er påkrevd",
   }).optional(),
   opplysningId: z.string({
-    required_error: "OpplysningId er påkrevd",
+    error: "OpplysningId er påkrevd",
   }).optional(),
   begrunnelse: z
     .string({
-      required_error: "Begrunnelse er påkrevd",
+      error: "Begrunnelse er påkrevd",
     })
     .refine((val) => /[a-zA-ZæøåÆØÅ]/.test(val ?? ""), {
       message: "Begrunnelse må inneholde minst én bokstav",
