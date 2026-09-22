@@ -28,7 +28,7 @@ pnpm run token
 ```
 
 **Manuelt** — hent token fra:
-https://azure-token-generator.intern.dev.nav.no/api/obo\?aud\=dev-gcp.teamdagpenger.dp-inntekt-api
+https://azure-token-generator.intern.dev.nav.no/api/obo?aud=dev-gcp.teamdagpenger.dp-inntekt-api
 
 og oppdater `.env`:
 
