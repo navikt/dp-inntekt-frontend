@@ -90,7 +90,7 @@ jobs:
           docker_context: .
 
       - name: Build static files
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v7.2.0
         with:
           target: build-export
           outputs: type=local,dest=build
