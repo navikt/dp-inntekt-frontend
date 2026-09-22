@@ -25,6 +25,10 @@ describe("parseNorskBeløpTilNumber", () => {
   it("konverterer 0", () => {
     expect(parseNorskBeløpTilNumber("0")).toBe(0);
   });
+
+  it("håndterer tall som allerede er number", () => {
+    expect(parseNorskBeløpTilNumber(1000.5)).toBe(1000.5);
+  });
 });
 
 describe("parseNumberTilNorskBeløp", () => {
@@ -211,5 +215,16 @@ describe("summerInntekterPerManed", () => {
     const resultat = summerInntekterPerManed([]);
 
     expect(resultat).toEqual({});
+  });
+
+  it("håndterer inntekter der beløp er number", () => {
+    const inntekter = [
+      { belop: 4896, aarMaaned: "2024-12" },
+      { belop: 10608, aarMaaned: "2024-12" },
+    ];
+
+    const resultat = summerInntekterPerManed(inntekter as unknown as IInntekt[]);
+
+    expect(resultat["2024-12"]).toBe("15504");
   });
 });
