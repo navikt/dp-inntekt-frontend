@@ -1,6 +1,9 @@
 allowBuilds:
+  esbuild: true
+  msw: false
   playwright-chromium: false
   puppeteer: false
+  unrs-resolver: false
 minimumReleaseAge: 4320
 overrides:
   uuid@<11.1.1: '>=11.1.1'
