@@ -10,10 +10,19 @@ import { mockUklassifisertInntekt } from "~/mocks/mock.uklassifiert-inntekt";
 
 const schema = z.object({
   inntektId: z
+    .string({
+      required_error: "Inntekt-ID er påkrevd",
+    })
     .ulid({ message: "Ugyldig inntekt-ID format" }),
   opplysningId: z
+    .string({
+      required_error: "Opplysning-ID er påkrevd",
+    })
     .uuid({ message: "Ugyldig opplysning-ID format" }),
   behandlingId: z
+    .string({
+      required_error: "Behandling-ID er påkrevd",
+    })
     .uuid({ message: "Ugyldig behandling-ID format" }),
 });
 
@@ -22,6 +31,7 @@ export async function action({ request }: Route.ActionArgs) {
   const inntektId = formData.get("inntektId");
   const opplysningTypeId = formData.get("opplysningId");
   const behandlingId = formData.get("behandlingId");
+
   invariant(inntektId, "Mangler inntekt-ID");
   invariant(opplysningTypeId, "Mangler opplysning-ID");
   invariant(behandlingId, "Mangler behandling-ID");

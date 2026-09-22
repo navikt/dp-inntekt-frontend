@@ -176,9 +176,9 @@ export default function InntektsKildeModal({
   );
 
   // Liste over inntekter som er fylt ut i form
-  const skjemaInntekter: IFormInntekt[] = aktiveInntektsManeder
-    .map((felt) => ({ dato: felt, belop: form.value(felt) }))
-    .filter((felt): felt is IFormInntekt => typeof felt.belop === "string" && felt.belop !== "");
+  const inntekterArray: IFormInntekt[] = aktiveInntektsManeder
+    .filter((input) => form.value(input) !== undefined && form.value(input) !== "")
+    .map((input) => ({ dato: input, belop: form.value(input) }));
 
   async function settInnNyInntekt() {
     const validering = await form.validate();
@@ -194,17 +194,13 @@ export default function InntektsKildeModal({
     }
 
     if (!harFeil && minstEnInntektFyltUt) {
-      const beskrivelse = form.value("beskrivelse");
-      const inntektskilde = form.value("inntektskilde");
-      const identifikator = form.value("identifikator");
-
-      if (!beskrivelse || !inntektskilde || !identifikator) {
-        return;
-      }
-
       setInntektEndret(true);
       setManglerInntekt(false);
       ref?.current?.close();
+
+      const beskrivelse = form.value("beskrivelse");
+      const inntektskilde = form.value("inntektskilde");
+      const identifikator = form.value("identifikator");
 
       const virksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
         (virksomhet) => virksomhet.virksomhetsnummer === identifikator
@@ -214,7 +210,7 @@ export default function InntektsKildeModal({
         beskrivelse,
         inntektskilde,
         identifikator,
-        skjemaInntekter
+        inntekterArray
       );
 
       // Oppdaterer eksisterende virksomhet med nye inntekter
@@ -256,18 +252,13 @@ export default function InntektsKildeModal({
     }
 
     if (!harFeil && minstEnInntektFyltUt && !identifikatorError) {
-      const beskrivelse = form.value("beskrivelse");
-      const inntektskilde = form.value("inntektskilde");
-      const identifikator = form.value("identifikator");
-
-      if (!beskrivelse || !inntektskilde || !identifikator) {
-        return;
-      }
-
       setInntektEndret(true);
       setManglerInntekt(false);
 
-      const inntekter = lagInntektListe(beskrivelse, inntektskilde, identifikator, skjemaInntekter);
+      const beskrivelse = form.value("beskrivelse");
+      const inntektskilde = form.value("inntektskilde");
+      const identifikator = form.value("identifikator");
+      const inntekter = lagInntektListe(beskrivelse, inntektskilde, identifikator, inntekterArray);
 
       const nyVirksomhet: IVirksomhet = {
         avvikListe: [],

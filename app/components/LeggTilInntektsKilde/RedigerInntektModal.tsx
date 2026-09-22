@@ -111,11 +111,8 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
 
   // Liste over inntekter som er fylt ut i form
   const inntekterArray: IFormInntekt[] = aktiveInntektsManeder
-    .map((felt) => ({ dato: felt, belop: form.value(felt) }))
-    .filter(
-      (inntekt): inntekt is IFormInntekt =>
-        typeof inntekt.belop === "string" && inntekt.belop !== ""
-    );
+    .filter((felt) => form.value(felt) !== undefined && form.value(felt) !== "")
+    .map((felt) => ({ dato: felt, belop: form.value(felt) }));
 
   async function settInn() {
     const validering = await form.validate();
