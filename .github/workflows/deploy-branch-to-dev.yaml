@@ -1,0 +1,108 @@
+name: Deploy branch to dev
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: "read"
+  id-token: "write"
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+
+      - name: Setup node
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: "24.x"
+
+      - name: Cache node_modules
+        uses: actions/cache@v6.1.0
+        id: node_modules
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Configure pnpm auth
+        run: pnpm config set //npm.pkg.github.com/:_authToken "$NODE_AUTH_TOKEN"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+
+      - name: Install dependencies
+        if: steps.node_modules.outputs.cache-hit != 'true'
+        run: pnpm install --ignore-scripts
+
+      - name: Run tests
+        run: pnpm test
+
+  build:
+    name: Bygg
+    needs: [test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+      packages: "write"
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7.0.1
+
+      - name: Bygg og push Docker image
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: teamdagpenger
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          tag: ${{ env.VERSION_TAG }}
+          build_secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
+          push_image: true
+          dockerfile: Dockerfile
+          docker_context: .
+
+      - name: Build static files
+        uses: docker/build-push-action@v7.3.0
+        with:
+          target: build-export
+          outputs: type=local,dest=build
+          secrets: NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
+
+      - name: Upload static files
+        uses: nais/deploy/actions/cdn-upload/v2@master
+        with:
+          team: teamdagpenger
+          source: ./build/client
+          destination: "/dp-brukerdialog-frontend/"
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+
+  deploy-dev:
+    name: Deploy til dev-gcp
+    permissions:
+      id-token: "write"
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment: dev-gcp
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          VAR: image=${{ needs.build.outputs.image }},githubSha=${{ github.sha }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais.yaml,.nais/unleash-apitoken.yaml
+          VARS: .nais/vars-dev.yaml
+          PRINT_PAYLOAD: true
