@@ -3,7 +3,7 @@
 }
 
 .errorSummary {
-  color: var(--a-surface-danger);
+  color: var(--ax-bg-danger-strong);
   font-weight: 600;
 }
 

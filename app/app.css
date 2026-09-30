@@ -1,11 +1,11 @@
 html {
-  background-color: var(--a-bg-subtle);
+  background-color: var(--ax-bg-neutral-soft);
 }
 
 main {
-  max-width: var(--a-breakpoint-2xl-down);
+  max-width: var(--ax-breakpoint-2xl-down);
   margin: 0 auto;
-  padding: var(--a-spacing-6);
+  padding: var(--ax-space-24);
 }
 
 /* Reset p tag padding globally*/
@@ -14,25 +14,25 @@ p {
 }
 
 .mt-2 {
-  margin-top: var(--a-spacing-2);
+  margin-top: var(--ax-space-8);
 }
 
 /* button.mt-4 for å øke specificity for søk inntektId knappen */
 .mt-4,
 button.mt-4 {
-  margin-top: var(--a-spacing-4);
+  margin-top: var(--ax-space-16);
 }
 
 .mt-6 {
-  margin-top: var(--a-spacing-6);
+  margin-top: var(--ax-space-24);
 }
 
 .mt-8 {
-  margin-top: var(--a-spacing-8);
+  margin-top: var(--ax-space-32);
 }
 
 .mb-6 {
-  margin-bottom: var(--a-spacing-6);
+  margin-bottom: var(--ax-space-24);
 }
 
 .bold {
@@ -44,5 +44,5 @@ button.mt-4 {
 }
 
 .medium {
-  font-size: var(--a-font-size-medium);
+  font-size: var(--ax-font-size-medium);
 }
