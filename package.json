@@ -13,9 +13,9 @@
     "token": "node ./token-generator.cjs"
   },
   "dependencies": {
-    "@navikt/aksel-icons": "^7.40.0",
-    "@navikt/ds-css": "^7.40.0",
-    "@navikt/ds-react": "^7.40.0",
+    "@navikt/aksel-icons": "^8.17.2",
+    "@navikt/ds-css": "^8.17.2",
+    "@navikt/ds-react": "^8.17.2",
     "@navikt/fnrvalidator": "^2.2.1",
     "@navikt/oasis": "^4.2.2",
     "@react-router/fs-routes": "^8.4.0",
