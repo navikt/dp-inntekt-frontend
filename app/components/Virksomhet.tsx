@@ -20,7 +20,7 @@ interface IInntekInfo {
 
 export function InntektInfo({ overskrift, verdi }: IInntekInfo) {
   return (
-    <VStack gap="0">
+    <VStack gap="space-0">
       <strong>{overskrift}</strong>
       {verdi}
     </VStack>
@@ -82,7 +82,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
           {erPrivatPerson ? "Privatperson" : virksomhetsnavn}
         </ExpansionCard.Title>
         <ExpansionCard.Description>
-          <VStack gap="4">
+          <VStack gap="space-16">
             <InntektInfo
               overskrift={erPrivatPerson ? "Fødselsnummer" : "Organisasjonsnummer"}
               verdi={erPrivatPerson ? maskerePersonnummer(virksomhetsnummer) : virksomhetsnummer}
@@ -102,7 +102,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
       </ExpansionCard.Header>
       <ExpansionCard.Content>
         <VirksomhetInntekter virksomhet={virksomhet} />
-        <HStack gap="2" className="mt-8" align="baseline">
+        <HStack gap="space-8" className="mt-8" align="baseline">
           <InntektsKildeModal
             erNyVirksomhet={false}
             virksomhetsnummer={virksomhetsnummer}

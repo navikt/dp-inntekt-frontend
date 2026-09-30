@@ -160,7 +160,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
               )}
             </Table.DataCell>
             <Table.DataCell align="right">
-              <HStack gap="1" justify="end">
+              <HStack gap="space-4" justify="end">
                 <RedigerVirksomhetInntekt
                   virksomhet={virksomhet}
                   formDefaultValues={{

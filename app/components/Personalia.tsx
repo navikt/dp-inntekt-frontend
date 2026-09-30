@@ -82,17 +82,17 @@ export function Personalia() {
   });
 
   return (
-    <Box background="surface-default" padding="4" borderRadius="xlarge" borderColor="border-subtle">
-      <HStack gap="4" wrap={false} align="center">
+    <Box background="default" padding="space-16" borderRadius="12" borderColor="neutral-subtle">
+      <HStack gap="space-16" wrap={false} align="center">
         {erEnKvinne(uklassifisertInntekt.mottaker.pnr) ? <KvinneIkon /> : <MennIkon />}
-        <HStack gap="4" align="center">
+        <HStack gap="space-16" align="center">
           <BodyShort weight="semibold">
             {skjulSensitiveOpplysninger
               ? maskerVerdi(uklassifisertInntekt.mottaker.navn)
               : uklassifisertInntekt.mottaker.navn}
           </BodyShort>
           <BodyShort>/</BodyShort>
-          <HStack align="center" gap="2">
+          <HStack align="center" gap="space-8">
             <BodyShort>
               F.nr:{" "}
               {skjulSensitiveOpplysninger
@@ -103,7 +103,7 @@ export function Personalia() {
           </HStack>
         </HStack>
         <Spacer />
-        <HStack gap="4" align="center">
+        <HStack gap="space-16" align="center">
           <Detail>
             <strong> Sist hentet fra A-Inntekt:</strong> {timestamp}
           </Detail>

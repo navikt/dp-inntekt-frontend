@@ -311,7 +311,7 @@ export default function InntektsKildeModal({
           <>
             <Modal.Body>
               <form {...form.getFormProps()}>
-                <VStack gap="4" className={styles.inntektInputContainer}>
+                <VStack gap="space-16" className={styles.inntektInputContainer}>
                   <RadioGroup
                     {...form.getInputProps("inntektskilde")}
                     size="small"
@@ -358,7 +358,7 @@ export default function InntektsKildeModal({
                     ))}
                   </Select>
                 </VStack>
-                <VStack gap="2" className="mt-4">
+                <VStack gap="space-8" className="mt-4">
                   <Label size="small">Utbetalingsperiode</Label>
                   <InntektPerioder perioder={genertePerioder} form={form} />
                   <div className={styles.errorSummary}>
