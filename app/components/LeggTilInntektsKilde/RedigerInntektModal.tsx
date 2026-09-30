@@ -106,7 +106,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
 
   // Sjekker om minst en inntekt er fylt ut
   const minstEnInntektFyltUt = aktiveInntektsManeder.some(
-    (felt) => form.value(felt) && form.value(felt) !== ""
+    (felt) => form.value(felt) && form.value(felt) !== "",
   );
 
   // Liste over inntekter som er fylt ut i form
@@ -136,7 +136,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
         formDefaultValues.beskrivelse,
         formDefaultValues.inntektskilde,
         virksomhet.virksomhetsnummer,
-        inntekterArray
+        inntekterArray,
       );
 
       const inntekter = [
@@ -152,7 +152,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
       };
 
       const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
-        virksomhet.virksomhetsnummer === identifikator ? oppdatertVirksomhet : virksomhet
+        virksomhet.virksomhetsnummer === identifikator ? oppdatertVirksomhet : virksomhet,
       );
 
       setUklassifisertInntekt({
@@ -215,7 +215,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                     <div className="mt-2" key={felt}>
                       Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
                     </div>
-                  )
+                  ),
               )}
             </div>
             {manglerInntekt && !minstEnInntektFyltUt && (

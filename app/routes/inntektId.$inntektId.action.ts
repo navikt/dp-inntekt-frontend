@@ -17,7 +17,7 @@ export async function action({ request }: Route.ActionArgs) {
     behandlingId,
     opplysningTypeId,
     erArena,
-    payload
+    payload,
   );
 
   if (!lagreInntektResponse.ok) {

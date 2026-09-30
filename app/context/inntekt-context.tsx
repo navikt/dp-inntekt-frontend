@@ -33,7 +33,7 @@ export const InntektContext = createContext<IInntektContextValue | undefined>(un
 
 function InntektProvider(props: PropsWithChildren<IInntektContextProps>) {
   const [uklassifisertInntekt, setUklassifisertInntekt] = useState<IUklassifisertInntekt>(
-    props.uklassifisertInntekt
+    props.uklassifisertInntekt,
   );
   const [inntektEndret, setInntektEndret] = useState(false);
   const [slettBekreftet, setSlettBekreftet] = useState(false);

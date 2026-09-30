@@ -74,11 +74,11 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
 
   function fjernEnInntektBeskrivelfraFraVirksomhet(
     inntektsbeskrivelse: string,
-    virksomhetsnummer: string
+    virksomhetsnummer: string,
   ) {
     // Filtrer ut inntekten med den spesifikke inntektsbeskrivelse
     const oppdaterteVirksomhetInntekter = virksomhet.inntekter.filter(
-      (inntekt) => inntekt.beskrivelse !== inntektsbeskrivelse
+      (inntekt) => inntekt.beskrivelse !== inntektsbeskrivelse,
     );
 
     // Oppdater virksomheten med de filtrerte inntektene
@@ -89,7 +89,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
 
     // Fjerner én inntektstype fra virksomheten og oppdaterer virksomheten i context med nye
     const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
-      virksomhet.virksomhetsnummer === virksomhetsnummer ? oppdaterteVirksomhet : virksomhet
+      virksomhet.virksomhetsnummer === virksomhetsnummer ? oppdaterteVirksomhet : virksomhet,
     );
 
     // Oppdater hele uklassifisertInntekt med de oppdaterte virksomhetene
@@ -105,7 +105,7 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
   function fjernHeleVirksomhet(virksomhetsnummer: string) {
     // Filtrer ut den spesifikke virksomheten fra uklassifisertInntekt
     var oppdatertVirksomheter = uklassifisertInntekt.virksomheter.filter(
-      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer
+      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummer,
     );
 
     // Oppdater hele uklassifisertInntekt med de oppdaterte virksomhetene
@@ -146,17 +146,17 @@ export default function VirsomhetInntekter({ virksomhet }: IProps) {
             <Table.DataCell>{virksomhetInntekt.inntektskilde}</Table.DataCell>
             <Table.DataCell align="right">
               {formatterNorskTall(
-                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode1)
+                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode1),
               )}
             </Table.DataCell>
             <Table.DataCell align="right">
               {formatterNorskTall(
-                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode2)
+                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode2),
               )}
             </Table.DataCell>
             <Table.DataCell align="right">
               {formatterNorskTall(
-                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode3)
+                beregnTotalInntektForEnPeriode(virksomhetInntekt.inntekter, periode3),
               )}
             </Table.DataCell>
             <Table.DataCell align="right">

@@ -37,7 +37,7 @@ export async function action({ request }: Route.ActionArgs) {
   invariant(behandlingId, "Mangler behandling-ID");
 
   return redirect(
-    `/inntektId/${inntektId}?opplysningId=${opplysningTypeId}&behandlingId=${behandlingId}`
+    `/inntektId/${inntektId}?opplysningId=${opplysningTypeId}&behandlingId=${behandlingId}`,
   );
 }
 

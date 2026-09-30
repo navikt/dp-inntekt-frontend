@@ -57,15 +57,15 @@ export interface ITilleggsInformasjonsDetaljer {
 }
 
 export enum ISpesielleInntjeningsforhold {
-  "hyreTilMannskapPaaFiskeSmaahvalfangstOgSelfangstfartoey",
-  "loennVedArbeidsmarkedstiltak",
-  "loennOgAnnenGodtgjoerelseSomIkkeErSkattepliktig",
-  "loennUtbetaltFraDenNorskeStatOpptjentIUtlandet",
-  "loennVedKonkursEllerStatsgarantiOsv",
-  "skattefriArbeidsinntektBarnUnderTrettenAar",
-  "statsansattUtlandet",
-  "utenlandskeSjoefolkSomIkkeErSkattepliktig",
-  "UNKNOWN",
+  hyreTilMannskapPaaFiskeSmaahvalfangstOgSelfangstfartoey,
+  loennVedArbeidsmarkedstiltak,
+  loennOgAnnenGodtgjoerelseSomIkkeErSkattepliktig,
+  loennUtbetaltFraDenNorskeStatOpptjentIUtlandet,
+  loennVedKonkursEllerStatsgarantiOsv,
+  skattefriArbeidsinntektBarnUnderTrettenAar,
+  statsansattUtlandet,
+  utenlandskeSjoefolkSomIkkeErSkattepliktig,
+  UNKNOWN,
 }
 
 export interface IAvvik {

@@ -54,7 +54,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
 
   function slettVirksomhet() {
     const oppdatertVirksomheter = uklassifisertInntekt.virksomheter.filter(
-      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummerSomSkalSlettes
+      (virksomhet) => virksomhet.virksomhetsnummer !== virksomhetsnummerSomSkalSlettes,
     );
 
     const oppdatertetInntekter = {
@@ -72,7 +72,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
   }
 
   const eksistertInntektsbeskrivelser = Array.from(
-    new Set(virksomhet?.inntekter.map((i) => i.beskrivelse))
+    new Set(virksomhet?.inntekter.map((i) => i.beskrivelse)),
   );
 
   return (
@@ -90,7 +90,7 @@ export default function Virksomhet({ virksomhet }: IProps) {
             <InntektInfo
               overskrift="Utbetalingsperiode"
               verdi={`${formaterNorskDato(periode.fraOgMed)} - ${formaterNorskDato(
-                periode.tilOgMed
+                periode.tilOgMed,
               )}`}
             />
             <InntektInfo

@@ -57,15 +57,13 @@ export default function Inntekt() {
           {inntektLagret && (
             <LocalAlert status="warning">
               <LocalAlert.Header>
-                <LocalAlert.Title>
-                  Inntekten er lagret
-                </LocalAlert.Title>
+                <LocalAlert.Title>Inntekten er lagret</LocalAlert.Title>
               </LocalAlert.Header>
-                <LocalAlert.Content>
-                    Inntekten er lagret, men opplysnings-ID-en kan ha endret seg. Vil du redigere
-                  inntekten på nytt, må du gå tilbake til dp-sak, oppdatere siden og klikke deg inn til
-                  inntektsredigeringen på nytt for å få korrekt opplysnings-ID.
-                </LocalAlert.Content>
+              <LocalAlert.Content>
+                Inntekten er lagret, men opplysnings-ID-en kan ha endret seg. Vil du redigere
+                inntekten på nytt, må du gå tilbake til dp-sak, oppdatere siden og klikke deg inn
+                til inntektsredigeringen på nytt for å få korrekt opplysnings-ID.
+              </LocalAlert.Content>
             </LocalAlert>
           )}
           <Personalia />
