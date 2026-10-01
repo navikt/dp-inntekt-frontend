@@ -28,6 +28,13 @@ export async function loader({ params }: Route.LoaderArgs) {
     });
   }
 
+  if (getEnv("NAIS_CLUSTER_NAME") !== "prod-gcp") {
+    return new Response(JSON.stringify({}), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   return new Response("Not found", {
     status: 404,
     headers: { "Content-Type": "application/text" },
