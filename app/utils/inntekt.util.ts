@@ -20,9 +20,9 @@ export function sumTotaltInntekterForAlleVirksomheter(virksomheter: IVirksomhet[
       total +
       virksomhet.inntekter.reduce(
         (sum, inntekt) => sum + parseNorskBeløpTilNumber(inntekt.belop),
-        0
+        0,
       ),
-    0
+    0,
   );
 }
 
@@ -171,6 +171,6 @@ export function summerInntekterPerManed(inntekter: IInntekt[]): Record<string, s
       acc[inntekt.aarMaaned] = parseNumberTilNorskBeløp(eksisterendeBeløp + beløp);
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   );
 }

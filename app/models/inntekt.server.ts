@@ -7,7 +7,7 @@ export async function lagreInntekt(
   behandlingId: string,
   opplysningTypeId: string,
   erArena: string,
-  payload: string
+  payload: string,
 ) {
   const url = `${getEnv("DP_INNTEKT_API_URL")}/v1/inntekt/uklassifisert/${inntektId}?behandlingId=${behandlingId}&opplysningId=${opplysningTypeId}&erArena=${erArena}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);
@@ -44,7 +44,7 @@ export async function hentInntektId(
   aktørId: string,
   kontekstType: string,
   kontekstId: string,
-  beregningsDato: string
+  beregningsDato: string,
 ) {
   const url = `${getEnv("DP_INNTEKT_API_URL")}/v3/inntekt/inntektId/${aktørId}/${kontekstType}/${kontekstId}/${beregningsDato}`;
   const onBehalfOfToken = await getDPInntektOboToken(request);

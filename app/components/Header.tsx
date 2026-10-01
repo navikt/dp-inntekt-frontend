@@ -12,12 +12,12 @@ export function Header({ tittel }: IProps) {
   const { readOnly } = useInntektSeachParams();
 
   return (
-    <Box background="surface-default" padding="6" borderRadius="xlarge" borderColor="border-subtle">
-      <HStack gap="4" justify="space-between" align="center">
-        <HStack gap="4">
+    <Box background="default" padding="space-24" borderRadius="12" borderColor="neutral-subtle">
+      <HStack gap="space-16" justify="space-between" align="center">
+        <HStack gap="space-16">
           <NavLogoIkon /> <BodyShort weight="semibold">{tittel}</BodyShort>
           {readOnly && (
-            <Tag variant="info" data-color="info" size="small">
+            <Tag variant="outline" data-color="info" size="small">
               Lesevisning
             </Tag>
           )}

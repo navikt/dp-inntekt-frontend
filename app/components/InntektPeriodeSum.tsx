@@ -13,7 +13,7 @@ import { erPersonnummer, maskerePersonnummer } from "~/utils/generell.util";
 export function InntektPerioderOppsummering() {
   const { uklassifisertInntekt } = useInntekt();
   const inntektPerioderTotaltBelop = sumTotaltInntekterForAlleVirksomheter(
-    uklassifisertInntekt.virksomheter
+    uklassifisertInntekt.virksomheter,
   );
 
   const oppdeltPerioder = delOppPeriodeTilTrePerioder(uklassifisertInntekt.periode);
@@ -22,7 +22,7 @@ export function InntektPerioderOppsummering() {
   const periode3 = oppdeltPerioder[2];
 
   const alleInntekter = uklassifisertInntekt.virksomheter.flatMap(
-    (virksomhet) => virksomhet.inntekter
+    (virksomhet) => virksomhet.inntekter,
   );
 
   function hentVirksomhetNavn(virksomhet: IVirksomhet) {
@@ -34,7 +34,7 @@ export function InntektPerioderOppsummering() {
   }
 
   return (
-    <Box padding="2">
+    <Box padding="space-8">
       <VStack>
         <BodyShort weight="semibold">Inntektsperiode</BodyShort>
         <BodyShort spacing>
@@ -70,17 +70,17 @@ export function InntektPerioderOppsummering() {
                 <Table.DataCell>{hentVirksomhetNavn(virsomhet)}</Table.DataCell>
                 <Table.DataCell align="right">
                   {formatterNorskTall(
-                    beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode1)
+                    beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode1),
                   )}
                 </Table.DataCell>
                 <Table.DataCell align="right">
                   {formatterNorskTall(
-                    beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode2)
+                    beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode2),
                   )}
                 </Table.DataCell>
                 <Table.DataCell align="right">
                   {formatterNorskTall(
-                    beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode3)
+                    beregnTotalInntektForEnPeriode(virsomhet.inntekter, periode3),
                   )}
                 </Table.DataCell>
               </Table.Row>

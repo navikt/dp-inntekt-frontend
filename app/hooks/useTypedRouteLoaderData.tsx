@@ -10,7 +10,7 @@ export function useTypedRouteLoaderData<T extends keyof Loaders>(route: T) {
 
   if (!routeData) {
     throw new Error(
-      `Route (${route}) data is not loaded. You might be trying to accessing data from a sub route that has not yet loaded`
+      `Route (${route}) data is not loaded. You might be trying to accessing data from a sub route that has not yet loaded`,
     );
   }
 

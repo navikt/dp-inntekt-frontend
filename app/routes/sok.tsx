@@ -37,7 +37,7 @@ export async function action({ request }: Route.ActionArgs) {
   invariant(behandlingId, "Mangler behandling-ID");
 
   return redirect(
-    `/inntektId/${inntektId}?opplysningId=${opplysningTypeId}&behandlingId=${behandlingId}`
+    `/inntektId/${inntektId}?opplysningId=${opplysningTypeId}&behandlingId=${behandlingId}`,
   );
 }
 
@@ -67,11 +67,11 @@ export default function Sok() {
   return (
     <InntektProvider uklassifisertInntekt={mockUklassifisertInntekt} slettModalRef={undefined}>
       <main>
-        <VStack gap="6">
+        <VStack gap="space-24">
           <Header tittel="Dagpenger inntekt" />
-          <Box background="surface-default" padding="6" borderRadius="xlarge">
+          <Box background="default" padding="space-24" borderRadius="12">
             <form {...form.getFormProps()}>
-              <VStack gap="4">
+              <VStack gap="space-16">
                 <TextField
                   {...form.getInputProps("inntektId")}
                   error={form.error("inntektId")}
