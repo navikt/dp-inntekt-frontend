@@ -3,8 +3,7 @@ import {getEnv} from "~/utils/env.utils";
 import type {Route} from "./+types/api.enhetsregister.$virksomhetsnummer";
 
 export async function loader({ params }: Route.LoaderArgs) {
-  console.log("getEnv(APP_ENV)", getEnv("APP_ENV"));
-  if (getEnv("APP_ENV") !== "prod") {
+  if (getEnv("NAIS_CLUSTER_NAME") !== "prod-gcp") {
     return new Response(JSON.stringify({}), {
       status: 200,
       headers: { "Content-Type": "application/json" },

@@ -1,7 +1,6 @@
 app: dp-inntekt-frontend-q1
 dp_inntekt_api_url: "http://dp-inntekt-api-q1"
 dp_inntekt_api_audience: "api://dev-gcp.teamdagpenger.dp-inntekt-api-q1/.default"
-app_env: dev
 
 ingresses:
   - https://dagpenger-inntekt-q1.ansatt.dev.nav.no
