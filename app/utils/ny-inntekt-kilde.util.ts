@@ -18,7 +18,7 @@ export function finnTidligsteOgSenesteDato(inntekter: IInntekt[]): IPeriode {
 export function finnTotalBelop(inntekter: IInntekt[]): string {
   const totaltbelop = inntekter.reduce(
     (sum, inntekt) => sum + parseNorskBeløpTilNumber(inntekt.belop),
-    0
+    0,
   );
 
   return totaltbelop.toString();
@@ -28,7 +28,7 @@ export function lagInntektListe(
   beskrivelse: string,
   inntektskilde: string,
   identifikator: string,
-  inntekter: IFormInntekt[]
+  inntekter: IFormInntekt[],
 ): IInntekt[] {
   const virksomhet = {
     aktoerType: inntektskilde,

@@ -70,14 +70,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <InntektProvider uklassifisertInntekt={mockUklassifisertInntekt} slettModalRef={undefined}>
       <main>
-        <VStack gap="6">
+        <VStack gap="space-6">
           <Header tittel="Dagpenger inntekt" />
           <LocalAlert status="error">
             <LocalAlert.Header>
               <LocalAlert.Title>Teknisk feil {statusKode}</LocalAlert.Title>
             </LocalAlert.Header>
             <LocalAlert.Content>
-              <VStack gap="4" align="start">
+              <VStack gap="space-4" align="start">
                 {feilmelding}
 
                 {stackTrace && (

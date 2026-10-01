@@ -1,5 +1,5 @@
-import {getToken, requestOboToken, validateToken} from "@navikt/oasis";
-import {getEnv} from "~/utils/env.utils";
+import { getToken, requestOboToken, validateToken } from "@navikt/oasis";
+import { getEnv } from "~/utils/env.utils";
 
 export async function getDPInntektOboToken(request: Request) {
   if (getEnv("IS_LOCALHOST") === "true") {

@@ -106,7 +106,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
 
   // Sjekker om minst en inntekt er fylt ut
   const minstEnInntektFyltUt = aktiveInntektsManeder.some(
-    (felt) => form.value(felt) && form.value(felt) !== ""
+    (felt) => form.value(felt) && form.value(felt) !== "",
   );
 
   // Liste over inntekter som er fylt ut i form
@@ -136,7 +136,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
         formDefaultValues.beskrivelse,
         formDefaultValues.inntektskilde,
         virksomhet.virksomhetsnummer,
-        inntekterArray
+        inntekterArray,
       );
 
       const inntekter = [
@@ -152,7 +152,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
       };
 
       const oppdaterteVirksomheter = uklassifisertInntekt.virksomheter.map((virksomhet) =>
-        virksomhet.virksomhetsnummer === identifikator ? oppdatertVirksomhet : virksomhet
+        virksomhet.virksomhetsnummer === identifikator ? oppdatertVirksomhet : virksomhet,
       );
 
       setUklassifisertInntekt({
@@ -179,7 +179,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
       >
         <Modal.Body>
           <form {...form.getFormProps()}>
-            <VStack gap="4" className={styles.inntektInputContainer}>
+            <VStack gap="space-16" className={styles.inntektInputContainer}>
               <RadioGroup
                 {...form.getInputProps("inntektskilde")}
                 size="small"
@@ -205,7 +205,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
             </VStack>
           </form>
 
-          <VStack gap="2" className="mt-4">
+          <VStack gap="space-8" className="mt-4">
             <Label size="small">Utbetalingsperiode</Label>
             <InntektPerioder perioder={genertePerioder} form={form} />
             <div className={styles.errorSummary}>
@@ -215,7 +215,7 @@ export default function RedigerModal({ ref, virksomhet, formDefaultValues }: IPr
                     <div className="mt-2" key={felt}>
                       Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
                     </div>
-                  )
+                  ),
               )}
             </div>
             {manglerInntekt && !minstEnInntektFyltUt && (
