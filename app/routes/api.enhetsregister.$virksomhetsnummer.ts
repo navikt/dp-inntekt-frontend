@@ -1,7 +1,15 @@
-import { hentVirksomhetsNavn } from "~/models/inntekt.server";
-import type { Route } from "./+types/api.enhetsregister.$virksomhetsnummer";
+import {hentVirksomhetsNavn} from "~/models/inntekt.server";
+import {getEnv} from "~/utils/env.utils";
+import type {Route} from "./+types/api.enhetsregister.$virksomhetsnummer";
 
 export async function loader({ params }: Route.LoaderArgs) {
+  if (getEnv("NAIS_CLUSTER_NAME") !== "prod-gcp") {
+    return new Response(JSON.stringify({}), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   if (!params.virksomhetsnummer) {
     return new Response("Virksomhetsnummer is empty", {
       status: 404,

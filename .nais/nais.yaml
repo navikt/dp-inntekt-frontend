@@ -47,6 +47,7 @@ spec:
       value: "{{dp_inntekt_api_url}}"
     - name: DP_INNTEKT_API_AUDIENCE
       value: "{{dp_inntekt_api_audience}}"
+
   accessPolicy:
     outbound:
       external:
@@ -57,9 +58,9 @@ spec:
         - host: login.microsoftonline.com
       rules:
         {{#if q1_miljo}}
-          - application: dp-inntekt-api-q1
-        {{else}}
-          - application: dp-inntekt-api
+           - application: dp-inntekt-api-q1
+               {{else}}
+        - application: dp-inntekt-api
         {{/if}}
 
   azure:
