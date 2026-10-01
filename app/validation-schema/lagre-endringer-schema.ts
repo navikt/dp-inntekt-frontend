@@ -9,12 +9,16 @@ export const lagreEndringerSchema = z.object({
   inntektId: z.string({
     required_error: "InntektId er påkrevd",
   }),
-  behandlingId: z.string({
-    required_error: "BehandlingId er påkrevd",
-  }).optional(),
-  opplysningId: z.string({
-    required_error: "OpplysningId er påkrevd",
-  }).optional(),
+  behandlingId: z
+    .string({
+      required_error: "BehandlingId er påkrevd",
+    })
+    .optional(),
+  opplysningId: z
+    .string({
+      required_error: "OpplysningId er påkrevd",
+    })
+    .optional(),
   begrunnelse: z
     .string({
       required_error: "Begrunnelse er påkrevd",

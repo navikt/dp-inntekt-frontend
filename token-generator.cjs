@@ -21,7 +21,7 @@ async function init() {
   const page = await context.newPage();
   const tokenResponsePromise = page.waitForResponse(
     (res) => res.url().includes("/api/obo") && res.status() === 200,
-    { timeout: 120_000 }
+    { timeout: 120_000 },
   );
 
   await page.goto(AZURE_TOKEN_URL);

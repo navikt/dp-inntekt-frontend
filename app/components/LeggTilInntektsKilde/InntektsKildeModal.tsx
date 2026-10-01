@@ -51,7 +51,7 @@ export default function InntektsKildeModal({
   const [identifikatorError, setIdentifikatorError] = useState<string | undefined>(undefined);
   const [showForms, setShowForms] = useState(false);
   const [virksomhetsnavn, setVirksomhetsnavn] = useState<string | undefined>(
-    erNyVirksomhet ? undefined : virksomhetsnummer
+    erNyVirksomhet ? undefined : virksomhetsnummer,
   );
 
   const form = useForm({
@@ -132,7 +132,7 @@ export default function InntektsKildeModal({
     }
 
     const eksisterendeVirksomhetsnummer = uklassifisertInntekt.virksomheter.map(
-      (virksomhet) => virksomhet.virksomhetsnummer
+      (virksomhet) => virksomhet.virksomhetsnummer,
     );
 
     const harDuplikatIdentifikator = eksisterendeVirksomhetsnummer.includes(identifikator);
@@ -172,7 +172,7 @@ export default function InntektsKildeModal({
 
   // Sjekker om minst en inntekt er fylt ut
   const minstEnInntektFyltUt = aktiveInntektsManeder.some(
-    (felt) => form.value(felt) && form.value(felt) !== ""
+    (felt) => form.value(felt) && form.value(felt) !== "",
   );
 
   // Liste over inntekter som er fylt ut i form
@@ -203,14 +203,14 @@ export default function InntektsKildeModal({
       const identifikator = form.value("identifikator");
 
       const virksomhet: IVirksomhet = uklassifisertInntekt.virksomheter.find(
-        (virksomhet) => virksomhet.virksomhetsnummer === identifikator
+        (virksomhet) => virksomhet.virksomhetsnummer === identifikator,
       )!!;
 
       const nyeInntekter = lagInntektListe(
         beskrivelse,
         inntektskilde,
         identifikator,
-        inntekterArray
+        inntekterArray,
       );
 
       // Oppdaterer eksisterende virksomhet med nye inntekter
@@ -229,7 +229,7 @@ export default function InntektsKildeModal({
         virksomheter: uklassifisertInntekt.virksomheter.map((virksomhet) =>
           virksomhet.virksomhetsnummer === oppdatertVirksomhet.virksomhetsnummer
             ? oppdatertVirksomhet
-            : virksomhet
+            : virksomhet,
         ),
       });
 
@@ -311,7 +311,7 @@ export default function InntektsKildeModal({
           <>
             <Modal.Body>
               <form {...form.getFormProps()}>
-                <VStack gap="4" className={styles.inntektInputContainer}>
+                <VStack gap="space-16" className={styles.inntektInputContainer}>
                   <RadioGroup
                     {...form.getInputProps("inntektskilde")}
                     size="small"
@@ -358,7 +358,7 @@ export default function InntektsKildeModal({
                     ))}
                   </Select>
                 </VStack>
-                <VStack gap="2" className="mt-4">
+                <VStack gap="space-8" className="mt-4">
                   <Label size="small">Utbetalingsperiode</Label>
                   <InntektPerioder perioder={genertePerioder} form={form} />
                   <div className={styles.errorSummary}>
@@ -368,7 +368,7 @@ export default function InntektsKildeModal({
                           <div className="mt-2" key={felt}>
                             Inntekt for {formaterNorskDato(felt)} er {form.error(felt)}
                           </div>
-                        )
+                        ),
                     )}
                   </div>
                   {manglerInntekt && !minstEnInntektFyltUt && (
