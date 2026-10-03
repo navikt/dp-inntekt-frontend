@@ -38,7 +38,7 @@ FROM scratch AS build-export
 COPY --from=app-build /app/build ./
 
 # runtime
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:24@sha256:980915d6201ff02ff3b194022e46bf0e46d55354fdc4e41758da8d28273abe60 AS runtime
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:24@sha256:cf6154cf1d0b8c4683664f64b2167662018275c948a01b59b7cc3af3efda078b AS runtime
 WORKDIR /app
 
 ARG NODE_ENV=production
