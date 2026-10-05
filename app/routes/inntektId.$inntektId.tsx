@@ -13,8 +13,7 @@ import { hentInntekt } from "~/models/inntekt.server";
 import type { IUklassifisertInntekt } from "~/types/inntekt.types";
 import type { Route } from "./+types/inntektId.$inntektId";
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const url = new URL(request.url);
+export async function loader({ request, url, params }: Route.LoaderArgs) {
   const opplysningTypeId = url.searchParams.get("opplysningId");
   const behandlingId = url.searchParams.get("behandlingId");
   const erArena = url.searchParams.get("erArena");
