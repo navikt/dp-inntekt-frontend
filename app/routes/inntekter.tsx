@@ -2,9 +2,7 @@ import { redirect } from "react-router";
 import { hentInntektId } from "~/models/inntekt.server";
 import type { Route } from "./+types/inntektId.$inntektId";
 
-export async function loader({ request }: Route.LoaderArgs) {
-  const url = new URL(request.url);
-
+export async function loader({ request, url }: Route.LoaderArgs) {
   const aktørId = url.searchParams.get("aktorId");
   const vedtakId = url.searchParams.get("vedtakId");
   const beregningsdato = url.searchParams.get("beregningsdato");
